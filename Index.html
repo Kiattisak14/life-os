@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Life OS">
+  <meta name="theme-color" content="#4f46e5">
+  <title>Kiattisak Life OS</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts Kanit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Kanit', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col pb-24 select-none">
+
+  <!-- Header -->
+  <header class="bg-indigo-600 text-white px-5 py-3.5 shadow-md sticky top-0 z-40">
+    <div class="max-w-md mx-auto flex items-center justify-between">
+      <div>
+        <div class="flex items-center space-x-1.5">
+          <span class="text-xs bg-indigo-500/80 text-amber-300 px-1.5 py-0.5 rounded font-mono font-bold">LIFE OS</span>
+          <h1 class="text-base font-bold tracking-wide">Kiattisak Hub</h1>
+        </div>
+        <p class="text-[11px] text-indigo-200" id="headerDate">Finance & English Tracker</p>
+      </div>
+      <div class="flex items-center space-x-1">
+        <button onclick="refreshData()" class="p-2 rounded-full hover:bg-indigo-500 active:scale-95 transition" title="รีเฟรชข้อมูล">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        </button>
+        <button onclick="openSettingsModal()" class="p-2 rounded-full hover:bg-indigo-500 active:scale-95 transition" title="ตั้งค่า API">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="max-w-md w-full mx-auto px-4 pt-3.5 flex-1">
+
+    <!-- ================== VIEW 1: RECORD VIEW (FINANCE) ================== -->
+    <div id="viewRecord" class="space-y-3.5">
+      
+      <!-- Type Switcher (รายจ่าย / รายรับ) -->
+      <div class="bg-slate-200 p-1 rounded-2xl flex shadow-inner">
+        <button id="btnTypeExpense" onclick="setType('expense')" 
+          class="flex-1 py-2 rounded-xl font-semibold text-xs transition-all duration-200 bg-rose-500 text-white shadow-sm">
+          💸 รายจ่าย (Expense)
+        </button>
+        <button id="btnTypeIncome" onclick="setType('income')" 
+          class="flex-1 py-2 rounded-xl font-semibold text-xs transition-all duration-200 text-slate-600">
+          💰 รายรับ (Income)
+        </button>
+      </div>
+
+      <!-- Amount Input Card -->
+      <div class="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 text-center">
+        <span class="text-xs text-slate-400 font-medium">ระบุจำนวนเงิน (บาท)</span>
+        <div class="flex items-center justify-center space-x-1 mt-1">
+          <span class="text-2xl font-bold text-slate-400">฿</span>
+          <input type="number" id="inputAmount" step="any" placeholder="0" 
+            class="text-4xl font-extrabold w-56 text-center outline-none bg-transparent placeholder-slate-200 focus:text-indigo-600">
+        </div>
+
+        <!-- Quick Amount Chips -->
+        <div class="flex justify-center space-x-1.5 mt-3">
+          <button onclick="addAmount(20)" class="px-2.5 py-1 text-xs rounded-lg bg-slate-100 hover:bg-slate-200 font-medium text-slate-600 active:scale-95">+20</button>
+          <button onclick="addAmount(50)" class="px-2.5 py-1 text-xs rounded-lg bg-slate-100 hover:bg-slate-200 font-medium text-slate-600 active:scale-95">+50</button>
+          <button onclick="addAmount(100)" class="px-2.5 py-1 text-xs rounded-lg bg-slate-100 hover:bg-slate-200 font-medium text-slate-600 active:scale-95">+100</button>
+          <button onclick="addAmount(500)" class="px-2.5 py-1 text-xs rounded-lg bg-slate-100 hover:bg-slate-200 font-medium text-slate-600 active:scale-95">+500</button>
+          <button onclick="clearAmount()" class="px-2.5 py-1 text-xs rounded-lg bg-rose-50 text-rose-500 font-medium active:scale-95">ล้าง</button>
+        </div>
+      </div>
+
+      <!-- Category Selector -->
+      <div class="bg-white rounded-3xl p-4 shadow-sm border border-slate-100">
+        <h3 class="text-xs font-semibold text-slate-500 mb-2.5 tracking-wider uppercase">เลือกหมวดหมู่</h3>
+        <div id="categoryContainer" class="grid grid-cols-4 gap-2">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Additional Details -->
+      <div class="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 space-y-2.5">
+        <!-- Payment Method -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">ช่องทางชำระ</label>
+          <div class="grid grid-cols-3 gap-1.5">
+            <button type="button" onclick="setPayment('โอนเงิน/QR')" class="btn-pay py-2 px-1 text-xs rounded-xl border border-indigo-500 bg-indigo-50 text-indigo-700 font-medium active:scale-95 text-center">📱 โอน/QR</button>
+            <button type="button" onclick="setPayment('เงินสด')" class="btn-pay py-2 px-1 text-xs rounded-xl border border-slate-200 text-slate-600 font-medium active:scale-95 text-center">💵 เงินสด</button>
+            <button type="button" onclick="setPayment('บัตรเครดิต')" class="btn-pay py-2 px-1 text-xs rounded-xl border border-slate-200 text-slate-600 font-medium active:scale-95 text-center">💳 บัตร</button>
+          </div>
+        </div>
+
+        <!-- Note & Date -->
+        <div class="grid grid-cols-2 gap-2 pt-0.5">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">วันที่</label>
+            <input type="date" id="inputDate" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-500 bg-slate-50">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">โน้ตสั้นๆ (ถ้ามี)</label>
+            <input type="text" id="inputNote" placeholder="เช่น กาแฟส้ม, ชาบู" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-500 bg-slate-50">
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button id="btnSubmit" onclick="submitForm()" 
+        class="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md shadow-indigo-200 active:scale-98 transition flex items-center justify-center space-x-2">
+        <span>💾 บันทึกรายการเงิน</span>
+      </button>
+    </div>
+
+    <!-- ================== VIEW 2: DASHBOARD VIEW (FINANCE) ================== -->
+    <div id="viewDashboard" class="hidden space-y-3.5">
+      
+      <!-- Summary Cards -->
+      <div class="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white rounded-3xl p-5 shadow-lg">
+        <div class="text-xs text-indigo-200 font-light flex justify-between">
+          <span id="dashMonthLabel">สรุปเดือนนี้</span>
+          <span>คงเหลือสุทธิ</span>
+        </div>
+        <div class="text-3xl font-extrabold mt-1 tracking-tight" id="dashBalance">฿0.00</div>
+        
+        <div class="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-indigo-500/50">
+          <div>
+            <div class="text-xs text-indigo-200">รายรับรวม 🟢</div>
+            <div class="text-lg font-bold text-emerald-300" id="dashIncome">฿0.00</div>
+          </div>
+          <div>
+            <div class="text-xs text-indigo-200">รายจ่ายรวม 🔴</div>
+            <div class="text-lg font-bold text-rose-300" id="dashExpense">฿0.00</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Breakdown -->
+      <div class="bg-white rounded-3xl p-4 shadow-sm border border-slate-100">
+        <h3 class="text-xs font-bold text-slate-700 mb-3 flex items-center justify-between uppercase tracking-wider">
+          <span>สัดส่วนค่าใช้จ่ายเดือนนี้</span>
+          <span class="text-[11px] font-normal text-slate-400">เรียงตามยอด</span>
+        </h3>
+        <div id="categoryBreakdownContainer" class="space-y-2.5">
+          <div class="text-center text-xs text-slate-400 py-6">กำลังโหลดข้อมูล...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================== VIEW 3: ENGLISH LEARNING TRACKER ================== -->
+    <div id="viewEnglish" class="hidden space-y-3.5">
+      
+      <!-- Level Status Card -->
+      <div class="bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 text-white rounded-3xl p-4 shadow-md">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-[10px] font-bold tracking-wider uppercase bg-white/20 px-2 py-0.5 rounded-full">CEFR Level Roadmap</span>
+            <div class="text-2xl font-black mt-1 flex items-center space-x-2">
+              <span>High A1</span>
+              <span class="text-amber-200">➔</span>
+              <span>A2</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="text-[11px] text-amber-100 font-medium">เป้าหมาย 4 สัปดาห์</span>
+            <div class="text-xs font-bold text-white bg-black/20 px-2.5 py-1 rounded-xl mt-0.5">Week 1 / Day 1 ✅</div>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="mt-3">
+          <div class="flex justify-between text-[11px] font-medium text-amber-100 mb-1">
+            <span>ก้าวสู่ระดับ A2 (Mastery)</span>
+            <span id="engProgressPercent">35%</span>
+          </div>
+          <div class="w-full bg-black/20 rounded-full h-2.5 p-0.5">
+            <div id="engProgressBar" class="bg-white h-1.5 rounded-full transition-all duration-500 shadow" style="width: 35%"></div>
+          </div>
+          <div class="flex justify-between text-[9px] text-amber-200 mt-1">
+            <span>A1 (Passed)</span>
+            <span>A2 (Operational)</span>
+            <span>B2 (Sovereign Empire)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Metrics Grid -->
+      <div class="grid grid-cols-3 gap-2">
+        <div class="bg-white rounded-2xl p-3 shadow-sm border border-slate-100 text-center">
+          <div class="text-xl">🔥</div>
+          <div class="text-base font-extrabold text-slate-800" id="engStreak">1 วัน</div>
+          <div class="text-[10px] text-slate-400 font-medium">Streak ต่อเนื่อง</div>
+        </div>
+        <div class="bg-white rounded-2xl p-3 shadow-sm border border-slate-100 text-center">
+          <div class="text-xl">📅</div>
+          <div class="text-base font-extrabold text-emerald-600" id="engPassedDays">1 / 28</div>
+          <div class="text-[10px] text-slate-400 font-medium">เป้าหมายวันผ่าน</div>
+        </div>
+        <div class="bg-white rounded-2xl p-3 shadow-sm border border-slate-100 text-center">
+          <div class="text-xl">📚</div>
+          <div class="text-base font-extrabold text-indigo-600" id="engTotalSentences">3</div>
+          <div class="text-[10px] text-slate-400 font-medium">ประโยคในคลัง</div>
+        </div>
+      </div>
+
+      <!-- Key Insights / Golden Rules Card -->
+      <div class="bg-amber-50 border border-amber-200/70 rounded-2xl p-3.5 text-amber-900 shadow-sm">
+        <div class="flex items-center space-x-1.5 mb-2">
+          <span class="text-sm">💡</span>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-amber-800">Golden Grammar Rules (กฎเหล็ก Day 1)</h4>
+        </div>
+        <ul class="text-[11px] space-y-1.5 text-amber-800 list-disc list-inside">
+          <li>หลัง <span class="font-bold underline">because</span> ต้องมีประธานและกริยาเต็มรูป เช่น <code class="bg-amber-100/80 px-1 rounded font-sans">because I finished...</code></li>
+          <li>บอกวัตถุประสงค์ว่าทำเพื่ออะไร ให้ใช้ <span class="font-bold underline">to + V</span> เช่น <code class="bg-amber-100/80 px-1 rounded font-sans">to simulate...</code> (ไม่ใช้ for to)</li>
+          <li>คำนามนับได้ชิ้นเดียว อย่าลืมใส่ <span class="font-bold underline">a/an</span> เช่น <code class="bg-amber-100/80 px-1 rounded font-sans">a motor model</code>, <code class="bg-amber-100/80 px-1 rounded font-sans">a book</code></li>
+        </ul>
+      </div>
+
+      <!-- Action Bar: Add New Sentence Button -->
+      <div class="flex items-center justify-between pt-1">
+        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-1">
+          <span>🏛️ คลังประโยคที่ฝึกสำเร็จ</span>
+          <span class="text-[10px] text-slate-400 font-normal">(Mastered Sentences)</span>
+        </h3>
+        <button onclick="toggleAddSentenceModal()" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-sm active:scale-95 transition flex items-center space-x-1">
+          <span>+ บันทึกประโยค</span>
+        </button>
+      </div>
+
+      <!-- Mastered Sentence Vault List -->
+      <div id="engSentenceListContainer" class="space-y-2.5">
+        <div class="text-center text-xs text-slate-400 py-6">กำลังโหลดคลังประโยค...</div>
+      </div>
+
+    </div>
+
+    <!-- ================== VIEW 4: HISTORY VIEW (FINANCE) ================== -->
+    <div id="viewHistory" class="hidden space-y-3">
+      <div class="flex items-center justify-between px-1">
+        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">รายการเงินล่าสุด 15 รายการ</h3>
+        <span class="text-[11px] text-slate-400">จาก Google Sheet</span>
+      </div>
+      <div id="historyListContainer" class="space-y-2">
+        <div class="text-center text-xs text-slate-400 py-8">กำลังโหลดข้อมูล...</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================== MODAL: SETTINGS (API URL CONFIG) ================== -->
+  <div id="settingsModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-5 space-y-3 shadow-2xl">
+      <div class="flex items-center justify-between border-b pb-2">
+        <h3 class="text-sm font-bold text-slate-800">⚙️ ตั้งค่าเชื่อมต่อ Apps Script API</h3>
+        <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-slate-600 font-bold p-1">✕</button>
+      </div>
+      <p class="text-[11px] text-slate-500">
+        วาง URL เว็บแอปที่ได้จาก Google Apps Script (ลงท้ายด้วย <code class="bg-slate-100 px-1 rounded">/exec</code>) เพื่อซิงค์ข้อมูลกับ Google Sheet
+      </p>
+      <div>
+        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Web App URL</label>
+        <input type="url" id="settingApiUrlInput" placeholder="https://script.google.com/macros/s/.../exec" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-500 bg-slate-50">
+      </div>
+      <div class="flex space-x-2 pt-2">
+        <button onclick="closeSettingsModal()" class="flex-1 py-2 text-xs font-semibold text-slate-600 rounded-xl bg-slate-100">ปิด</button>
+        <button onclick="saveApiUrlSetting()" class="flex-1 py-2 text-xs font-bold text-white rounded-xl bg-indigo-600 hover:bg-indigo-700">บันทึก & ซิงค์</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================== MODAL: ADD ENGLISH SENTENCE ================== -->
+  <div id="addSentenceModal" class="fixed inset-0 bg-black/60 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden transition-opacity">
+    <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 space-y-3.5 shadow-2xl animate-in slide-in-from-bottom">
+      <div class="flex items-center justify-between border-b pb-2">
+        <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-1">
+          <span>🎯 บันทึกประโยคฝึกสำเร็จ (Mastery Pass)</span>
+        </h3>
+        <button onclick="toggleAddSentenceModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold p-1">✕</button>
+      </div>
+
+      <div class="space-y-2.5">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">ประโยคภาษาอังกฤษ (English Sentence) *</label>
+          <textarea id="modalEngSentence" rows="2" placeholder="เช่น Tonight, I will test the motor controller..." class="w-full text-xs p-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-500 bg-slate-50"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">ความหมาย / บริบทภาษาไทย (Thai Context)</label>
+          <input type="text" id="modalEngMeaning" placeholder="เช่น คืนนี้จะทดสอบกล่องควบคุมมอเตอร์..." class="w-full text-xs p-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-500 bg-slate-50">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">ช่วงเวลา/วันที่ (Day)</label>
+            <input type="text" id="modalEngDay" value="Day 1" placeholder="เช่น Day 1, Day 2" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-500 bg-slate-50">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">หัวข้อ (Topic)</label>
+            <input type="text" id="modalEngTopic" value="3 กาลเวลา (Present & Future)" placeholder="เช่น กาลเวลา, การเปรียบเทียบ" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-500 bg-slate-50">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">กฎไวยากรณ์ / ข้อควรจำ (Grammar Rule)</label>
+          <input type="text" id="modalEngRule" placeholder="เช่น การใช้ will + V1, to + V บอกเป้าหมาย" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-500 bg-slate-50">
+        </div>
+      </div>
+
+      <div class="pt-2 flex space-x-2">
+        <button onclick="toggleAddSentenceModal()" class="flex-1 py-2.5 text-xs font-semibold text-slate-600 rounded-xl bg-slate-100 hover:bg-slate-200 transition">ยกเลิก</button>
+        <button id="btnSaveSentence" onclick="submitEnglishSentence()" class="flex-1 py-2.5 text-xs font-bold text-white rounded-xl bg-indigo-600 hover:bg-indigo-700 shadow transition flex items-center justify-center space-x-1">
+          <span>บันทึกลงคลัง ✨</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation Bar (4 Tabs) -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 py-1.5 px-3 z-40">
+    <div class="max-w-md mx-auto grid grid-cols-4 items-center text-center">
+      
+      <!-- Tab 1: Record -->
+      <button onclick="switchTab('record')" id="tabBtnRecord" class="flex flex-col items-center text-indigo-600 font-semibold text-[11px] py-1 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>บันทึกเงิน</span>
+      </button>
+
+      <!-- Tab 2: Dashboard -->
+      <button onclick="switchTab('dashboard')" id="tabBtnDashboard" class="flex flex-col items-center text-slate-400 hover:text-slate-600 font-medium text-[11px] py-1 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+        <span>การเงิน</span>
+      </button>
+
+      <!-- Tab 3: English Learning -->
+      <button onclick="switchTab('english')" id="tabBtnEnglish" class="flex flex-col items-center text-slate-400 hover:text-slate-600 font-medium text-[11px] py-1 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+        <span>ฝึกอังกฤษ</span>
+      </button>
+
+      <!-- Tab 4: History -->
+      <button onclick="switchTab('history')" id="tabBtnHistory" class="flex flex-col items-center text-slate-400 hover:text-slate-600 font-medium text-[11px] py-1 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>ประวัติ</span>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-5 py-2.5 rounded-full text-xs font-semibold shadow-xl transition-all duration-300 opacity-0 pointer-events-none">
+    ข้อความแจ้งเตือน
+  </div>
+
+  <script>
+    // State & API URL Config
+    let API_URL = localStorage.getItem('LIFE_OS_API_URL') || '';
+    let activeTab = 'record';
+    let currentType = 'expense';
+    let currentCategory = 'อาหาร';
+    let currentPayment = 'โอนเงิน/QR';
+
+    const expenseCategories = [
+      { name: 'อาหาร', icon: '🍜' },
+      { name: 'เครื่องดื่ม', icon: '☕' },
+      { name: 'เดินทาง', icon: '🚗' },
+      { name: 'ช้อปปิ้ง', icon: '🛍️' },
+      { name: 'ที่พัก/บิล', icon: '🏠' },
+      { name: 'สุขภาพ', icon: '💊' },
+      { name: 'บันเทิง', icon: '🎬' },
+      { name: 'อื่นๆ', icon: '📦' }
+    ];
+
+    const incomeCategories = [
+      { name: 'เงินเดือน', icon: '💼' },
+      { name: 'ธุรกิจ/ขาย', icon: '📈' },
+      { name: 'ฟรีแลนซ์', icon: '💻' },
+      { name: 'การลงทุน', icon: '💰' },
+      { name: 'ของขวัญ', icon: '🎁' },
+      { name: 'อื่นๆ', icon: '✨' }
+    ];
+
+    // Init
+    window.onload = function() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('inputDate').value = today;
+      document.getElementById('headerDate').innerText = new Date().toLocaleDateString('th-TH', { 
+        weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' 
+      }) + ' · Life OS';
+      
+      renderCategories();
+
+      // Check if running in Google Apps Script directly or via GitHub Pages
+      const isGAS = typeof google !== 'undefined' && google.script && google.script.run;
+      if (!isGAS && !API_URL) {
+        // First time on GitHub Pages
+        setTimeout(openSettingsModal, 400);
+      } else {
+        fetchDashboardData();
+        fetchEnglishData();
+      }
+    };
+
+    function openSettingsModal() {
+      document.getElementById('settingApiUrlInput').value = API_URL;
+      document.getElementById('settingsModal').classList.remove('hidden');
+    }
+
+    function closeSettingsModal() {
+      document.getElementById('settingsModal').classList.add('hidden');
+    }
+
+    function saveApiUrlSetting() {
+      const input = document.getElementById('settingApiUrlInput').value.trim();
+      if (!input) {
+        showToast('กรุณาระบุ Web App URL', true);
+        return;
+      }
+      API_URL = input;
+      localStorage.setItem('LIFE_OS_API_URL', API_URL);
+      closeSettingsModal();
+      showToast('บันทึกการเชื่อมต่อแล้ว กำลังซิงค์ข้อมูล... 🔄');
+      fetchDashboardData();
+      fetchEnglishData();
+    }
+
+    function setType(type) {
+      currentType = type;
+      const btnExp = document.getElementById('btnTypeExpense');
+      const btnInc = document.getElementById('btnTypeIncome');
+
+      if (type === 'expense') {
+        btnExp.className = 'flex-1 py-2 rounded-xl font-semibold text-xs transition-all duration-200 bg-rose-500 text-white shadow-sm';
+        btnInc.className = 'flex-1 py-2 rounded-xl font-semibold text-xs transition-all duration-200 text-slate-600';
+        currentCategory = 'อาหาร';
+      } else {
+        btnInc.className = 'flex-1 py-2 rounded-xl font-semibold text-xs transition-all duration-200 bg-emerald-500 text-white shadow-sm';
+        btnExp.className = 'flex-1 py-2 rounded-xl font-semibold text-xs transition-all duration-200 text-slate-600';
+        currentCategory = 'เงินเดือน';
+      }
+      renderCategories();
+    }
+
+    function renderCategories() {
+      const container = document.getElementById('categoryContainer');
+      container.innerHTML = '';
+      const list = currentType === 'expense' ? expenseCategories : incomeCategories;
+
+      list.forEach(cat => {
+        const isSelected = cat.name === currentCategory;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `p-2 rounded-2xl flex flex-col items-center justify-center transition active:scale-90 border ${
+          isSelected 
+            ? (currentType === 'expense' ? 'bg-rose-50 border-rose-400 text-rose-700 font-bold' : 'bg-emerald-50 border-emerald-400 text-emerald-700 font-bold') 
+            : 'bg-slate-50 border-slate-100 text-slate-600 hover:bg-slate-100'
+        }`;
+        btn.innerHTML = `
+          <span class="text-lg mb-0.5">${cat.icon}</span>
+          <span class="text-[10px] truncate w-full text-center">${cat.name}</span>
+        `;
+        btn.onclick = () => {
+          currentCategory = cat.name;
+          renderCategories();
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    function addAmount(val) {
+      const input = document.getElementById('inputAmount');
+      const cur = Number(input.value) || 0;
+      input.value = cur + val;
+    }
+
+    function clearAmount() {
+      document.getElementById('inputAmount').value = '';
+    }
+
+    function setPayment(method) {
+      currentPayment = method;
+      document.querySelectorAll('.btn-pay').forEach(btn => {
+        if (btn.innerText.includes(method.split('/')[0])) {
+          btn.className = 'btn-pay py-2 px-1 text-xs rounded-xl border border-indigo-500 bg-indigo-50 text-indigo-700 font-medium active:scale-95 text-center';
+        } else {
+          btn.className = 'btn-pay py-2 px-1 text-xs rounded-xl border border-slate-200 text-slate-600 font-medium active:scale-95 text-center';
+        }
+      });
+    }
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.className = `fixed top-5 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 rounded-full text-xs font-semibold shadow-xl transition-all duration-300 opacity-100 ${
+        isError ? 'bg-rose-600 text-white' : 'bg-slate-900 text-white'
+      }`;
+      setTimeout(() => {
+        toast.className = toast.className.replace('opacity-100', 'opacity-0');
+      }, 2500);
+    }
+
+    function switchTab(tab) {
+      activeTab = tab;
+      const views = ['Record', 'Dashboard', 'English', 'History'];
+      views.forEach(v => {
+        const el = document.getElementById('view' + v);
+        if (el) el.classList.add('hidden');
+        const btn = document.getElementById('tabBtn' + v);
+        if (btn) btn.className = 'flex flex-col items-center text-slate-400 hover:text-slate-600 font-medium text-[11px] py-1 transition';
+      });
+
+      const activeView = document.getElementById('view' + tab.charAt(0).toUpperCase() + tab.slice(1));
+      const activeBtn = document.getElementById('tabBtn' + tab.charAt(0).toUpperCase() + tab.slice(1));
+      
+      if (activeView) activeView.classList.remove('hidden');
+      if (activeBtn) activeBtn.className = 'flex flex-col items-center text-indigo-600 font-semibold text-[11px] py-1 transition';
+
+      if (tab === 'dashboard' || tab === 'history') {
+        fetchDashboardData();
+      } else if (tab === 'english') {
+        fetchEnglishData();
+      }
+    }
+
+    function refreshData() {
+      showToast('กำลังรีเฟรชข้อมูล...');
+      fetchDashboardData();
+      fetchEnglishData();
+    }
+
+    // ==========================================
+    // Unified API Calling Layer (GAS / Fetch)
+    // ==========================================
+    async function callApi(action, data = null) {
+      const isGAS = typeof google !== 'undefined' && google.script && google.script.run;
+      
+      if (isGAS) {
+        return new Promise((resolve, reject) => {
+          if (action === 'getDashboardData') google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).getDashboardData();
+          else if (action === 'getEnglishData') google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).getEnglishData();
+          else if (action === 'recordTransaction') google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).recordTransaction(data);
+          else if (action === 'recordEnglishSentence') google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).recordEnglishSentence(data);
+        });
+      }
+
+      if (!API_URL) {
+        openSettingsModal();
+        throw new Error('กรุณาตั้งค่า Web App URL ก่อน');
+      }
+
+      // Using Fetch for GitHub Pages / External Hosting
+      if (data) {
+        // POST with text/plain to avoid CORS preflight options
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: action, data: data })
+        });
+        return await res.json();
+      } else {
+        // GET
+        const res = await fetch(`${API_URL}?action=${action}`);
+        return await res.json();
+      }
+    }
+
+    // ==========================================
+    // Finance Handlers
+    // ==========================================
+    async function submitForm() {
+      const amountInput = document.getElementById('inputAmount');
+      const amount = Number(amountInput.value);
+
+      if (!amount || amount <= 0) {
+        showToast('กรุณากรอกจำนวนเงินให้ถูกต้อง', true);
+        amountInput.focus();
+        return;
+      }
+
+      const submitBtn = document.getElementById('btnSubmit');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>⏳ กำลังบันทึก...</span>';
+
+      const payload = {
+        type: currentType,
+        amount: amount,
+        category: currentCategory,
+        paymentMethod: currentPayment,
+        note: document.getElementById('inputNote').value.trim(),
+        date: document.getElementById('inputDate').value
+      };
+
+      try {
+        const res = await callApi('recordTransaction', payload);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>💾 บันทึกรายการเงิน</span>';
+        if (res && res.success) {
+          showToast('บันทึกเรียบร้อยแล้ว ✅');
+          amountInput.value = '';
+          document.getElementById('inputNote').value = '';
+          fetchDashboardData();
+        } else {
+          showToast(res.message || 'บันทึกล้มเหลว', true);
+        }
+      } catch (err) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>💾 บันทึกรายการเงิน</span>';
+        showToast('ข้อผิดพลาด: ' + err.message, true);
+      }
+    }
+
+    async function fetchDashboardData() {
+      try {
+        const data = await callApi('getDashboardData');
+        updateDashboardUI(data);
+      } catch (err) {
+        console.error('Fetch dashboard error:', err);
+      }
+    }
+
+    function updateDashboardUI(data) {
+      if (!data) return;
+
+      if (data.monthName) {
+        document.getElementById('dashMonthLabel').innerText = `สรุปเดือน ${data.monthName}`;
+      }
+
+      document.getElementById('dashBalance').innerText = '฿' + (data.balance || 0).toLocaleString('th-TH', { minimumFractionDigits: 2 });
+      document.getElementById('dashIncome').innerText = '฿' + (data.totalIncome || 0).toLocaleString('th-TH', { minimumFractionDigits: 2 });
+      document.getElementById('dashExpense').innerText = '฿' + (data.totalExpense || 0).toLocaleString('th-TH', { minimumFractionDigits: 2 });
+
+      const catContainer = document.getElementById('categoryBreakdownContainer');
+      if (!data.categories || data.categories.length === 0) {
+        catContainer.innerHTML = '<div class="text-center text-xs text-slate-400 py-6">ยังไม่มีรายการค่าใช้จ่ายในเดือนนี้</div>';
+      } else {
+        catContainer.innerHTML = '';
+        data.categories.forEach(item => {
+          const row = document.createElement('div');
+          row.className = 'space-y-1';
+          row.innerHTML = `
+            <div class="flex justify-between text-xs font-medium">
+              <span class="text-slate-700">${item.name} (${item.percent}%)</span>
+              <span class="text-slate-900 font-semibold">฿${Number(item.amount).toLocaleString('th-TH', { minimumFractionDigits: 2 })}</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+              <div class="bg-indigo-500 h-2 rounded-full" style="width: ${item.percent}%"></div>
+            </div>
+          `;
+          catContainer.appendChild(row);
+        });
+      }
+
+      const histContainer = document.getElementById('historyListContainer');
+      if (!data.recentTransactions || data.recentTransactions.length === 0) {
+        histContainer.innerHTML = '<div class="text-center text-xs text-slate-400 py-8">ยังไม่มีประวัติรายการ</div>';
+      } else {
+        histContainer.innerHTML = '';
+        data.recentTransactions.forEach(t => {
+          const isInc = t.type === 'income';
+          const card = document.createElement('div');
+          card.className = 'bg-white rounded-2xl p-3 border border-slate-100 shadow-sm flex items-center justify-between';
+          card.innerHTML = `
+            <div class="flex items-center space-x-2.5">
+              <div class="w-9 h-9 rounded-xl flex items-center justify-center text-base ${isInc ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}">
+                ${isInc ? '💰' : '💸'}
+              </div>
+              <div>
+                <div class="text-xs font-bold text-slate-800">${t.category} ${t.note ? `<span class="font-normal text-slate-400">· ${t.note}</span>` : ''}</div>
+                <div class="text-[10px] text-slate-400">${t.date} ${t.time} · ${t.paymentMethod}</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs font-bold ${isInc ? 'text-emerald-600' : 'text-rose-600'}">
+                ${isInc ? '+' : '-'}฿${Number(t.amount).toLocaleString('th-TH', { minimumFractionDigits: 2 })}
+              </div>
+            </div>
+          `;
+          histContainer.appendChild(card);
+        });
+      }
+    }
+
+    // ==========================================
+    // English Module Handlers
+    // ==========================================
+    async function fetchEnglishData() {
+      try {
+        const data = await callApi('getEnglishData');
+        updateEnglishUI(data);
+      } catch (err) {
+        console.error('Fetch english error:', err);
+      }
+    }
+
+    function updateEnglishUI(data) {
+      if (!data) return;
+
+      document.getElementById('engStreak').innerText = (data.streakDays || 1) + ' วัน';
+      document.getElementById('engPassedDays').innerText = `${data.totalPassedDays || 1} / ${data.targetDays || 28}`;
+      document.getElementById('engTotalSentences').innerText = data.totalSentences || (data.sentences ? data.sentences.length : 0);
+      
+      const pct = data.levelProgressPercent || 35;
+      document.getElementById('engProgressPercent').innerText = pct + '%';
+      document.getElementById('engProgressBar').style.width = pct + '%';
+
+      const container = document.getElementById('engSentenceListContainer');
+      if (!data.sentences || data.sentences.length === 0) {
+        container.innerHTML = '<div class="text-center text-xs text-slate-400 py-6">ยังไม่มีประโยคในคลัง</div>';
+        return;
+      }
+
+      container.innerHTML = '';
+      data.sentences.forEach((s) => {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-2xl p-3.5 border border-slate-100 shadow-sm space-y-2';
+        
+        const cleanSentence = s.sentenceEN.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        
+        card.innerHTML = `
+          <div class="flex items-start justify-between">
+            <span class="text-[10px] font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md">
+              ${s.day} · ${s.topic}
+            </span>
+            <div class="flex items-center space-x-1">
+              <button onclick="speakSentence('${cleanSentence}')" class="p-1 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-100 active:scale-90 transition" title="ฟังเสียงอ่าน">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                </svg>
+              </button>
+              <button onclick="copyText('${cleanSentence}')" class="p-1 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-100 active:scale-90 transition" title="คัดลอก">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="text-xs font-semibold text-slate-800 leading-snug">
+            "${s.sentenceEN}"
+          </div>
+
+          <div class="text-[11px] text-slate-500">
+            🇹🇭 ${s.sentenceTH}
+          </div>
+
+          ${s.grammarNote ? `
+            <div class="text-[10px] bg-slate-50 text-slate-600 rounded-lg p-2 border border-slate-100 font-sans">
+              <span class="font-bold text-amber-700">📌 กฎ:</span> ${s.grammarNote}
+            </div>
+          ` : ''}
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function speakSentence(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = 'en-US';
+        utter.rate = 0.9;
+        window.speechSynthesis.speak(utter);
+      } else {
+        showToast('เบราว์เซอร์ไม่รองรับระบบออกเสียง');
+      }
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('คัดลอกประโยคแล้ว 📋');
+      }).catch(() => {
+        showToast('คัดลอกไม่สำเร็จ', true);
+      });
+    }
+
+    function toggleAddSentenceModal() {
+      const modal = document.getElementById('addSentenceModal');
+      modal.classList.toggle('hidden');
+    }
+
+    async function submitEnglishSentence() {
+      const sentence = document.getElementById('modalEngSentence').value.trim();
+      const meaning = document.getElementById('modalEngMeaning').value.trim();
+      const day = document.getElementById('modalEngDay').value.trim() || 'Day 1';
+      const topic = document.getElementById('modalEngTopic').value.trim() || 'Active Sentence Building';
+      const rule = document.getElementById('modalEngRule').value.trim();
+
+      if (!sentence) {
+        showToast('กรุณาระบุประโยคภาษาอังกฤษ', true);
+        return;
+      }
+
+      const btn = document.getElementById('btnSaveSentence');
+      btn.disabled = true;
+      btn.innerHTML = '<span>กำลังบันทึก...</span>';
+
+      const payload = {
+        sentenceEN: sentence,
+        sentenceTH: meaning,
+        day: day,
+        topic: topic,
+        grammarNote: rule
+      };
+
+      try {
+        const res = await callApi('recordEnglishSentence', payload);
+        btn.disabled = false;
+        btn.innerHTML = '<span>บันทึกลงคลัง ✨</span>';
+        if (res && res.success) {
+          showToast(res.message);
+          toggleAddSentenceModal();
+          document.getElementById('modalEngSentence').value = '';
+          document.getElementById('modalEngMeaning').value = '';
+          document.getElementById('modalEngRule').value = '';
+          fetchEnglishData();
+        } else {
+          showToast(res.message || 'บันทึกล้มเหลว', true);
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerHTML = '<span>บันทึกลงคลัง ✨</span>';
+        showToast('ข้อผิดพลาด: ' + err.message, true);
+      }
+    }
+  </script>
+</body>
+</html>

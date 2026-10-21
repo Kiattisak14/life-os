@@ -382,7 +382,8 @@
 
   <script>
     // State & API URL Config
-    let API_URL = localStorage.getItem('LIFE_OS_API_URL') || '';
+    const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbyd-HrCzsf-twri99hy6jL8AcASfrGQ1ydZfva0UVTACf2bYu895gRbSi_bd6Ie7lfyGA/exec';
+    let API_URL = localStorage.getItem('LIFE_OS_API_URL') || DEFAULT_API_URL;
     let activeTab = 'record';
     let currentType = 'expense';
     let currentCategory = 'อาหาร';

@@ -26,6 +26,21 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+  
+    .perspective {
+      perspective: 1000px;
+    }
+    .transform-style-3d {
+      transform-style: preserve-3d;
+    }
+    .backface-hidden {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .rotate-y-180 {
+      transform: rotateY(180deg);
+    }
+
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col pb-24 select-none">
@@ -169,7 +184,26 @@
     </div>
 
     <!-- ================== VIEW 3: ENGLISH LEARNING TRACKER ================== -->
+    
+    <!-- ================== VIEW 3: ENGLISH LEARNING HUB ================== -->
     <div id="viewEnglish" class="hidden space-y-3.5">
+      
+      <!-- Sub-Tab Switcher: Sentences vs Vocab Flashcards -->
+      <div class="bg-slate-200 p-1 rounded-2xl flex shadow-inner">
+        <button id="btnSubSentences" onclick="switchEngSubTab('sentences')" 
+          class="flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 bg-white text-indigo-700 shadow-sm flex items-center justify-center space-x-1">
+          <span>🎯 ประโยค 28 วัน</span>
+        </button>
+        <button id="btnSubVocab" onclick="switchEngSubTab('vocab')" 
+          class="flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 text-slate-600 flex items-center justify-center space-x-1">
+          <span>🃏 คลังศัพท์ 100 คำ</span>
+          <span id="badgeVocabCount" class="text-[9px] bg-indigo-100 text-indigo-700 font-bold px-1.5 py-0.2 rounded-full">100</span>
+        </button>
+      </div>
+
+      <!-- SUB-VIEW A: SENTENCES (Existing Content) -->
+      <div id="engSubViewSentences" class="space-y-3.5">
+
       
       <!-- Level Status Card -->
       <div class="bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 text-white rounded-3xl p-4 shadow-md">
@@ -254,6 +288,128 @@
       </div>
 
     </div>
+
+    
+      </div>
+      <!-- END SUB-VIEW A: SENTENCES -->
+
+      <!-- SUB-VIEW B: VOCAB FLASHCARDS (NEW!) -->
+      <div id="engSubViewVocab" class="hidden space-y-3.5">
+        
+        <!-- Vocab Metrics & Filter Card -->
+        <div class="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">28-DAY VAULT</span>
+              <h3 class="text-sm font-bold text-slate-800 mt-0.5">🃏 การ์ดคำศัพท์สำหรับฝึกจำ</h3>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] text-slate-400">เชี่ยวชาญแล้ว</span>
+              <div class="text-xs font-black text-emerald-600" id="vocabMasteredStats">0 / 100 คำ</div>
+            </div>
+          </div>
+
+          <!-- Category Filter Pills -->
+          <div class="flex space-x-1.5 overflow-x-auto pb-1 hide-scrollbar text-[11px]">
+            <button onclick="filterVocabCategory('all')" id="vcat_all" class="vcat-btn px-2.5 py-1 rounded-xl bg-indigo-600 text-white font-semibold active:scale-95 transition">ทั้งหมด (100)</button>
+            <button onclick="filterVocabCategory('Daily Life')" id="vcat_daily" class="vcat-btn px-2.5 py-1 rounded-xl bg-slate-100 text-slate-600 font-medium active:scale-95 transition">🏠 Daily (30)</button>
+            <button onclick="filterVocabCategory('EV & Engineering')" id="vcat_ev" class="vcat-btn px-2.5 py-1 rounded-xl bg-slate-100 text-slate-600 font-medium active:scale-95 transition">⚡ EV (40)</button>
+            <button onclick="filterVocabCategory('Workplace & Business')" id="vcat_work" class="vcat-btn px-2.5 py-1 rounded-xl bg-slate-100 text-slate-600 font-medium active:scale-95 transition">💼 Work (30)</button>
+          </div>
+        </div>
+
+        <!-- 3D Flipping Flashcard Container -->
+        <div class="relative w-full h-72 cursor-pointer select-none perspective" onclick="flipVocabCard()">
+          <div id="flashcardInner" class="relative w-full h-full duration-500 transform-style-3d transition-transform rounded-3xl shadow-md border border-slate-200 bg-white">
+            
+            <!-- FRONT SIDE OF CARD -->
+            <div class="absolute inset-0 w-full h-full rounded-3xl p-6 flex flex-col justify-between backface-hidden bg-gradient-to-b from-white to-slate-50">
+              <div class="flex items-center justify-between text-xs">
+                <span id="fcNumber" class="text-slate-400 font-mono font-semibold">#1 / 100</span>
+                <span id="fcCategoryBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">Daily Life</span>
+              </div>
+              
+              <div class="text-center my-auto">
+                <h2 id="fcWord" class="text-3xl font-extrabold text-slate-800 tracking-wide">prepare</h2>
+                <span id="fcPOS" class="text-xs font-semibold text-indigo-500 italic mt-1 inline-block">[ v. ]</span>
+                <div class="mt-4">
+                  <button type="button" onclick="event.stopPropagation(); speakCurrentWord();" class="inline-flex items-center space-x-1 px-3 py-1.5 rounded-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold transition active:scale-95 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    </svg>
+                    <span>ฟังเสียงอ่าน 🔊</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="text-center text-[11px] text-slate-400 font-medium">
+                👆 แตะที่การ์ดเพื่อดูคำแปลและตัวอย่างประโยค
+              </div>
+            </div>
+
+            <!-- BACK SIDE OF CARD -->
+            <div class="absolute inset-0 w-full h-full rounded-3xl p-6 flex flex-col justify-between backface-hidden bg-slate-900 text-white rotate-y-180">
+              <div class="flex items-center justify-between text-xs">
+                <span id="fcNumberBack" class="text-slate-400 font-mono font-semibold">#1 / 100</span>
+                <span id="fcStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-amber-300">Not Started</span>
+              </div>
+
+              <div class="my-auto space-y-3">
+                <div class="text-center">
+                  <div class="text-xs text-slate-400">คำแปลภาษาไทย</div>
+                  <div id="fcMeaning" class="text-xl font-bold text-amber-300 mt-0.5">เตรียมตัว / เตรียมการ</div>
+                </div>
+                <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700">
+                  <div class="text-[10px] text-slate-400 font-semibold mb-1 flex items-center justify-between">
+                    <span>ตัวอย่างประโยคบริบทจริง:</span>
+                    <button type="button" onclick="event.stopPropagation(); speakCurrentExample();" class="text-indigo-400 hover:text-indigo-300">🔊</button>
+                  </div>
+                  <p id="fcExample" class="text-xs text-slate-200 italic leading-relaxed">
+                    "I prepare my breakfast before leaving for work."
+                  </p>
+                </div>
+              </div>
+
+              <div class="text-center text-[10px] text-slate-400 font-medium">
+                แตะเพื่อพลิกกลับหน้าคำศัพท์ ↺
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Flashcard Action Buttons (Next / Prev / Status) -->
+        <div class="grid grid-cols-4 gap-2 pt-1">
+          <button onclick="prevVocabCard()" class="py-2.5 rounded-2xl bg-white border border-slate-200 text-slate-700 font-bold text-xs shadow-sm hover:bg-slate-50 active:scale-95 flex items-center justify-center">
+            ◀ ก่อนหน้า
+          </button>
+          
+          <button onclick="markVocabStatus('Practiced')" class="py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-sm active:scale-95 flex items-center justify-center space-x-1">
+            <span>⚡ ซ้อมจำ</span>
+          </button>
+
+          <button onclick="markVocabStatus('Mastered')" class="py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm active:scale-95 flex items-center justify-center space-x-1">
+            <span>✅ จำได้แล้ว</span>
+          </button>
+
+          <button onclick="nextVocabCard()" class="py-2.5 rounded-2xl bg-white border border-slate-200 text-slate-700 font-bold text-xs shadow-sm hover:bg-slate-50 active:scale-95 flex items-center justify-center">
+            ถัดไป ▶
+          </button>
+        </div>
+
+        <!-- Quick Jump Grid Drawer / List toggle -->
+        <div class="bg-white rounded-3xl p-3.5 shadow-sm border border-slate-100">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-slate-700">📑 รายการคำศัพท์ทั้งหมด</span>
+            <span class="text-[10px] text-slate-400" id="vocabListCounter">100 รายการ</span>
+          </div>
+          <div id="vocabMiniListContainer" class="max-h-56 overflow-y-auto space-y-1.5 pr-1 text-xs">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+      </div>
+      <!-- END SUB-VIEW B: VOCAB FLASHCARDS -->
 
     <!-- ================== VIEW 4: HISTORY VIEW (FINANCE) ================== -->
     <div id="viewHistory" class="hidden space-y-3">
@@ -851,6 +1007,1143 @@
         showToast('ข้อผิดพลาด: ' + err.message, true);
       }
     }
+  
+    // ==========================================
+    // VOCABULARY VAULT & FLASHCARD ENGINE
+    // ==========================================
+    let masterVocabList = [
+  {
+    "id": 1,
+    "word": "prepare",
+    "pos": "v.",
+    "meaning": "เตรียมตัว / เตรียมการ",
+    "example": "I prepare my breakfast before leaving for work.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 2,
+    "word": "relax",
+    "pos": "v.",
+    "meaning": "พักผ่อน",
+    "example": "I like to relax in my room after work.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 3,
+    "word": "commute",
+    "pos": "v. / n.",
+    "meaning": "เดินทางไป-กลับทำงาน",
+    "example": "I commute to work by motorcycle every morning.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 4,
+    "word": "expensive",
+    "pos": "adj.",
+    "meaning": "ราคาแพง",
+    "example": "This imported spare part is too expensive.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 5,
+    "word": "affordable",
+    "pos": "adj.",
+    "meaning": "ราคาจับต้องได้ / ย่อมเยา",
+    "example": "We need an affordable battery solution for the project.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 6,
+    "word": "habit",
+    "pos": "n.",
+    "meaning": "นิสัย / กิจวัตร",
+    "example": "Practicing English every day is a great habit.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 7,
+    "word": "routine",
+    "pos": "n.",
+    "meaning": "กิจวัตรประจำวัน",
+    "example": "My morning routine starts at 6:30 a.m.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 8,
+    "word": "decide",
+    "pos": "v.",
+    "meaning": "ตัดสินใจ",
+    "example": "I decided to build a hybrid motorcycle.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 9,
+    "word": "plan",
+    "pos": "v. / n.",
+    "meaning": "วางแผน / แผนการ",
+    "example": "Tonight, I plan to review my monthly expenses.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 10,
+    "word": "improve",
+    "pos": "v.",
+    "meaning": "ปรับปรุง / พัฒนาขึ้น",
+    "example": "My English skills are improving day by day.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 11,
+    "word": "focus",
+    "pos": "v. / n.",
+    "meaning": "มีสมาธิ / โฟกัส",
+    "example": "I need to focus on my main goal.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 12,
+    "word": "healthy",
+    "pos": "adj.",
+    "meaning": "สุขภาพดี",
+    "example": "Eating good food keeps me healthy and energetic.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 13,
+    "word": "tired",
+    "pos": "adj.",
+    "meaning": "เหนื่อย",
+    "example": "I felt tired after working all day in the shop.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 14,
+    "word": "comfortable",
+    "pos": "adj.",
+    "meaning": "สะดวกสบาย",
+    "example": "The new seat on my PG-1 is very comfortable.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 15,
+    "word": "convenient",
+    "pos": "adj.",
+    "meaning": "สะดวก",
+    "example": "Riding a motorbike is convenient in traffic.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 16,
+    "word": "necessary",
+    "pos": "adj.",
+    "meaning": "จำเป็น",
+    "example": "Good safety gear is necessary for riding.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 17,
+    "word": "remember",
+    "pos": "v.",
+    "meaning": "จำได้",
+    "example": "Please remember to turn off the lights.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 18,
+    "word": "forget",
+    "pos": "v.",
+    "meaning": "ลืม",
+    "example": "Don't forget to charge your phone tonight.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 19,
+    "word": "borrow",
+    "pos": "v.",
+    "meaning": "ขอยืม",
+    "example": "Can I borrow your digital caliper for an hour?",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 20,
+    "word": "lend",
+    "pos": "v.",
+    "meaning": "ให้ยืม",
+    "example": "My coworker lent me a wrench set.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 21,
+    "word": "choose",
+    "pos": "v.",
+    "meaning": "เลือก",
+    "example": "I have to choose the right battery chemistry.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 22,
+    "word": "prefer",
+    "pos": "v.",
+    "meaning": "ชอบมากกว่า",
+    "example": "I prefer living in the countryside with fresh air.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 23,
+    "word": "explain",
+    "pos": "v.",
+    "meaning": "อธิบาย",
+    "example": "Can you explain this circuit diagram to me?",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 24,
+    "word": "understand",
+    "pos": "v.",
+    "meaning": "เข้าใจ",
+    "example": "I understand the basic principles of electric motors.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 25,
+    "word": "confident",
+    "pos": "adj.",
+    "meaning": "มั่นใจ",
+    "example": "I feel more confident speaking English now.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 26,
+    "word": "patient",
+    "pos": "adj.",
+    "meaning": "อดทน",
+    "example": "Building a custom bike requires being patient.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 27,
+    "word": "schedule",
+    "pos": "n. / v.",
+    "meaning": "ตารางเวลา",
+    "example": "My work schedule is very flexible this week.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 28,
+    "word": "destination",
+    "pos": "n.",
+    "meaning": "จุดหมายปลายทาง",
+    "example": "My dream destination is my sovereign farm in Ubon.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 29,
+    "word": "environment",
+    "pos": "n.",
+    "meaning": "สภาพแวดล้อม",
+    "example": "A quiet environment helps me think clearly.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 30,
+    "word": "freedom",
+    "pos": "n.",
+    "meaning": "อิสรภาพ",
+    "example": "Financial freedom is my long-term goal.",
+    "category": "Daily Life",
+    "status": "Not Started"
+  },
+  {
+    "id": 31,
+    "word": "simulate",
+    "pos": "v.",
+    "meaning": "จำลองการทำงาน",
+    "example": "I built a 3D model to simulate the motor bracket.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 32,
+    "word": "fitment",
+    "pos": "n.",
+    "meaning": "ความพอดี / การสวมใส่ชิ้นงาน",
+    "example": "The sprocket fitment on the rear wheel is perfect.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 33,
+    "word": "bracket",
+    "pos": "n.",
+    "meaning": "แป้นยึด / ขาจับ",
+    "example": "I designed a custom bracket for the MY1020 motor.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 34,
+    "word": "downsize",
+    "pos": "v.",
+    "meaning": "ลดขนาดลง",
+    "example": "We downsized the battery pack to reduce vehicle weight.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 35,
+    "word": "capacity",
+    "pos": "n.",
+    "meaning": "ความจุ",
+    "example": "This LFP battery cell has a capacity of 15Ah.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 36,
+    "word": "voltage",
+    "pos": "n.",
+    "meaning": "แรงดันไฟฟ้า",
+    "example": "Always measure the pack voltage before connecting.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 37,
+    "word": "current",
+    "pos": "n.",
+    "meaning": "กระแสไฟฟ้า",
+    "example": "The motor draws high current during acceleration.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 38,
+    "word": "wiring",
+    "pos": "n.",
+    "meaning": "ระบบสายไฟ",
+    "example": "Clean wiring prevents short circuits in the system.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 39,
+    "word": "harness",
+    "pos": "n.",
+    "meaning": "ชุดสายไฟสำเร็จรูป",
+    "example": "I built a custom wire harness for the controller.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 40,
+    "word": "sensor",
+    "pos": "n.",
+    "meaning": "ตัวตรวจจับ / เซนเซอร์",
+    "example": "The throttle sensor sends a voltage signal to the VCU.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 41,
+    "word": "controller",
+    "pos": "n.",
+    "meaning": "กล่องควบคุม",
+    "example": "The BLDC controller manages the power to the motor.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 42,
+    "word": "firmware",
+    "pos": "n.",
+    "meaning": "เฟิร์มแวร์ควบคุม",
+    "example": "I updated the VCU firmware to fix the CAN bus issue.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 43,
+    "word": "test-fit",
+    "pos": "v.",
+    "meaning": "ลองประกอบดูความพอดี",
+    "example": "Let's test-fit the spacer before final welding.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 44,
+    "word": "sprocket",
+    "pos": "n.",
+    "meaning": "สเตอร์รถ",
+    "example": "The dual sprocket setup connects both engine and motor.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 45,
+    "word": "torque",
+    "pos": "n.",
+    "meaning": "แรงบิด",
+    "example": "Electric motors deliver maximum torque instantly.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 46,
+    "word": "efficiency",
+    "pos": "n.",
+    "meaning": "ประสิทธิภาพ",
+    "example": "The hybrid mode increases overall fuel efficiency.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 47,
+    "word": "dimension",
+    "pos": "n.",
+    "meaning": "มิติ / ขนาดกว้างยาวสูง",
+    "example": "Check the exact dimensions from the CAD file.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 48,
+    "word": "measure",
+    "pos": "v.",
+    "meaning": "วัดขนาด / วัดค่า",
+    "example": "Measure the swingarm clearance carefully.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 49,
+    "word": "tolerance",
+    "pos": "n.",
+    "meaning": "พิกัดความเผื่อ",
+    "example": "CNC machining has a tight tolerance of 0.05 mm.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 50,
+    "word": "assembly",
+    "pos": "n.",
+    "meaning": "การประกอบชิ้นงาน",
+    "example": "The final assembly of the PG-1 will take two days.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 51,
+    "word": "component",
+    "pos": "n.",
+    "meaning": "ชิ้นส่วน / องค์ประกอบ",
+    "example": "Every electrical component must be waterproof.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 52,
+    "word": "inspect",
+    "pos": "v.",
+    "meaning": "ตรวจสอบความเรียบร้อย",
+    "example": "Always inspect the weld seams before painting.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 53,
+    "word": "calibrate",
+    "pos": "v.",
+    "meaning": "ปรับเทียบค่ามาตรฐาน",
+    "example": "We need to calibrate the current sensor accurately.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 54,
+    "word": "charge",
+    "pos": "v. / n.",
+    "meaning": "ชาร์จไฟ / ประจุไฟ",
+    "example": "It takes three hours to fully charge the battery.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 55,
+    "word": "discharge",
+    "pos": "v. / n.",
+    "meaning": "คายประจุไฟ",
+    "example": "Do not discharge the battery cells below 2.5 volts.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 56,
+    "word": "overheat",
+    "pos": "v.",
+    "meaning": "ร้อนเกินไป",
+    "example": "The motor might overheat if run at peak load too long.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 57,
+    "word": "cooling",
+    "pos": "n.",
+    "meaning": "การระบายความร้อน",
+    "example": "Good air cooling is critical for the battery casing.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 58,
+    "word": "durable",
+    "pos": "adj.",
+    "meaning": "ทนทาน",
+    "example": "Stainless steel bolts are durable against rust.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 59,
+    "word": "robust",
+    "pos": "adj.",
+    "meaning": "แข็งแกร่ง / เชื่อถือได้สูง",
+    "example": "We need a robust mounting design for off-road riding.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 60,
+    "word": "prototype",
+    "pos": "n.",
+    "meaning": "ตัวต้นแบบ",
+    "example": "The PG-1 hybrid is our first working prototype.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 61,
+    "word": "modify",
+    "pos": "v.",
+    "meaning": "ดัดแปลง / ปรับแต่ง",
+    "example": "I modified the rear hub to fit two sprockets.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 62,
+    "word": "troubleshoot",
+    "pos": "v.",
+    "meaning": "หาสาเหตุและแก้ปัญหา",
+    "example": "I spent the afternoon troubleshooting the communication error.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 63,
+    "word": "fault",
+    "pos": "n.",
+    "meaning": "ข้อผิดพลาด / จุดบกพร่อง",
+    "example": "The system detected a ground fault and shut down.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 64,
+    "word": "maintenance",
+    "pos": "n.",
+    "meaning": "การบำรุงรักษา",
+    "example": "Electric drivetrains require very low maintenance.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 65,
+    "word": "power",
+    "pos": "n.",
+    "meaning": "กำลังไฟฟ้า",
+    "example": "The 3000W motor provides plenty of power.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 66,
+    "word": "connect",
+    "pos": "v.",
+    "meaning": "เชื่อมต่อ",
+    "example": "Connect the positive terminal to the main contactor.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 67,
+    "word": "disconnect",
+    "pos": "v.",
+    "meaning": "ปลดการเชื่อมต่อ",
+    "example": "Always disconnect the master switch before servicing.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 68,
+    "word": "ground",
+    "pos": "n. / v.",
+    "meaning": "กราวด์ / การต่อลงดิน",
+    "example": "Make sure the metal chassis is properly grounded.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 69,
+    "word": "replace",
+    "pos": "v.",
+    "meaning": "เปลี่ยนแทนที่",
+    "example": "I replaced the blown fuse with a new one.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 70,
+    "word": "specification",
+    "pos": "n.",
+    "meaning": "ข้อมูลจำเพาะ / สเปก",
+    "example": "Check the motor specifications on the datasheet.",
+    "category": "EV & Engineering",
+    "status": "Not Started"
+  },
+  {
+    "id": 71,
+    "word": "urgent",
+    "pos": "adj.",
+    "meaning": "เร่งด่วน",
+    "example": "I received an urgent message from the project manager.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 72,
+    "word": "deadline",
+    "pos": "n.",
+    "meaning": "กำหนดส่งงาน",
+    "example": "We must finish the testing before the Friday deadline.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 73,
+    "word": "supplier",
+    "pos": "n.",
+    "meaning": "ผู้จัดหา / ร้านค้าส่ง",
+    "example": "We contacted a local supplier for battery cells.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 74,
+    "word": "quotation",
+    "pos": "n.",
+    "meaning": "ใบเสนอราคา",
+    "example": "Please request a quotation for the laser cutting service.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 75,
+    "word": "cost",
+    "pos": "n. / v.",
+    "meaning": "ต้นทุน / ค่าใช้จ่าย",
+    "example": "We need to keep the total material cost under 30,000 baht.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 76,
+    "word": "budget",
+    "pos": "n.",
+    "meaning": "งบประมาณ",
+    "example": "Our monthly development budget is well managed.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 77,
+    "word": "approve",
+    "pos": "v.",
+    "meaning": "อนุมัติ / เห็นชอบ",
+    "example": "The lead engineer approved our concept design.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 78,
+    "word": "discuss",
+    "pos": "v.",
+    "meaning": "ปรึกษาหารือ / พูดคุย",
+    "example": "We will discuss the testing results in tomorrow's meeting.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 79,
+    "word": "report",
+    "pos": "v. / n.",
+    "meaning": "รายงาน",
+    "example": "I need to report the testing progress to my team.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 80,
+    "word": "update",
+    "pos": "v. / n.",
+    "meaning": "ข้อมูลล่าสุด / อัปเดต",
+    "example": "Please update the task status in the project tracker.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 81,
+    "word": "deliver",
+    "pos": "v.",
+    "meaning": "จัดส่ง / ส่งมอบงาน",
+    "example": "The supplier promised to deliver the metal plates tomorrow.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 82,
+    "word": "delay",
+    "pos": "n. / v.",
+    "meaning": "ความล่าช้า / ล่าช้า",
+    "example": "The shipment was delayed due to customs inspection.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 83,
+    "word": "solution",
+    "pos": "n.",
+    "meaning": "ทางออก / วิธีแก้ปัญหา",
+    "example": "We found an innovative solution for the chain tensioner.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 84,
+    "word": "prioritize",
+    "pos": "v.",
+    "meaning": "จัดลำดับความสำคัญ",
+    "example": "Prioritize electrical safety over pure speed.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 85,
+    "word": "collaborate",
+    "pos": "v.",
+    "meaning": "ร่วมมือกันทำงาน",
+    "example": "We collaborate closely with the manufacturing team.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 86,
+    "word": "feedback",
+    "pos": "n.",
+    "meaning": "ผลตอบรับ / คำติชม",
+    "example": "User feedback helps us improve the user interface.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 87,
+    "word": "confirm",
+    "pos": "v.",
+    "meaning": "ยืนยัน",
+    "example": "Please confirm the delivery date via email.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 88,
+    "word": "cancel",
+    "pos": "v.",
+    "meaning": "ยกเลิก",
+    "example": "We had to cancel the outdoor test because of heavy rain.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 89,
+    "word": "inventory",
+    "pos": "n.",
+    "meaning": "สินค้าคงคลัง / อะไหล่ในสต็อก",
+    "example": "Check the inventory for M8 hex screws.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 90,
+    "word": "purchase",
+    "pos": "v. / n.",
+    "meaning": "สั่งซื้อ",
+    "example": "I purchased a high-quality BMS module online.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 91,
+    "word": "quality",
+    "pos": "n.",
+    "meaning": "คุณภาพ",
+    "example": "High build quality ensures long-term reliability.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 92,
+    "word": "reliability",
+    "pos": "n.",
+    "meaning": "ความน่าเชื่อถือ / ไว้วางใจได้",
+    "example": "Reliability is our number one priority for daily commuting.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 93,
+    "word": "standard",
+    "pos": "n.",
+    "meaning": "มาตรฐาน",
+    "example": "Our battery pack meets industrial safety standards.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 94,
+    "word": "requirement",
+    "pos": "n.",
+    "meaning": "ข้อกำหนด / ความต้องการ",
+    "example": "Meeting the waterproof requirement is essential.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 95,
+    "word": "perform",
+    "pos": "v.",
+    "meaning": "ทำงาน / แสดงสมรรถนะ",
+    "example": "The prototype performs better than expected on hills.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 96,
+    "word": "result",
+    "pos": "n.",
+    "meaning": "ผลลัพธ์",
+    "example": "The test results showed zero voltage drop under load.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 97,
+    "word": "recommend",
+    "pos": "v.",
+    "meaning": "แนะนำ",
+    "example": "I recommend using threadlocker on all motor mount bolts.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 98,
+    "word": "responsibility",
+    "pos": "n.",
+    "meaning": "ความรับผิดชอบ",
+    "example": "Safety verification is my primary responsibility.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 99,
+    "word": "achieve",
+    "pos": "v.",
+    "meaning": "บรรลุเป้าหมาย",
+    "example": "We achieved our milestone ahead of schedule.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  },
+  {
+    "id": 100,
+    "word": "milestone",
+    "pos": "n.",
+    "meaning": "ก้าวสำคัญ / หมุดหมายหลัก",
+    "example": "Building the first hybrid prototype is a huge milestone.",
+    "category": "Workplace & Business",
+    "status": "Not Started"
+  }
+];
+    let filteredVocabList = [...masterVocabList];
+    let currentVocabIndex = 0;
+    let isCardFlipped = false;
+    let currentVocabCategory = 'all';
+
+    function switchEngSubTab(sub) {
+      const btnSentences = document.getElementById('btnSubSentences');
+      const btnVocab = document.getElementById('btnSubVocab');
+      const viewSentences = document.getElementById('engSubViewSentences');
+      const viewVocab = document.getElementById('engSubViewVocab');
+
+      if (sub === 'sentences') {
+        btnSentences.className = 'flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 bg-white text-indigo-700 shadow-sm flex items-center justify-center space-x-1';
+        btnVocab.className = 'flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 text-slate-600 flex items-center justify-center space-x-1';
+        viewSentences.classList.remove('hidden');
+        viewVocab.classList.add('hidden');
+      } else {
+        btnVocab.className = 'flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 bg-white text-indigo-700 shadow-sm flex items-center justify-center space-x-1';
+        btnSentences.className = 'flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 text-slate-600 flex items-center justify-center space-x-1';
+        viewSentences.classList.add('hidden');
+        viewVocab.classList.remove('hidden');
+        loadVocabFromBackend();
+        renderCurrentVocabCard();
+        renderVocabMiniList();
+      }
+    }
+
+    async function loadVocabFromBackend() {
+      try {
+        // Load cached status from localStorage first for instant offline/speed
+        const cached = localStorage.getItem('LIFE_OS_VOCAB_STATUS');
+        if (cached) {
+          const statusMap = JSON.parse(cached);
+          masterVocabList.forEach(v => {
+            if (statusMap[v.id]) v.status = statusMap[v.id];
+          });
+          filterVocabCategory(currentVocabCategory);
+        }
+
+        const res = await callApi('getVocabData');
+        if (res && res.success && res.vocabList && res.vocabList.length > 0) {
+          masterVocabList = res.vocabList;
+          // save to localStorage
+          const statusMap = {};
+          masterVocabList.forEach(v => { statusMap[v.id] = v.status; });
+          localStorage.setItem('LIFE_OS_VOCAB_STATUS', JSON.stringify(statusMap));
+          filterVocabCategory(currentVocabCategory);
+        }
+      } catch (e) {
+        console.log('Using local vocab master list:', e);
+      }
+    }
+
+    function filterVocabCategory(cat) {
+      currentVocabCategory = cat;
+      const catBtns = ['all', 'daily', 'ev', 'work'];
+      catBtns.forEach(b => {
+        const el = document.getElementById('vcat_' + b);
+        if (el) {
+          el.className = 'vcat-btn px-2.5 py-1 rounded-xl bg-slate-100 text-slate-600 font-medium active:scale-95 transition';
+        }
+      });
+
+      let activeBtnId = 'vcat_all';
+      if (cat === 'Daily Life') activeBtnId = 'vcat_daily';
+      else if (cat === 'EV & Engineering') activeBtnId = 'vcat_ev';
+      else if (cat === 'Workplace & Business') activeBtnId = 'vcat_work';
+
+      const activeBtn = document.getElementById(activeBtnId);
+      if (activeBtn) {
+        activeBtn.className = 'vcat-btn px-2.5 py-1 rounded-xl bg-indigo-600 text-white font-semibold active:scale-95 transition';
+      }
+
+      if (cat === 'all') {
+        filteredVocabList = [...masterVocabList];
+      } else {
+        filteredVocabList = masterVocabList.filter(v => v.category === cat);
+      }
+
+      currentVocabIndex = 0;
+      isCardFlipped = false;
+      resetCardFlipUI();
+      renderCurrentVocabCard();
+      renderVocabMiniList();
+      updateVocabStats();
+    }
+
+    function updateVocabStats() {
+      const masteredCount = masterVocabList.filter(v => v.status === 'Mastered').length;
+      const practicedCount = masterVocabList.filter(v => v.status === 'Practiced').length;
+      document.getElementById('vocabMasteredStats').innerText = `${masteredCount} / 100 คำ`;
+      const badge = document.getElementById('badgeVocabCount');
+      if (badge) badge.innerText = `${masteredCount} ผ่าน`;
+    }
+
+    function renderCurrentVocabCard() {
+      if (!filteredVocabList || filteredVocabList.length === 0) return;
+      const v = filteredVocabList[currentVocabIndex];
+
+      document.getElementById('fcNumber').innerText = `#${v.id} / 100`;
+      document.getElementById('fcNumberBack').innerText = `#${v.id} / 100`;
+      document.getElementById('fcWord').innerText = v.word;
+      document.getElementById('fcPOS').innerText = `[ ${v.pos} ]`;
+      document.getElementById('fcCategoryBadge').innerText = v.category;
+      document.getElementById('fcMeaning').innerText = v.meaning;
+      document.getElementById('fcExample').innerText = `"${v.example}"`;
+
+      const statusBadge = document.getElementById('fcStatusBadge');
+      statusBadge.innerText = v.status;
+      if (v.status === 'Mastered') {
+        statusBadge.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500 text-white';
+      } else if (v.status === 'Practiced') {
+        statusBadge.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-400 text-slate-900';
+      } else {
+        statusBadge.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300';
+      }
+    }
+
+    function flipVocabCard() {
+      isCardFlipped = !isCardFlipped;
+      const cardInner = document.getElementById('flashcardInner');
+      if (isCardFlipped) {
+        cardInner.classList.add('rotate-y-180');
+      } else {
+        cardInner.classList.remove('rotate-y-180');
+      }
+    }
+
+    function resetCardFlipUI() {
+      isCardFlipped = false;
+      const cardInner = document.getElementById('flashcardInner');
+      if (cardInner) cardInner.classList.remove('rotate-y-180');
+    }
+
+    function nextVocabCard() {
+      if (filteredVocabList.length === 0) return;
+      currentVocabIndex = (currentVocabIndex + 1) % filteredVocabList.length;
+      resetCardFlipUI();
+      renderCurrentVocabCard();
+    }
+
+    function prevVocabCard() {
+      if (filteredVocabList.length === 0) return;
+      currentVocabIndex = (currentVocabIndex - 1 + filteredVocabList.length) % filteredVocabList.length;
+      resetCardFlipUI();
+      renderCurrentVocabCard();
+    }
+
+    function speakCurrentWord() {
+      const v = filteredVocabList[currentVocabIndex];
+      if (v && v.word) speakSentence(v.word);
+    }
+
+    function speakCurrentExample() {
+      const v = filteredVocabList[currentVocabIndex];
+      if (v && v.example) speakSentence(v.example);
+    }
+
+    async function markVocabStatus(status) {
+      const v = filteredVocabList[currentVocabIndex];
+      if (!v) return;
+
+      v.status = status;
+      // update master list
+      const mItem = masterVocabList.find(x => x.id === v.id);
+      if (mItem) mItem.status = status;
+
+      // save to local storage
+      const cached = localStorage.getItem('LIFE_OS_VOCAB_STATUS');
+      const statusMap = cached ? JSON.parse(cached) : {};
+      statusMap[v.id] = status;
+      localStorage.setItem('LIFE_OS_VOCAB_STATUS', JSON.stringify(statusMap));
+
+      renderCurrentVocabCard();
+      renderVocabMiniList();
+      updateVocabStats();
+
+      showToast(`บันทึกคำว่า "${v.word}" เป็น ${status} แล้ว ✨`);
+
+      // Sync to Apps Script / Google Drive
+      try {
+        callApi('updateVocabStatus', { id: v.id, status: status });
+      } catch (err) {
+        console.log('Background sync error:', err);
+      }
+
+      // auto next card after 400ms
+      setTimeout(() => {
+        nextVocabCard();
+      }, 400);
+    }
+
+    function renderVocabMiniList() {
+      const container = document.getElementById('vocabMiniListContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      document.getElementById('vocabListCounter').innerText = `${filteredVocabList.length} รายการ`;
+
+      filteredVocabList.forEach((v, idx) => {
+        const row = document.createElement('div');
+        row.className = `p-2 rounded-xl border flex items-center justify-between cursor-pointer transition ${
+          idx === currentVocabIndex ? 'bg-indigo-50 border-indigo-400 font-bold' : 'bg-slate-50 border-slate-100 hover:bg-slate-100'
+        }`;
+        row.onclick = () => {
+          currentVocabIndex = idx;
+          resetCardFlipUI();
+          renderCurrentVocabCard();
+        };
+
+        let statusBadge = '<span class="text-[9px] text-slate-400">ยังไม่เริ่ม</span>';
+        if (v.status === 'Mastered') {
+          statusBadge = '<span class="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">✅ แม่นแล้ว</span>';
+        } else if (v.status === 'Practiced') {
+          statusBadge = '<span class="text-[9px] font-bold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">⚡ ซ้อมอยู่</span>';
+        }
+
+        row.innerHTML = `
+          <div class="flex items-center space-x-2 truncate">
+            <span class="text-[10px] text-slate-400 font-mono w-5">#${v.id}</span>
+            <span class="text-xs text-slate-800 font-bold">${v.word}</span>
+            <span class="text-[10px] text-slate-500 truncate">- ${v.meaning}</span>
+          </div>
+          <div class="flex items-center space-x-1 flex-shrink-0">
+            ${statusBadge}
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
   </script>
 </body>
 </html>

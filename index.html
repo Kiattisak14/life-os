@@ -74,8 +74,22 @@
   <!-- Main Content Container -->
   <main class="max-w-md w-full mx-auto px-4 pt-3.5 flex-1">
 
-    <!-- ================== VIEW 1: RECORD VIEW (FINANCE) ================== -->
-    <div id="viewRecord" class="space-y-3.5">
+    <!-- ================== RECORD TRANSACTION BOTTOM SHEET / MODAL ================== -->
+    <div id="recordModal" class="fixed inset-0 z-50 hidden flex items-end sm:items-center justify-center bg-slate-900/60 backdrop-blur-xs p-0 sm:p-4 transition-opacity duration-300" onclick="if(event.target===this) closeRecordModal()">
+      <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[92vh] overflow-y-auto p-4 sm:p-5 space-y-3.5 shadow-2xl relative" onclick="event.stopPropagation()">
+        
+        <!-- Modal Drag Handle & Header -->
+        <div class="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-1 sm:hidden"></div>
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <div class="flex items-center space-x-2">
+            <span class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-sm font-bold">✍️</span>
+            <div>
+              <h3 class="text-sm font-bold text-slate-800">จดบันทึกรายการเงิน</h3>
+              <p class="text-[10px] text-slate-400">บันทึกรายจ่าย / รายรับลง Google Sheet</p>
+            </div>
+          </div>
+          <button type="button" onclick="closeRecordModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold flex items-center justify-center text-sm active:scale-90 transition">✕</button>
+        </div>
       
       <!-- Type Switcher (รายจ่าย / รายรับ) -->
       <div class="bg-slate-200 p-1 rounded-2xl flex shadow-inner">
@@ -223,10 +237,28 @@
         class="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md shadow-indigo-200 active:scale-98 transition flex items-center justify-center space-x-2">
         <span>💾 บันทึกรายการเงิน</span>
       </button>
+      </div>
     </div>
 
-    <!-- ================== VIEW 2: DASHBOARD VIEW (FINANCE) ================== -->
-    <div id="viewDashboard" class="hidden space-y-3.5">
+    <!-- ================== VIEW 1: DASHBOARD VIEW (FINANCE - DEFAULT VIEW) ================== -->
+    <div id="viewDashboard" class="space-y-3.5">
+      
+      <!-- Quick Record Trigger Card on Dashboard -->
+      <button onclick="openRecordModal()" 
+        class="w-full bg-white hover:bg-indigo-50/50 border border-slate-200/80 hover:border-indigo-300 rounded-2xl p-3 shadow-xs flex items-center justify-between text-left active:scale-98 transition group">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-xl bg-indigo-50 group-hover:bg-indigo-600 group-hover:text-white text-indigo-600 flex items-center justify-center text-lg font-bold transition">
+            ✍️
+          </div>
+          <div>
+            <div class="text-xs font-bold text-slate-800">แตะเพื่อจดบันทึกรายการเงิน</div>
+            <div class="text-[10px] text-slate-400">กรอกตัวเลขด่วน · บันทึกถังงบ · แนบสลิป</div>
+          </div>
+        </div>
+        <span class="text-xs font-bold bg-indigo-50 text-indigo-700 group-hover:bg-indigo-600 group-hover:text-white px-2.5 py-1.5 rounded-xl transition flex items-center space-x-1">
+          <span>+ จดเงิน</span>
+        </span>
+      </button>
       
       <!-- ================== 1. NET WORTH SUMMARY CARDS ================== -->
       <div class="bg-gradient-to-br from-indigo-700 via-indigo-800 to-slate-900 text-white rounded-3xl p-5 shadow-lg space-y-3.5">
@@ -666,35 +698,38 @@
     </div>
   </div>
 
-  <!-- Bottom Navigation Bar (4 Tabs) -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 py-1.5 px-3 z-40">
-    <div class="max-w-md mx-auto grid grid-cols-4 items-center text-center">
-      
-      <!-- Tab 1: Record -->
-      <button onclick="switchTab('record')" id="tabBtnRecord" class="flex flex-col items-center text-indigo-600 font-semibold text-[11px] py-1 transition">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <span>บันทึกเงิน</span>
-      </button>
+  <!-- Floating Action Button (FAB) for Quick Record -->
+  <div id="fabContainer" class="fixed bottom-20 right-4 sm:right-6 z-40">
+    <button onclick="openRecordModal()" 
+      class="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-bold text-xs py-3.5 px-4 rounded-full shadow-lg shadow-indigo-300/60 active:scale-95 transition-all flex items-center space-x-2 border border-white/20">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
+      </svg>
+      <span class="tracking-wide">จดบันทึก</span>
+    </button>
+  </div>
 
-      <!-- Tab 2: Dashboard -->
-      <button onclick="switchTab('dashboard')" id="tabBtnDashboard" class="flex flex-col items-center text-slate-400 hover:text-slate-600 font-medium text-[11px] py-1 transition">
+  <!-- Bottom Navigation Bar (3 Tabs: การเงิน / ภาษาอังกฤษ / ประวัติ) -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 py-1.5 px-4 z-40">
+    <div class="max-w-md mx-auto grid grid-cols-3 items-center text-center">
+      
+      <!-- Tab 1: การเงิน (Finance Dashboard + FAB) -->
+      <button onclick="switchTab('dashboard')" id="tabBtnDashboard" class="flex flex-col items-center text-indigo-600 font-semibold text-[11px] py-1 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <span>การเงิน</span>
       </button>
 
-      <!-- Tab 3: English Learning -->
+      <!-- Tab 2: ภาษาอังกฤษ (English & Vocab) -->
       <button onclick="switchTab('english')" id="tabBtnEnglish" class="flex flex-col items-center text-slate-400 hover:text-slate-600 font-medium text-[11px] py-1 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </svg>
-        <span>ฝึกอังกฤษ</span>
+        <span>ภาษาอังกฤษ</span>
       </button>
 
-      <!-- Tab 4: History -->
+      <!-- Tab 3: ประวัติ (History) -->
       <button onclick="switchTab('history')" id="tabBtnHistory" class="flex flex-col items-center text-slate-400 hover:text-slate-600 font-medium text-[11px] py-1 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -714,7 +749,7 @@
     // State & API URL Config
     const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbyd-HrCzsf-twri99hy6jL8AcASfrGQ1ydZfva0UVTACf2bYu895gRbSi_bd6Ie7lfyGA/exec';
     let API_URL = localStorage.getItem('LIFE_OS_API_URL') || DEFAULT_API_URL;
-    let activeTab = 'record';
+    let activeTab = 'dashboard';
     let currentType = 'expense';
     let currentCategory = 'อาหาร';
     let currentPayment = 'โอนเงิน/QR';
@@ -939,9 +974,25 @@
       }, 2500);
     }
 
+    function openRecordModal() {
+      const modal = document.getElementById('recordModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+          const inp = document.getElementById('inputAmount');
+          if (inp) inp.focus();
+        }, 120);
+      }
+    }
+
+    function closeRecordModal() {
+      const modal = document.getElementById('recordModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
     function switchTab(tab) {
       activeTab = tab;
-      const views = ['Record', 'Dashboard', 'English', 'History'];
+      const views = ['Dashboard', 'English', 'History'];
       views.forEach(v => {
         const el = document.getElementById('view' + v);
         if (el) el.classList.add('hidden');
@@ -954,6 +1005,15 @@
       
       if (activeView) activeView.classList.remove('hidden');
       if (activeBtn) activeBtn.className = 'flex flex-col items-center text-indigo-600 font-semibold text-[11px] py-1 transition';
+
+      const fab = document.getElementById('fabContainer');
+      if (fab) {
+        if (tab === 'dashboard' || tab === 'history') {
+          fab.classList.remove('hidden');
+        } else {
+          fab.classList.add('hidden');
+        }
+      }
 
       if (tab === 'dashboard' || tab === 'history') {
         fetchDashboardData();
@@ -1040,7 +1100,8 @@
           showToast('บันทึกเรียบร้อยแล้ว ✅');
           amountInput.value = '';
           document.getElementById('inputNote').value = '';
-              removeSlip();
+          removeSlip();
+          closeRecordModal();
           fetchDashboardData();
         } else {
           showToast(res.message || 'บันทึกล้มเหลว', true);

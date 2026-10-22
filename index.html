@@ -108,6 +108,42 @@
         </div>
       </div>
 
+      <!-- Mini Live Burn-Down Widget (ถังกินอยู่ & ใช้ชีวิต) -->
+      <div id="miniBurnWidget" class="bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-indigo-500/10 border border-emerald-200/60 rounded-2xl p-3 shadow-xs">
+        <div class="flex items-center justify-between text-xs">
+          <div class="flex items-center space-x-1 font-bold text-slate-700">
+            <span>🍚 ถังกินอยู่เดือนนี้:</span>
+            <span class="text-emerald-600 font-extrabold" id="miniBurnRemaining">฿8,500</span>
+            <span class="text-slate-400 font-normal text-[10px]">/ ฿8,500</span>
+          </div>
+          <span id="miniBurnDailyBadge" class="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">
+            ใช้วันละ ฿<span id="miniBurnDaily">283</span>
+          </span>
+        </div>
+        <div class="w-full bg-slate-200/80 rounded-full h-2 mt-2 overflow-hidden">
+          <div id="miniBurnBar" class="bg-emerald-500 h-2 rounded-full transition-all duration-500" style="width: 100%"></div>
+        </div>
+      </div>
+
+      <!-- Budget Bucket Selector (ถังงบประมาณ) -->
+      <div class="bg-white rounded-3xl p-4 shadow-sm border border-slate-100" id="bucketSelectSection">
+        <div class="flex items-center justify-between mb-2.5">
+          <h3 class="text-xs font-semibold text-slate-500 tracking-wider uppercase">🏷️ หักจากถังงบประมาณ</h3>
+          <span class="text-[10px] text-indigo-600 font-bold" id="selectedBucketLabel">🍚 กินอยู่ & ใช้ชีวิต</span>
+        </div>
+        <div class="grid grid-cols-3 gap-1.5" id="bucketBtnContainer">
+          <button type="button" onclick="setBucket('กินอยู่ & ใช้ชีวิต')" class="btn-bucket py-2 px-1 text-xs rounded-xl border border-indigo-500 bg-indigo-50 text-indigo-700 font-bold active:scale-95 text-center truncate">
+            🍚 กินอยู่
+          </button>
+          <button type="button" onclick="setBucket('รายจ่ายคงที่')" class="btn-bucket py-2 px-1 text-xs rounded-xl border border-slate-200 text-slate-600 font-medium active:scale-95 text-center truncate">
+            🏠 คงที่
+          </button>
+          <button type="button" onclick="setBucket('โปรเจกต์ PG-1 / พิเศษ')" class="btn-bucket py-2 px-1 text-xs rounded-xl border border-slate-200 text-slate-600 font-medium active:scale-95 text-center truncate">
+            ⚙️ PG-1
+          </button>
+        </div>
+      </div>
+
       <!-- Category Selector -->
       <div class="bg-white rounded-3xl p-4 shadow-sm border border-slate-100">
         <h3 class="text-xs font-semibold text-slate-500 mb-2.5 tracking-wider uppercase">เลือกหมวดหมู่</h3>
@@ -139,6 +175,38 @@
             <input type="text" id="inputNote" placeholder="เช่น กาแฟส้ม, ชาบู" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-500 bg-slate-50">
           </div>
         </div>
+
+        <!-- Slip Attachment -->
+        <div class="pt-2 border-t border-slate-100">
+          <label class="block text-xs font-semibold text-slate-500 mb-1.5 flex items-center justify-between">
+            <span>📸 แนบสลิปโอนเงิน / ใบเสร็จ</span>
+            <span class="text-[10px] text-slate-400 font-normal">บันทึกเข้า Drive</span>
+          </label>
+          <input type="file" id="inputSlip" accept="image/*" class="hidden" onchange="handleSlipSelect(event)">
+          
+          <div id="slipUploadButtonContainer">
+            <button type="button" onclick="document.getElementById('inputSlip').click()" 
+              class="w-full py-2.5 px-3 rounded-xl border border-dashed border-slate-300 hover:border-indigo-400 bg-slate-50 hover:bg-indigo-50/40 text-slate-600 text-xs font-medium flex items-center justify-center space-x-1.5 transition active:scale-98">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span>แตะเพื่อเลือกรูปสลิป / ถ่ายรูป</span>
+            </button>
+          </div>
+
+          <!-- Slip Thumbnail Preview -->
+          <div id="slipPreviewContainer" class="hidden flex items-center justify-between p-2 rounded-xl bg-indigo-50/70 border border-indigo-100 mt-1">
+            <div class="flex items-center space-x-2.5 overflow-hidden">
+              <img id="slipThumbnail" src="" class="w-11 h-11 object-cover rounded-lg border border-indigo-200 shadow-xs">
+              <div class="overflow-hidden">
+                <p class="text-[11px] font-bold text-slate-700 truncate max-w-[190px]" id="slipFileName">slip.jpg</p>
+                <p class="text-[9px] text-emerald-600 font-semibold">พร้อมอัปโหลดเข้า Google Drive ☁️</p>
+              </div>
+            </div>
+            <button type="button" onclick="removeSlip()" class="p-1.5 text-rose-500 hover:bg-rose-100 rounded-lg text-xs font-bold transition" title="ลบรูป">✕</button>
+          </div>
+        </div>
       </div>
 
       <!-- Submit Button -->
@@ -151,22 +219,107 @@
     <!-- ================== VIEW 2: DASHBOARD VIEW (FINANCE) ================== -->
     <div id="viewDashboard" class="hidden space-y-3.5">
       
-      <!-- Summary Cards -->
-      <div class="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white rounded-3xl p-5 shadow-lg">
-        <div class="text-xs text-indigo-200 font-light flex justify-between">
-          <span id="dashMonthLabel">สรุปเดือนนี้</span>
-          <span>คงเหลือสุทธิ</span>
+      <!-- ================== 1. NET WORTH SUMMARY CARDS ================== -->
+      <div class="bg-gradient-to-br from-indigo-700 via-indigo-800 to-slate-900 text-white rounded-3xl p-5 shadow-lg space-y-3.5">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-bold tracking-wider uppercase bg-white/15 px-2 py-0.5 rounded-full text-indigo-200">Personal Net Worth</span>
+          <span class="text-xs text-indigo-200 font-light" id="dashMonthLabel">รอบเดือน พ.ย. 2026</span>
         </div>
-        <div class="text-3xl font-extrabold mt-1 tracking-tight" id="dashBalance">฿0.00</div>
-        
-        <div class="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-indigo-500/50">
-          <div>
-            <div class="text-xs text-indigo-200">รายรับรวม 🟢</div>
-            <div class="text-lg font-bold text-emerald-300" id="dashIncome">฿0.00</div>
+
+        <div>
+          <span class="text-xs text-indigo-200 font-light">ความมั่งคั่งสุทธิ (Net Worth) 🌟</span>
+          <div class="text-3xl font-black mt-0.5 tracking-tight text-white" id="dashNetWorth">฿0.00</div>
+          <p class="text-[10px] text-indigo-300 mt-0.5">สินทรัพย์รวม ลบ หนี้สินคงค้าง</p>
+        </div>
+
+        <!-- 3 Sub-Cards for Assets / Liabilities / Receivables -->
+        <div class="grid grid-cols-3 gap-2 pt-3 border-t border-indigo-600/60">
+          <div class="bg-white/10 rounded-2xl p-2.5 text-center backdrop-blur-xs">
+            <div class="text-[10px] text-emerald-300 font-medium">สินทรัพย์รวม 🟢</div>
+            <div class="text-xs font-extrabold text-white mt-0.5" id="dashTotalAssets">฿0</div>
+            <div class="text-[9px] text-indigo-200 mt-0.5">PVD + เงินสด</div>
           </div>
-          <div>
-            <div class="text-xs text-indigo-200">รายจ่ายรวม 🔴</div>
-            <div class="text-lg font-bold text-rose-300" id="dashExpense">฿0.00</div>
+          <div class="bg-white/10 rounded-2xl p-2.5 text-center backdrop-blur-xs">
+            <div class="text-[10px] text-rose-300 font-medium">หนี้สินคงค้าง 🔴</div>
+            <div class="text-xs font-extrabold text-white mt-0.5" id="dashLiabilities">฿19,200</div>
+            <div class="text-[9px] text-indigo-200 mt-0.5">งวดรถ (8 งวด)</div>
+          </div>
+          <div onclick="openReceivableModal()" class="bg-white/10 hover:bg-white/15 active:scale-95 cursor-pointer rounded-2xl p-2.5 text-center backdrop-blur-xs transition">
+            <div class="text-[10px] text-amber-300 font-medium">ลูกหนี้รอคืน 🟡</div>
+            <div class="text-xs font-extrabold text-white mt-0.5" id="dashReceivables">฿3,000</div>
+            <div class="text-[9px] text-amber-200 underline mt-0.5">ดูรายละเอียด 🔍</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================== 2. DYNAMIC BUDGET BURN-DOWN ================== -->
+      <div class="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center space-x-1">
+            <span>⚡ สรุปงบตามถังการเงิน (Burn-Down)</span>
+          </h3>
+          <span class="text-[10px] text-slate-400">รอบเดือนนี้</span>
+        </div>
+
+        <!-- Hero Burn-Down: ถังกินอยู่ & ใช้ชีวิต -->
+        <div class="bg-slate-50 border border-slate-100 rounded-2xl p-3.5 space-y-2">
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="text-xs font-bold text-slate-800 flex items-center space-x-1">
+                <span>🍚 ถังกินอยู่ & ใช้ชีวิต</span>
+                <span class="text-[10px] bg-emerald-100 text-emerald-800 font-semibold px-1.5 py-0.2 rounded-md">งบ 8,500 บ.</span>
+              </div>
+              <div class="text-[11px] text-slate-500 mt-0.5">
+                จ่ายแล้ว: <span class="font-bold text-rose-600" id="dashLivingSpent">฿0</span> · 
+                เหลือ: <span class="font-bold text-emerald-600" id="dashLivingRemaining">฿8,500</span>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full" id="dashLivingDailyBadge">
+                เฉลี่ย ฿<span id="dashLivingDaily">283</span> / วัน
+              </span>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+            <div id="dashLivingBar" class="bg-emerald-500 h-2.5 rounded-full transition-all duration-500" style="width: 100%"></div>
+          </div>
+          <div class="flex justify-between text-[9px] text-slate-400">
+            <span>ใช้ไป <span id="dashLivingPercent">0%</span></span>
+            <span>เหลืออีก <span id="dashDaysLeft">30</span> วัน</span>
+          </div>
+        </div>
+
+        <!-- 2 Sub-Buckets: Fixed & Project -->
+        <div class="grid grid-cols-2 gap-2">
+          <div class="bg-slate-50 border border-slate-100 rounded-2xl p-3">
+            <div class="text-[11px] font-bold text-slate-700">🏠 รายจ่ายคงที่</div>
+            <div class="text-sm font-extrabold text-slate-900 mt-0.5" id="dashFixedSpent">฿0</div>
+            <div class="text-[9px] text-slate-400">งบ ฿7,000 (ห้อง, รถ, เน็ต, AI)</div>
+          </div>
+          <div class="bg-slate-50 border border-slate-100 rounded-2xl p-3">
+            <div class="text-[11px] font-bold text-slate-700">⚙️ โปรเจกต์ PG-1</div>
+            <div class="text-sm font-extrabold text-indigo-600 mt-0.5" id="dashProjectSpent">฿0</div>
+            <div class="text-[9px] text-slate-400">อะไหล่รถ & วิจัยพัฒนา</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cash Flow Summary -->
+      <div class="bg-white rounded-3xl p-4 shadow-sm border border-slate-100">
+        <h3 class="text-xs font-bold text-slate-700 mb-2 flex items-center justify-between uppercase tracking-wider">
+          <span>กระแสเงินสดเดือนนี้</span>
+          <span class="text-[11px] font-semibold text-slate-600" id="dashBalance">คงเหลือ: ฿0.00</span>
+        </h3>
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="bg-emerald-50/70 border border-emerald-100 rounded-xl p-2.5">
+            <span class="text-slate-500 text-[10px]">รายรับรวม</span>
+            <div class="text-base font-bold text-emerald-600" id="dashIncome">฿0.00</div>
+          </div>
+          <div class="bg-rose-50/70 border border-rose-100 rounded-xl p-2.5">
+            <span class="text-slate-500 text-[10px]">รายจ่ายรวม</span>
+            <div class="text-base font-bold text-rose-600" id="dashExpense">฿0.00</div>
           </div>
         </div>
       </div>
@@ -544,6 +697,9 @@
     let currentType = 'expense';
     let currentCategory = 'อาหาร';
     let currentPayment = 'โอนเงิน/QR';
+    let currentBucket = 'กินอยู่ & ใช้ชีวิต';
+    let currentSlipBase64 = '';
+    let currentSlipFileName = '';
 
     const expenseCategories = [
       { name: 'อาหาร', icon: '🍜' },
@@ -660,6 +816,84 @@
 
     function clearAmount() {
       document.getElementById('inputAmount').value = '';
+    }
+
+    
+    // Bucket & Slip Handlers
+    function setBucket(bucket) {
+      currentBucket = bucket;
+      document.getElementById('selectedBucketLabel').innerText = bucket;
+      document.querySelectorAll('.btn-bucket').forEach(btn => {
+        if (btn.innerText.includes(bucket.split(' ')[0]) || btn.innerText.includes(bucket.substring(0, 4))) {
+          btn.className = 'btn-bucket py-2 px-1 text-xs rounded-xl border border-indigo-500 bg-indigo-50 text-indigo-700 font-bold active:scale-95 text-center truncate';
+        } else {
+          btn.className = 'btn-bucket py-2 px-1 text-xs rounded-xl border border-slate-200 text-slate-600 font-medium active:scale-95 text-center truncate';
+        }
+      });
+    }
+
+    function handleSlipSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      currentSlipFileName = file.name;
+      document.getElementById('slipFileName').innerText = file.name;
+
+      // Compress and resize image using canvas for ultra-fast mobile upload
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const maxWidth = 1200;
+          const maxHeight = 1200;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width = Math.round((width * maxHeight) / height);
+              height = maxHeight;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          currentSlipBase64 = canvas.toDataURL('image/jpeg', 0.75);
+          
+          document.getElementById('slipThumbnail').src = currentSlipBase64;
+          document.getElementById('slipUploadButtonContainer').classList.add('hidden');
+          document.getElementById('slipPreviewContainer').classList.remove('hidden');
+          showToast('แนบรูปสลิปเรียบร้อยแล้ว 📸');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeSlip() {
+      currentSlipBase64 = '';
+      currentSlipFileName = '';
+      const input = document.getElementById('inputSlip');
+      if (input) input.value = '';
+      document.getElementById('slipUploadButtonContainer').classList.remove('hidden');
+      document.getElementById('slipPreviewContainer').classList.add('hidden');
+    }
+
+    function openReceivableModal() {
+      document.getElementById('receivableModal').classList.remove('hidden');
+    }
+
+    function closeReceivableModal() {
+      document.getElementById('receivableModal').classList.add('hidden');
     }
 
     function setPayment(method) {
@@ -783,6 +1017,7 @@
           showToast('บันทึกเรียบร้อยแล้ว ✅');
           amountInput.value = '';
           document.getElementById('inputNote').value = '';
+              removeSlip();
           fetchDashboardData();
         } else {
           showToast(res.message || 'บันทึกล้มเหลว', true);
@@ -851,7 +1086,10 @@
               </div>
               <div>
                 <div class="text-xs font-bold text-slate-800">${t.category} ${t.note ? `<span class="font-normal text-slate-400">· ${t.note}</span>` : ''}</div>
-                <div class="text-[10px] text-slate-400">${t.date} ${t.time} · ${t.paymentMethod}</div>
+                <div class="text-[10px] text-slate-400 flex items-center space-x-1.5 flex-wrap">
+                  <span>${t.date} ${t.time} · ${t.paymentMethod}</span>
+                  ${t.bucket ? `<span class="px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 font-medium text-[9px]">${t.bucket}</span>` : ''}
+                </div>
               </div>
             </div>
             <div class="text-right">
@@ -2145,5 +2383,35 @@
     }
 
   </script>
+
+  <!-- ================== MODAL: RECEIVABLES DETAIL ================== -->
+  <div id="receivableModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-5 space-y-3.5 shadow-2xl">
+      <div class="flex items-center justify-between border-b pb-2">
+        <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-1.5">
+          <span>🟡 รายละเอียดลูกหนี้รอติดตาม</span>
+        </h3>
+        <button onclick="closeReceivableModal()" class="text-slate-400 hover:text-slate-600 font-bold p-1">✕</button>
+      </div>
+
+      <div class="bg-amber-50 border border-amber-200/80 rounded-2xl p-3.5 space-y-1.5">
+        <div class="flex justify-between items-center text-xs">
+          <span class="text-slate-600 font-medium">ยอดเงินให้ยืมคงค้าง:</span>
+          <span class="text-base font-extrabold text-amber-700">฿3,000.00</span>
+        </div>
+        <div class="text-[11px] text-amber-900/80">
+          สถานะ: <span class="font-bold text-amber-800">รอติดตามชำระคืนรอบเดือน พ.ย. 2026</span>
+        </div>
+      </div>
+
+      <p class="text-[11px] text-slate-500 leading-relaxed">
+        * ยอดนี้ถูกนับรวมอยู่ในสินทรัพย์รวม (Assets) ของคุณแล้ว เมื่อได้รับคืนแล้ว ให้บันทึกเป็นรายรับเพื่อเปลี่ยนสภาพคล่องเข้ากระเป๋าเงินสด
+      </p>
+
+      <button onclick="closeReceivableModal()" class="w-full py-2.5 text-xs font-bold text-slate-700 rounded-xl bg-slate-100 hover:bg-slate-200 transition">
+        ปิดหน้าต่าง
+      </button>
+    </div>
+  </div>
 </body>
 </html>

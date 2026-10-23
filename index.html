@@ -1148,10 +1148,40 @@
       const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
       const daysLeft = Math.max(1, daysInMonth - now.getDate());
 
+      // 0. คำนวณ projectSpent ทันทีจากรายการที่มีอยู่ (Client-Side Instant Loop Calculation)
+      let calcProjectSpent = 0;
+      let calcFixedSpent = 0;
+      let calcLivingSpent = 0;
+
+      if (data.recentTransactions && Array.isArray(data.recentTransactions)) {
+        data.recentTransactions.forEach(t => {
+          if (t.type === 'expense') {
+            const amt = Number(t.amount) || 0;
+            const b = (t.bucket || '').toString();
+            const n = (t.note || '').toString();
+            const c = (t.category || '').toString();
+
+            const isPG1 = b.includes('PG-1') || b.includes('โปรเจกต์') ||
+                          /PG-1|เสตอร์|โซ่|นอต|อะไหล่/i.test(n) ||
+                          /PG-1|เสตอร์|โซ่|นอต|อะไหล่/i.test(c);
+
+            const isFixed = b.includes('คงที่') || c.includes('ที่พัก/บิล');
+
+            if (isPG1) {
+              calcProjectSpent += amt;
+            } else if (isFixed) {
+              calcFixedSpent += amt;
+            } else {
+              calcLivingSpent += amt;
+            }
+          }
+        });
+      }
+
       // Auto-fallback calculations if backend didn't return them
       if (!data.burnDown) {
         const livingBudget = isOct ? 3000 : 8500;
-        const livingSpent = totalExp;
+        const livingSpent = calcLivingSpent > 0 ? calcLivingSpent : Math.max(0, totalExp - calcProjectSpent);
         const livingRemaining = Math.max(0, livingBudget - livingSpent);
         const dailyAllowance = Math.round(livingRemaining / daysLeft);
         const livingPercent = Math.min(100, Math.round((livingSpent / livingBudget) * 100));
@@ -1164,9 +1194,21 @@
           dailyAllowance: dailyAllowance,
           livingPercent: livingPercent,
           daysLeft: daysLeft,
-          fixedSpent: 0,
-          projectSpent: 0
+          fixedSpent: calcFixedSpent,
+          projectSpent: calcProjectSpent
         };
+      } else {
+        // หาก backend ส่ง projectSpent เป็น 0 หรือยังไม่ได้ deploy ใหม่ ให้ใช้ยอดคำนวณจากรายการทันที
+        if (calcProjectSpent > 0 && (!data.burnDown.projectSpent || data.burnDown.projectSpent < calcProjectSpent)) {
+          // หาก livingSpent ใน ต.ค. เคยรวมยอดอะไหล่ PG-1 เข้าไป ให้หักแยกออกมาให้ถูกต้อง
+          if (isOct && data.burnDown.livingSpent >= calcProjectSpent) {
+            data.burnDown.livingSpent = Math.max(0, data.burnDown.livingSpent - calcProjectSpent);
+            data.burnDown.livingRemaining = Math.max(0, data.burnDown.livingBudget - data.burnDown.livingSpent);
+            data.burnDown.dailyAllowance = Math.round(data.burnDown.livingRemaining / data.burnDown.daysLeft);
+            data.burnDown.livingPercent = Math.min(100, Math.round((data.burnDown.livingSpent / data.burnDown.livingBudget) * 100));
+          }
+          data.burnDown.projectSpent = calcProjectSpent;
+        }
       }
 
       if (!data.netWorth) {
@@ -1258,11 +1300,11 @@
           }
         }
 
-        // Sub Buckets
+        // Sub Buckets (พร้อม fallback จากยอดคำนวณสด)
         const fixedEl = document.getElementById('dashFixedSpent');
-        if (fixedEl) fixedEl.innerText = '฿' + (bd.fixedSpent || 0).toLocaleString('th-TH');
+        if (fixedEl) fixedEl.innerText = '฿' + (bd.fixedSpent || calcFixedSpent || 0).toLocaleString('th-TH');
         const projEl = document.getElementById('dashProjectSpent');
-        if (projEl) projEl.innerText = '฿' + (bd.projectSpent || 0).toLocaleString('th-TH');
+        if (projEl) projEl.innerText = '฿' + (bd.projectSpent || calcProjectSpent || 0).toLocaleString('th-TH');
       }
 
       document.getElementById('dashBalance').innerText = '฿' + (data.balance || 0).toLocaleString('th-TH', { minimumFractionDigits: 2 });
@@ -1309,6 +1351,7 @@
                 <div class="text-[10px] text-slate-400 flex items-center space-x-1.5 flex-wrap">
                   <span>${t.date} ${t.time} · ${t.paymentMethod}</span>
                   ${t.bucket ? `<span class="px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 font-medium text-[9px]">${t.bucket}</span>` : ''}
+                  ${t.slipUrl ? `<a href="${t.slipUrl}" target="_blank" class="px-1.5 py-0.2 rounded bg-indigo-50 text-indigo-600 font-semibold text-[9px] hover:underline flex items-center space-x-0.5"><span>📸 ดูสลิป</span></a>` : ''}
                 </div>
               </div>
             </div>

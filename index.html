@@ -269,8 +269,8 @@
 
         <div>
           <span class="text-xs text-indigo-200 font-light">ความมั่งคั่งสุทธิ (Net Worth) 🌟</span>
-          <div class="text-3xl font-black mt-0.5 tracking-tight text-white" id="dashNetWorth">฿62,220</div>
-          <p class="text-[10px] text-indigo-300 mt-0.5">สินทรัพย์ (฿81,420) ลบ หนี้สิน (฿19,200)</p>
+          <div class="text-3xl font-black mt-0.5 tracking-tight text-white" id="dashNetWorth">฿54,168</div>
+          <p class="text-[10px] text-indigo-300 mt-0.5">สินทรัพย์ (฿88,608) ลบ หนี้สิน (฿34,440)</p>
         </div>
 
         <!-- 4 Sub-Cards for Cash Treasury / PVD / Liabilities / Receivables -->
@@ -292,9 +292,9 @@
           <div class="bg-white/10 rounded-2xl p-2.5 text-left backdrop-blur-xs flex items-center justify-between">
             <div>
               <div class="text-[10px] text-rose-300 font-medium">หนี้งวดรถ 🔴</div>
-              <div class="text-xs font-black text-white mt-0.5" id="dashLiabilities">฿19,200</div>
+              <div class="text-xs font-black text-white mt-0.5" id="dashLiabilities">฿34,440</div>
             </div>
-            <span class="text-[9px] bg-rose-500/30 text-rose-200 px-1.5 py-0.5 rounded font-bold">เหลือ 8 งวด</span>
+            <span id="dashBikeMonths" class="text-[9px] bg-rose-500/30 text-rose-200 px-1.5 py-0.5 rounded font-bold">เหลือ 14 งวด</span>
           </div>
           <div onclick="openReceivableModal()" class="bg-white/10 hover:bg-white/15 active:scale-95 cursor-pointer rounded-2xl p-2.5 text-left backdrop-blur-xs transition flex items-center justify-between">
             <div>
@@ -1214,7 +1214,7 @@
       if (!data.netWorth) {
         const cashTreasury = 50000;
         const pvdAmount = 31420;
-        const bikeDebt = 19200;
+        const bikeDebt = 34440;
         const receivable = 3000;
         const totalAssets = cashTreasury + pvdAmount;
         const netWorth = totalAssets - bikeDebt;
@@ -1225,6 +1225,7 @@
           cashInTreasury: cashTreasury,
           pvdAmount: pvdAmount,
           totalLiabilities: bikeDebt,
+          bikeMonthsLeft: 14,
           receivableAmount: receivable
         };
       }
@@ -1232,13 +1233,24 @@
       // 1. Net Worth Cards
       if (data.netWorth) {
         const nw = data.netWorth;
-        document.getElementById('dashNetWorth').innerText = '฿' + (nw.netWorth || 0).toLocaleString('th-TH');
+        // Safety check if GAS returns old 19200 debt before redeployment
+        if (nw.totalLiabilities === 19200) {
+          nw.totalLiabilities = 34440;
+          if (nw.netWorth) nw.netWorth = nw.netWorth - (34440 - 19200);
+        }
+        if (nw.bikeMonthsLeft === 8 || !nw.bikeMonthsLeft) {
+          nw.bikeMonthsLeft = 14;
+        }
+
+        document.getElementById('dashNetWorth').innerText = '฿' + (nw.netWorth || 54168).toLocaleString('th-TH');
         const cashEl = document.getElementById('dashCashTreasury');
         if (cashEl) cashEl.innerText = '฿' + (nw.cashInTreasury || 50000).toLocaleString('th-TH');
         const pvdEl = document.getElementById('dashPvdAmount');
         if (pvdEl) pvdEl.innerText = '฿' + (nw.pvdAmount || 31420).toLocaleString('th-TH');
-        document.getElementById('dashLiabilities').innerText = '฿' + (nw.totalLiabilities || 19200).toLocaleString('th-TH');
+        document.getElementById('dashLiabilities').innerText = '฿' + (nw.totalLiabilities || 34440).toLocaleString('th-TH');
         document.getElementById('dashReceivables').innerText = '฿' + (nw.receivableAmount || 3000).toLocaleString('th-TH');
+        const bikeMonthsEl = document.getElementById('dashBikeMonths');
+        if (bikeMonthsEl && nw.bikeMonthsLeft) bikeMonthsEl.innerText = `เหลือ ${nw.bikeMonthsLeft} งวด`;
       }
 
       // 2. Dynamic Burn-Down & Advance

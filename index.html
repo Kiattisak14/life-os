@@ -139,13 +139,13 @@
         </div>
       </div>
 
-      <!-- Advance Badge Notification (1,500 THB) -->
+      <!-- Advance Badge Notification (4,000 THB) -->
       <div id="advanceBadgeRecord" class="bg-amber-500/10 border border-amber-300/80 rounded-2xl p-2.5 flex items-center justify-between text-xs text-amber-900 shadow-xs">
         <div class="flex items-center space-x-1.5 font-bold">
           <span class="text-base">⚠️</span>
-          <span>มีเงินยืมล่วงหน้าจากคลัง: <span class="text-amber-700 font-extrabold">1,500 บาท</span></span>
+          <span>มีเงินยืมล่วงหน้าจากคลัง: <span class="text-amber-700 font-extrabold">4,000 บาท</span></span>
         </div>
-        <span class="text-[10px] bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded-full whitespace-nowrap">รอหักคืนวันเงินเดือนออก</span>
+        <span class="text-[10px] bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded-full whitespace-nowrap">ผ่อนคืน พ.ย. & ธ.ค.</span>
       </div>
 
       <!-- Budget Bucket Selector (ถังงบประมาณ) -->
@@ -269,8 +269,8 @@
 
         <div>
           <span class="text-xs text-indigo-200 font-light">ความมั่งคั่งสุทธิ (Net Worth) 🌟</span>
-          <div class="text-3xl font-black mt-0.5 tracking-tight text-white" id="dashNetWorth">฿64,720</div>
-          <p class="text-[10px] text-indigo-300 mt-0.5">สินทรัพย์ (฿83,920) ลบ หนี้สิน (฿19,200)</p>
+          <div class="text-3xl font-black mt-0.5 tracking-tight text-white" id="dashNetWorth">฿62,220</div>
+          <p class="text-[10px] text-indigo-300 mt-0.5">สินทรัพย์ (฿81,420) ลบ หนี้สิน (฿19,200)</p>
         </div>
 
         <!-- 4 Sub-Cards for Cash Treasury / PVD / Liabilities / Receivables -->
@@ -278,7 +278,7 @@
           <div class="bg-white/10 rounded-2xl p-2.5 text-left backdrop-blur-xs flex items-center justify-between">
             <div>
               <div class="text-[10px] text-emerald-300 font-medium">เงินสดในคลัง 🟢</div>
-              <div class="text-xs font-black text-white mt-0.5" id="dashCashTreasury">฿52,500</div>
+              <div class="text-xs font-black text-white mt-0.5" id="dashCashTreasury">฿50,000</div>
             </div>
             <span class="text-[9px] bg-emerald-500/30 text-emerald-200 px-1.5 py-0.5 rounded font-bold">สำรอง</span>
           </div>
@@ -311,11 +311,11 @@
         <div class="flex items-center space-x-2.5">
           <span class="text-xl">⚠️</span>
           <div>
-            <div class="font-bold">มีเงินยืมล่วงหน้าจากคลัง: <span class="text-amber-700 font-extrabold">1,500 บาท</span></div>
-            <div class="text-[10px] text-amber-700/80 mt-0.5">เบิกอะไหล่ PG-1 ล่วงหน้า · รอหักคืนวันเงินเดือนออกรอบ พ.ย.</div>
+            <div class="font-bold">มีเงินยืมล่วงหน้าจากคลัง: <span class="text-amber-700 font-extrabold">4,000 บาท</span></div>
+            <div class="text-[10px] text-amber-700/80 mt-0.5">เบิกอะไหล่ PG-1 & มอเตอร์ Taobao · ผ่อนคืน 2 งวด: พ.ย. 2,000 บ. / ธ.ค. 2,000 บ.</div>
           </div>
         </div>
-        <span class="text-[10px] bg-amber-100 border border-amber-200 text-amber-800 font-bold px-2 py-1 rounded-xl whitespace-nowrap">หักคืนรอบ พ.ย.</span>
+        <span class="text-[10px] bg-amber-100 border border-amber-200 text-amber-800 font-bold px-2 py-1 rounded-xl whitespace-nowrap">ผ่อนคืน พ.ย. & ธ.ค.</span>
       </div>
 
       <!-- ================== 2. DYNAMIC BUDGET BURN-DOWN ================== -->
@@ -1162,8 +1162,8 @@
             const c = (t.category || '').toString();
 
             const isPG1 = b.includes('PG-1') || b.includes('โปรเจกต์') ||
-                          /PG-1|เสตอร์|โซ่|นอต|อะไหล่/i.test(n) ||
-                          /PG-1|เสตอร์|โซ่|นอต|อะไหล่/i.test(c);
+                          /PG-1|เสตอร์|โซ่|นอต|อะไหล่|มอเตอร์|motor|taobao/i.test(n) ||
+                          /PG-1|เสตอร์|โซ่|นอต|อะไหล่|มอเตอร์|motor|taobao/i.test(c);
 
             const isFixed = b.includes('คงที่') || c.includes('ที่พัก/บิล');
 
@@ -1180,7 +1180,7 @@
 
       // Auto-fallback calculations if backend didn't return them
       if (!data.burnDown) {
-        const livingBudget = isOct ? 3000 : 8500;
+        const livingBudget = isOct ? 3000 : 8000;
         const livingSpent = calcLivingSpent > 0 ? calcLivingSpent : Math.max(0, totalExp - calcProjectSpent);
         const livingRemaining = Math.max(0, livingBudget - livingSpent);
         const dailyAllowance = Math.round(livingRemaining / daysLeft);
@@ -1212,7 +1212,7 @@
       }
 
       if (!data.netWorth) {
-        const cashTreasury = 52500;
+        const cashTreasury = 50000;
         const pvdAmount = 31420;
         const bikeDebt = 19200;
         const receivable = 3000;
@@ -1234,7 +1234,7 @@
         const nw = data.netWorth;
         document.getElementById('dashNetWorth').innerText = '฿' + (nw.netWorth || 0).toLocaleString('th-TH');
         const cashEl = document.getElementById('dashCashTreasury');
-        if (cashEl) cashEl.innerText = '฿' + (nw.cashInTreasury || 52500).toLocaleString('th-TH');
+        if (cashEl) cashEl.innerText = '฿' + (nw.cashInTreasury || 50000).toLocaleString('th-TH');
         const pvdEl = document.getElementById('dashPvdAmount');
         if (pvdEl) pvdEl.innerText = '฿' + (nw.pvdAmount || 31420).toLocaleString('th-TH');
         document.getElementById('dashLiabilities').innerText = '฿' + (nw.totalLiabilities || 19200).toLocaleString('th-TH');
@@ -1259,9 +1259,9 @@
           if (miniTotal) miniTotal.innerText = `/ ฿${(bd.livingBudget || 3000).toLocaleString()}`;
         } else {
           if (dashTitle) dashTitle.innerText = '🍚 ถังกินอยู่ & ใช้ชีวิต';
-          if (dashBadge) dashBadge.innerText = `งบ ${(bd.livingBudget || 8500).toLocaleString()} บ.`;
+          if (dashBadge) dashBadge.innerText = `งบ ${(bd.livingBudget || 8000).toLocaleString()} บ.`;
           if (miniTitle) miniTitle.innerText = '🍚 ถังกินอยู่เดือนนี้:';
-          if (miniTotal) miniTotal.innerText = `/ ฿${(bd.livingBudget || 8500).toLocaleString()}`;
+          if (miniTotal) miniTotal.innerText = `/ ฿${(bd.livingBudget || 8000).toLocaleString()}`;
         }
 
         // Values

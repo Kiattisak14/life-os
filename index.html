@@ -139,13 +139,13 @@
         </div>
       </div>
 
-      <!-- Advance Badge Notification (5,325 THB) -->
+      <!-- Advance Badge Notification (5,500 THB) -->
       <div id="advanceBadgeRecord" class="bg-amber-500/10 border border-amber-300/80 rounded-2xl p-2.5 flex items-center justify-between text-xs text-amber-900 shadow-xs">
         <div class="flex items-center space-x-1.5 font-bold">
           <span class="text-base">⚠️</span>
-          <span>มีเงินยืมล่วงหน้าจากคลัง: <span class="text-amber-700 font-extrabold">5,325 บาท</span></span>
+          <span>มีเงินยืมล่วงหน้าจากคลัง: <span class="text-amber-700 font-extrabold">5,500 บาท</span></span>
         </div>
-        <span class="text-[10px] bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded-full whitespace-nowrap">ผ่อนคืน 2 งวด: พ.ย. 2,663 บ. / ธ.ค. 2,662 บ.</span>
+        <span class="text-[10px] bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded-full whitespace-nowrap">ผ่อนคืน 2 งวด: พ.ย. 2,750 บ. / ธ.ค. 2,750 บ.</span>
       </div>
 
       <!-- Budget Bucket Selector (ถังงบประมาณ) -->
@@ -269,8 +269,8 @@
 
         <div>
           <span class="text-xs text-indigo-200 font-light">ความมั่งคั่งสุทธิ (Net Worth) 🌟</span>
-          <div class="text-3xl font-black mt-0.5 tracking-tight text-white" id="dashNetWorth">฿54,339</div>
-          <p class="text-[10px] text-indigo-300 mt-0.5">สินทรัพย์ (฿88,779) ลบ หนี้สิน (฿34,440)</p>
+          <div class="text-3xl font-black mt-0.5 tracking-tight text-white" id="dashNetWorth">฿53,758</div>
+          <p class="text-[10px] text-indigo-300 mt-0.5">สินทรัพย์ (฿88,198) ลบ หนี้สิน (฿34,440)</p>
         </div>
 
         <!-- 4 Sub-Cards for Cash Treasury / PVD / Liabilities / Receivables -->
@@ -278,7 +278,7 @@
           <div class="bg-white/10 rounded-2xl p-2.5 text-left backdrop-blur-xs flex items-center justify-between">
             <div>
               <div class="text-[10px] text-emerald-300 font-medium">เงินสดในคลัง 🟢</div>
-              <div class="text-xs font-black text-white mt-0.5" id="dashCashTreasury">฿48,675</div>
+              <div class="text-xs font-black text-white mt-0.5" id="dashCashTreasury">฿48,500</div>
             </div>
             <span class="text-[9px] bg-emerald-500/30 text-emerald-200 px-1.5 py-0.5 rounded font-bold">สำรอง</span>
           </div>
@@ -311,8 +311,8 @@
         <div class="flex items-center space-x-2.5">
           <span class="text-xl">⚠️</span>
           <div>
-            <div class="font-bold">มีเงินยืมล่วงหน้าจากคลัง: <span class="text-amber-700 font-extrabold">5,325 บาท</span></div>
-            <div class="text-[10px] text-amber-700/80 mt-0.5">เบิกอะไหล่ PG-1 (3,825 บ.) + เติมกินอยู่ ต.ค. (1,500 บ.) · ผ่อนคืน 2 งวด: พ.ย. 2,663 บ. / ธ.ค. 2,662 บ.</div>
+            <div class="font-bold">มีเงินยืมล่วงหน้าจากคลัง: <span class="text-amber-700 font-extrabold">5,500 บาท</span></div>
+            <div class="text-[10px] text-amber-700/80 mt-0.5">หักแยกถัง PG-1 (4,000 บ.) + เติมกินอยู่ ต.ค. (1,500 บ.) · ผ่อนคืน 2 งวด: พ.ย. 2,750 บ. / ธ.ค. 2,750 บ.</div>
           </div>
         </div>
         <span class="text-[10px] bg-amber-100 border border-amber-200 text-amber-800 font-bold px-2 py-1 rounded-xl whitespace-nowrap">ผ่อนคืน 2 งวด</span>
@@ -364,10 +364,18 @@
             <div class="text-sm font-extrabold text-slate-900 mt-0.5" id="dashFixedSpent">฿0</div>
             <div class="text-[9px] text-slate-400">งบ ฿7,000 (ห้อง, รถ, เน็ต, AI)</div>
           </div>
-          <div class="bg-slate-50 border border-slate-100 rounded-2xl p-3">
-            <div class="text-[11px] font-bold text-slate-700">⚙️ โปรเจกต์ PG-1</div>
-            <div class="text-sm font-extrabold text-indigo-600 mt-0.5" id="dashProjectSpent">฿0</div>
-            <div class="text-[9px] text-slate-400">อะไหล่รถ & วิจัยพัฒนา</div>
+          <div class="bg-indigo-50/40 border border-indigo-100/80 rounded-2xl p-3">
+            <div class="flex items-center justify-between">
+              <div class="text-[11px] font-bold text-indigo-950">⚙️ งบอะไหล่ PG-1</div>
+              <span class="text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.2 rounded-md font-semibold">งบ 4,000 บ.</span>
+            </div>
+            <div class="text-sm font-extrabold text-indigo-600 mt-0.5">
+              เหลือ: <span id="dashProjectRemaining">฿3,419</span>
+            </div>
+            <div class="text-[9px] text-slate-500 mt-0.5 flex justify-between">
+              <span>ใช้ไป: <span class="font-bold text-slate-700" id="dashProjectSpent">฿581</span></span>
+              <span class="text-indigo-600 font-medium">แยกจากคลัง</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1219,7 +1227,7 @@
       }
 
       if (!data.netWorth) {
-        const cashTreasury = 48675;
+        const cashTreasury = 48500;
         const pvdAmount = 31420;
         const bikeDebt = 34440;
         const receivable = 3000;
@@ -1249,9 +1257,9 @@
           nw.bikeMonthsLeft = 14;
         }
 
-        document.getElementById('dashNetWorth').innerText = '฿' + (nw.netWorth || 54339).toLocaleString('th-TH');
+        document.getElementById('dashNetWorth').innerText = '฿' + (nw.netWorth || 53758).toLocaleString('th-TH');
         const cashEl = document.getElementById('dashCashTreasury');
-        if (cashEl) cashEl.innerText = '฿' + (nw.cashInTreasury || 48675).toLocaleString('th-TH');
+        if (cashEl) cashEl.innerText = '฿' + (nw.cashInTreasury || 48500).toLocaleString('th-TH');
         const pvdEl = document.getElementById('dashPvdAmount');
         if (pvdEl) pvdEl.innerText = '฿' + (nw.pvdAmount || 31420).toLocaleString('th-TH');
         document.getElementById('dashLiabilities').innerText = '฿' + (nw.totalLiabilities || 34440).toLocaleString('th-TH');
@@ -1322,8 +1330,13 @@
         // Sub Buckets (พร้อม fallback จากยอดคำนวณสด)
         const fixedEl = document.getElementById('dashFixedSpent');
         if (fixedEl) fixedEl.innerText = '฿' + (bd.fixedSpent || calcFixedSpent || 0).toLocaleString('th-TH');
+        const pg1Budget = 4000;
+        const projSpent = (bd.projectSpent || calcProjectSpent || 0);
+        const projRemaining = Math.max(0, pg1Budget - projSpent);
         const projEl = document.getElementById('dashProjectSpent');
-        if (projEl) projEl.innerText = '฿' + (bd.projectSpent || calcProjectSpent || 0).toLocaleString('th-TH');
+        if (projEl) projEl.innerText = '฿' + projSpent.toLocaleString('th-TH');
+        const projRemEl = document.getElementById('dashProjectRemaining');
+        if (projRemEl) projRemEl.innerText = '฿' + projRemaining.toLocaleString('th-TH');
       }
 
       document.getElementById('dashBalance').innerText = '฿' + (data.balance || 0).toLocaleString('th-TH', { minimumFractionDigits: 2 });

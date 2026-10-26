@@ -127,15 +127,15 @@
         <div class="flex items-center justify-between text-xs">
           <div class="flex items-center space-x-1 font-bold text-slate-700">
             <span id="miniBurnTitle">⚡ งบปลายเดือน ต.ค.:</span>
-            <span class="text-emerald-600 font-extrabold" id="miniBurnRemaining">฿2,745</span>
-            <span class="text-slate-400 font-normal text-[10px]" id="miniBurnTotal">/ ฿3,000</span>
+            <span class="text-emerald-600 font-extrabold" id="miniBurnRemaining">฿359</span>
+            <span class="text-slate-400 font-normal text-[10px]" id="miniBurnTotal">/ ฿1,500</span>
           </div>
-          <span id="miniBurnDailyBadge" class="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">
-            เฉลี่ย ฿<span id="miniBurnDaily">343</span> / วัน
+          <span id="miniBurnDailyBadge" class="text-[10px] font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
+            เฉลี่ย ฿<span id="miniBurnDaily">60</span> / วัน
           </span>
         </div>
         <div class="w-full bg-slate-200/80 rounded-full h-2 mt-2 overflow-hidden">
-          <div id="miniBurnBar" class="bg-emerald-500 h-2 rounded-full transition-all duration-500" style="width: 100%"></div>
+          <div id="miniBurnBar" class="bg-amber-500 h-2 rounded-full transition-all duration-500" style="width: 24%"></div>
         </div>
       </div>
 
@@ -278,7 +278,7 @@
           <div class="bg-white/10 rounded-2xl p-2.5 text-left backdrop-blur-xs flex items-center justify-between">
             <div>
               <div class="text-[10px] text-emerald-300 font-medium">เงินสดในคลัง 🟢</div>
-              <div class="text-xs font-black text-white mt-0.5" id="dashCashTreasury">฿50,000</div>
+              <div class="text-xs font-black text-white mt-0.5" id="dashCashTreasury">฿50,175</div>
             </div>
             <span class="text-[9px] bg-emerald-500/30 text-emerald-200 px-1.5 py-0.5 rounded font-bold">สำรอง</span>
           </div>
@@ -333,27 +333,27 @@
             <div>
               <div class="text-xs font-bold text-slate-800 flex items-center space-x-1">
                 <span id="dashLivingTitle">⚡ งบปลายเดือน ต.ค.</span>
-                <span class="text-[10px] bg-emerald-100 text-emerald-800 font-semibold px-1.5 py-0.2 rounded-md" id="dashLivingBadge">งบ 3,000 บ.</span>
+                <span class="text-[10px] bg-amber-100 text-amber-800 font-semibold px-1.5 py-0.2 rounded-md" id="dashLivingBadge">งบ 1,500 บ.</span>
               </div>
               <div class="text-[11px] text-slate-500 mt-0.5">
-                จ่ายแล้ว: <span class="font-bold text-rose-600" id="dashLivingSpent">฿255</span> · 
-                เหลือ: <span class="font-bold text-emerald-600" id="dashLivingRemaining">฿2,745</span>
+                จ่ายแล้ว: <span class="font-bold text-rose-600" id="dashLivingSpent">฿1,141</span> · 
+                เหลือ: <span class="font-bold text-emerald-600" id="dashLivingRemaining">฿359</span>
               </div>
             </div>
             <div class="text-right">
               <span class="text-[10px] font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full" id="dashLivingDailyBadge">
-                เฉลี่ย ฿<span id="dashLivingDaily">343</span> / วัน
+                เฉลี่ย ฿<span id="dashLivingDaily">60</span> / วัน
               </span>
             </div>
           </div>
 
           <!-- Progress Bar -->
           <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
-            <div id="dashLivingBar" class="bg-emerald-500 h-2.5 rounded-full transition-all duration-500" style="width: 100%"></div>
+            <div id="dashLivingBar" class="bg-amber-500 h-2.5 rounded-full transition-all duration-500" style="width: 24%"></div>
           </div>
           <div class="flex justify-between text-[9px] text-slate-400">
-            <span>ใช้ไป <span id="dashLivingPercent">0%</span></span>
-            <span>เหลืออีก <span id="dashDaysLeft">9</span> วัน</span>
+            <span>ใช้ไป <span id="dashLivingPercent">76%</span></span>
+            <span>เหลืออีก <span id="dashDaysLeft">6</span> วัน</span>
           </div>
         </div>
 
@@ -1180,7 +1180,7 @@
 
       // Auto-fallback calculations if backend didn't return them
       if (!data.burnDown) {
-        const livingBudget = isOct ? 3000 : 8000;
+        const livingBudget = isOct ? 1500 : 8000;
         const livingSpent = calcLivingSpent > 0 ? calcLivingSpent : Math.max(0, totalExp - calcProjectSpent);
         const livingRemaining = Math.max(0, livingBudget - livingSpent);
         const dailyAllowance = Math.round(livingRemaining / daysLeft);
@@ -1198,6 +1198,13 @@
           projectSpent: calcProjectSpent
         };
       } else {
+        // หาก backend ยังส่ง livingBudget = 3000 บ. (ก่อน redeploy) ให้ปรับฐานเป็น 1,500 บ. ทันที
+        if (isOct && (data.burnDown.livingBudget === 3000 || !data.burnDown.livingBudget)) {
+          data.burnDown.livingBudget = 1500;
+          data.burnDown.livingRemaining = Math.max(0, 1500 - data.burnDown.livingSpent);
+          data.burnDown.dailyAllowance = Math.round(data.burnDown.livingRemaining / data.burnDown.daysLeft);
+          data.burnDown.livingPercent = Math.min(100, Math.round((data.burnDown.livingSpent / 1500) * 100));
+        }
         // หาก backend ส่ง projectSpent เป็น 0 หรือยังไม่ได้ deploy ใหม่ ให้ใช้ยอดคำนวณจากรายการทันที
         if (calcProjectSpent > 0 && (!data.burnDown.projectSpent || data.burnDown.projectSpent < calcProjectSpent)) {
           // หาก livingSpent ใน ต.ค. เคยรวมยอดอะไหล่ PG-1 เข้าไป ให้หักแยกออกมาให้ถูกต้อง
@@ -1212,7 +1219,7 @@
       }
 
       if (!data.netWorth) {
-        const cashTreasury = 50000;
+        const cashTreasury = 50175;
         const pvdAmount = 31420;
         const bikeDebt = 34440;
         const receivable = 3000;
@@ -1244,7 +1251,7 @@
 
         document.getElementById('dashNetWorth').innerText = '฿' + (nw.netWorth || 54168).toLocaleString('th-TH');
         const cashEl = document.getElementById('dashCashTreasury');
-        if (cashEl) cashEl.innerText = '฿' + (nw.cashInTreasury || 50000).toLocaleString('th-TH');
+        if (cashEl) cashEl.innerText = '฿' + (nw.cashInTreasury || 50175).toLocaleString('th-TH');
         const pvdEl = document.getElementById('dashPvdAmount');
         if (pvdEl) pvdEl.innerText = '฿' + (nw.pvdAmount || 31420).toLocaleString('th-TH');
         document.getElementById('dashLiabilities').innerText = '฿' + (nw.totalLiabilities || 34440).toLocaleString('th-TH');
@@ -1266,9 +1273,9 @@
 
         if (isOct) {
           if (dashTitle) dashTitle.innerText = '⚡ งบปลายเดือน ต.ค.';
-          if (dashBadge) dashBadge.innerText = `งบ ${(bd.livingBudget || 3000).toLocaleString()} บ.`;
+          if (dashBadge) dashBadge.innerText = `งบ ${(bd.livingBudget || 1500).toLocaleString()} บ.`;
           if (miniTitle) miniTitle.innerText = '⚡ งบปลายเดือน ต.ค.:';
-          if (miniTotal) miniTotal.innerText = `/ ฿${(bd.livingBudget || 3000).toLocaleString()}`;
+          if (miniTotal) miniTotal.innerText = `/ ฿${(bd.livingBudget || 1500).toLocaleString()}`;
         } else {
           if (dashTitle) dashTitle.innerText = '🍚 ถังกินอยู่ & ใช้ชีวิต';
           if (dashBadge) dashBadge.innerText = `งบ ${(bd.livingBudget || 8000).toLocaleString()} บ.`;

@@ -127,11 +127,11 @@
         <div class="flex items-center justify-between text-xs">
           <div class="flex items-center space-x-1 font-bold text-slate-700">
             <span id="miniBurnTitle">⚡ งบปลายเดือน ต.ค.:</span>
-            <span class="text-emerald-600 font-extrabold" id="miniBurnRemaining">฿1,859</span>
-            <span class="text-slate-400 font-normal text-[10px]" id="miniBurnTotal">/ ฿3,000</span>
+            <span class="text-emerald-600 font-extrabold" id="miniBurnRemaining">฿2,001.73</span>
+            <span class="text-slate-400 font-normal text-[10px]" id="miniBurnTotal">/ ฿3,054</span>
           </div>
           <span id="miniBurnDailyBadge" class="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">
-            เฉลี่ย ฿<span id="miniBurnDaily">310</span> / วัน
+            เฉลี่ย ฿<span id="miniBurnDaily">334</span> / วัน
           </span>
         </div>
         <div class="w-full bg-slate-200/80 rounded-full h-2 mt-2 overflow-hidden">
@@ -333,26 +333,26 @@
             <div>
               <div class="text-xs font-bold text-slate-800 flex items-center space-x-1">
                 <span id="dashLivingTitle">⚡ งบปลายเดือน ต.ค.</span>
-                <span class="text-[10px] bg-emerald-100 text-emerald-800 font-semibold px-1.5 py-0.2 rounded-md" id="dashLivingBadge">งบ 3,000 บ.</span>
+                <span class="text-[10px] bg-emerald-100 text-emerald-800 font-semibold px-1.5 py-0.2 rounded-md" id="dashLivingBadge">งบ 3,054 บ.</span>
               </div>
               <div class="text-[11px] text-slate-500 mt-0.5">
-                จ่ายแล้ว: <span class="font-bold text-rose-600" id="dashLivingSpent">฿1,141</span> · 
-                เหลือ: <span class="font-bold text-emerald-600" id="dashLivingRemaining">฿1,859</span>
+                จ่ายแล้ว: <span class="font-bold text-rose-600" id="dashLivingSpent">฿1,052</span> · 
+                เหลือ: <span class="font-bold text-emerald-600" id="dashLivingRemaining">฿2,001.73</span>
               </div>
             </div>
             <div class="text-right">
               <span class="text-[10px] font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full" id="dashLivingDailyBadge">
-                เฉลี่ย ฿<span id="dashLivingDaily">310</span> / วัน
+                เฉลี่ย ฿<span id="dashLivingDaily">334</span> / วัน
               </span>
             </div>
           </div>
 
           <!-- Progress Bar -->
           <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
-            <div id="dashLivingBar" class="bg-emerald-500 h-2.5 rounded-full transition-all duration-500" style="width: 62%"></div>
+            <div id="dashLivingBar" class="bg-emerald-500 h-2.5 rounded-full transition-all duration-500" style="width: 66%"></div>
           </div>
           <div class="flex justify-between text-[9px] text-slate-400">
-            <span>ใช้ไป <span id="dashLivingPercent">38%</span></span>
+            <span>ใช้ไป <span id="dashLivingPercent">34%</span></span>
             <span>เหลืออีก <span id="dashDaysLeft">6</span> วัน</span>
           </div>
         </div>
@@ -370,10 +370,10 @@
               <span class="text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.2 rounded-md font-semibold">งบ 4,000 บ.</span>
             </div>
             <div class="text-sm font-extrabold text-indigo-600 mt-0.5">
-              เหลือ: <span id="dashProjectRemaining">฿3,419</span>
+              เหลือ: <span id="dashProjectRemaining">฿174.64</span>
             </div>
             <div class="text-[9px] text-slate-500 mt-0.5 flex justify-between">
-              <span>ใช้ไป: <span class="font-bold text-slate-700" id="dashProjectSpent">฿581</span></span>
+              <span>ใช้ไป: <span class="font-bold text-slate-700" id="dashProjectSpent">฿3,825.36</span></span>
               <span class="text-indigo-600 font-medium">แยกจากคลัง</span>
             </div>
           </div>
@@ -1188,7 +1188,8 @@
 
       // Auto-fallback calculations if backend didn't return them
       if (!data.burnDown) {
-        const livingBudget = isOct ? 3000 : 8000;
+        // เดือน ต.ค. ใช้ฐานงบ 3,053.73 บ. เพื่อให้เหลือเงินสดจริง 2,001.73 บ. (เมื่อหักกินอยู่จริง 1,052 บ.)
+        const livingBudget = isOct ? 3053.73 : 8000;
         const livingSpent = calcLivingSpent > 0 ? calcLivingSpent : Math.max(0, totalExp - calcProjectSpent);
         const livingRemaining = Math.max(0, livingBudget - livingSpent);
         const dailyAllowance = Math.round(livingRemaining / daysLeft);
@@ -1206,12 +1207,12 @@
           projectSpent: calcProjectSpent
         };
       } else {
-        // หาก backend ยังส่ง livingBudget = 1500 บ. (ก่อน redeploy แผน C) ให้ปรับฐานเป็น 3,000 บ. ตามแผน C ทันที
-        if (isOct && data.burnDown.livingBudget === 1500) {
-          data.burnDown.livingBudget = 3000;
-          data.burnDown.livingRemaining = Math.max(0, 3000 - data.burnDown.livingSpent);
+        // ปรับฐานงบ ต.ค. ให้ตรงกับเงินสดจริงในมือ 2,001.73 บ.
+        if (isOct && (data.burnDown.livingBudget === 1500 || data.burnDown.livingBudget === 3000 || !data.burnDown.livingBudget)) {
+          data.burnDown.livingBudget = 3053.73;
+          data.burnDown.livingRemaining = Math.max(0, 3053.73 - data.burnDown.livingSpent);
           data.burnDown.dailyAllowance = Math.round(data.burnDown.livingRemaining / data.burnDown.daysLeft);
-          data.burnDown.livingPercent = Math.min(100, Math.round((data.burnDown.livingSpent / 3000) * 100));
+          data.burnDown.livingPercent = Math.min(100, Math.round((data.burnDown.livingSpent / 3053.73) * 100));
         }
         // หาก backend ส่ง projectSpent เป็น 0 หรือยังไม่ได้ deploy ใหม่ ให้ใช้ยอดคำนวณจากรายการทันที
         if (calcProjectSpent > 0 && (!data.burnDown.projectSpent || data.burnDown.projectSpent < calcProjectSpent)) {
@@ -1292,8 +1293,13 @@
         }
 
         // Values
+        const remVal = bd.livingRemaining || 0;
+        const remStr = (remVal % 1 !== 0) 
+          ? '฿' + remVal.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+          : '฿' + remVal.toLocaleString('th-TH');
+
         document.getElementById('dashLivingSpent').innerText = '฿' + (bd.livingSpent || 0).toLocaleString('th-TH');
-        document.getElementById('dashLivingRemaining').innerText = '฿' + (bd.livingRemaining || 0).toLocaleString('th-TH');
+        document.getElementById('dashLivingRemaining').innerText = remStr;
         document.getElementById('dashLivingDaily').innerText = (bd.dailyAllowance || 0).toLocaleString('th-TH');
         document.getElementById('dashLivingPercent').innerText = (bd.livingPercent || 0) + '%';
         document.getElementById('dashDaysLeft').innerText = (bd.daysLeft || 0);
@@ -1313,7 +1319,7 @@
         }
 
         // Mini Burn Bar
-        document.getElementById('miniBurnRemaining').innerText = '฿' + (bd.livingRemaining || 0).toLocaleString('th-TH');
+        document.getElementById('miniBurnRemaining').innerText = remStr;
         document.getElementById('miniBurnDaily').innerText = (bd.dailyAllowance || 0).toLocaleString('th-TH');
         const miniBar = document.getElementById('miniBurnBar');
         if (miniBar) {
@@ -1334,9 +1340,17 @@
         const projSpent = (bd.projectSpent || calcProjectSpent || 0);
         const projRemaining = Math.max(0, pg1Budget - projSpent);
         const projEl = document.getElementById('dashProjectSpent');
-        if (projEl) projEl.innerText = '฿' + projSpent.toLocaleString('th-TH');
+        if (projEl) {
+          projEl.innerText = (projSpent % 1 !== 0)
+            ? '฿' + projSpent.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            : '฿' + projSpent.toLocaleString('th-TH');
+        }
         const projRemEl = document.getElementById('dashProjectRemaining');
-        if (projRemEl) projRemEl.innerText = '฿' + projRemaining.toLocaleString('th-TH');
+        if (projRemEl) {
+          projRemEl.innerText = (projRemaining % 1 !== 0)
+            ? '฿' + projRemaining.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            : '฿' + projRemaining.toLocaleString('th-TH');
+        }
       }
 
       document.getElementById('dashBalance').innerText = '฿' + (data.balance || 0).toLocaleString('th-TH', { minimumFractionDigits: 2 });

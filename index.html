@@ -411,20 +411,21 @@
     </div>
 
     
-    <!-- ================== VIEW 2: FIELD WORK & DAILY FOCUS OS (NEW v2.2) ================== -->
+    
+    <!-- ================== VIEW 2: FIELD WORK & DAILY FOCUS OS (v2.3 PROJECT HIERARCHY) ================== -->
     <div id="viewWork" class="hidden space-y-3.5">
       
-      <!-- Sub-Tab Switcher: Cockpit vs Master Pool -->
+      <!-- Sub-Tab Switcher: Cockpit vs Projects Board -->
       <div class="bg-slate-200 p-1 rounded-2xl flex shadow-inner">
         <button id="btnWorkSubCockpit" onclick="switchWorkSubTab('cockpit')" 
           class="flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 bg-white text-indigo-700 shadow-sm flex items-center justify-center space-x-1.5">
-          <span>⚡ หน้างานวันนี้</span>
+          <span>⚡ แผนรายวัน (Today)</span>
           <span id="badgeTodayTaskCount" class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-1.5 py-0.2 rounded-full">0</span>
         </button>
-        <button id="btnWorkSubPool" onclick="switchWorkSubTab('pool')" 
+        <button id="btnWorkSubProjects" onclick="switchWorkSubTab('projects')" 
           class="flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 text-slate-600 flex items-center justify-center space-x-1.5">
-          <span>📋 คลังงานรวม & เมทริกซ์</span>
-          <span id="badgePoolTaskCount" class="text-[10px] bg-slate-300 text-slate-700 font-bold px-1.5 py-0.2 rounded-full">0</span>
+          <span>📁 โปรเจกต์ & งานทั้งหมด</span>
+          <span id="badgeProjectsTaskCount" class="text-[10px] bg-slate-300 text-slate-700 font-bold px-1.5 py-0.2 rounded-full">0</span>
         </button>
       </div>
 
@@ -443,7 +444,7 @@
                 <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-300 text-xs font-black">⚡</span>
                 <div>
                   <h2 class="text-xs font-black tracking-wide uppercase text-slate-200">Daily Work Cockpit</h2>
-                  <p class="text-[10px] text-cyan-400/90 font-medium">EA Engineering & Field Focus</p>
+                  <p class="text-[10px] text-cyan-400/90 font-medium">EA Engineering & Project Tasks</p>
                 </div>
               </div>
               <div class="flex items-center space-x-1 bg-slate-800/80 px-2 py-1 rounded-xl border border-slate-700 text-xs">
@@ -458,7 +459,7 @@
             <div class="bg-indigo-900/40 border border-indigo-500/30 rounded-2xl px-3 py-2 flex items-center justify-between">
               <div class="flex items-center space-x-2">
                 <span class="text-xs">🎯</span>
-                <span class="text-[11px] text-slate-300 font-medium">กฎเหล็ก: <strong class="text-cyan-300">โฟกัสทำทีละงาน</strong> ไม่เปิดหลายแท็บพร้อมกัน</span>
+                <span class="text-[11px] text-slate-300 font-medium">กฎโฟกัส: <strong class="text-cyan-300">ทำทีละงานให้เสร็จ</strong> จัดการคิวงานได้อิสระ</span>
               </div>
               <span id="workCockpitRate" class="text-[11px] font-bold text-emerald-400">0%</span>
             </div>
@@ -474,50 +475,71 @@
               </div>
             </div>
 
-            <!-- 3 Status Metric Badges -->
-            <div class="grid grid-cols-3 gap-2 pt-1 text-center">
-              <div class="bg-slate-800/90 rounded-2xl p-2 border border-slate-700/60">
-                <div class="text-[10px] text-slate-400 font-medium">⏳ รอเริ่ม</div>
-                <div id="countWorkTodo" class="text-base font-black text-slate-200 mt-0.5">0</div>
+            <!-- 4 Status Metric Badges -->
+            <div class="grid grid-cols-4 gap-1.5 pt-1 text-center">
+              <div class="bg-slate-800/90 rounded-2xl p-1.5 border border-slate-700/60">
+                <div class="text-[9px] text-slate-400 font-medium">⏳ รอเริ่ม</div>
+                <div id="countWorkTodo" class="text-sm font-black text-slate-200 mt-0.5">0</div>
               </div>
-              <div class="bg-cyan-950/40 rounded-2xl p-2 border border-cyan-500/40">
-                <div class="text-[10px] text-cyan-300 font-medium flex items-center justify-center space-x-1">
+              <div class="bg-cyan-950/40 rounded-2xl p-1.5 border border-cyan-500/40">
+                <div class="text-[9px] text-cyan-300 font-medium flex items-center justify-center space-x-0.5">
                   <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
-                  <span>⚙️ กำลังทำ</span>
+                  <span>⚙️ ทำอยู่</span>
                 </div>
-                <div id="countWorkInProgress" class="text-base font-black text-cyan-300 mt-0.5">0</div>
+                <div id="countWorkInProgress" class="text-sm font-black text-cyan-300 mt-0.5">0</div>
               </div>
-              <div class="bg-emerald-950/40 rounded-2xl p-2 border border-emerald-500/40">
-                <div class="text-[10px] text-emerald-300 font-medium">✅ เสร็จสิ้น</div>
-                <div id="countWorkDone" class="text-base font-black text-emerald-300 mt-0.5">0</div>
+              <div class="bg-amber-950/40 rounded-2xl p-1.5 border border-amber-500/40">
+                <div class="text-[9px] text-amber-300 font-medium">⏸️ รอคนอื่น</div>
+                <div id="countWorkWait" class="text-sm font-black text-amber-300 mt-0.5">0</div>
+              </div>
+              <div class="bg-emerald-950/40 rounded-2xl p-1.5 border border-emerald-500/40">
+                <div class="text-[9px] text-emerald-300 font-medium">✅ เสร็จแล้ว</div>
+                <div id="countWorkDone" class="text-sm font-black text-emerald-300 mt-0.5">0</div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- ⚙️ DOING NOW FOCUS CARD (Highlighted when in progress) -->
+        <!-- ⚠️ Carry Over Banner (if tasks remained from previous days) -->
+        <div id="workCarryOverBanner" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-3 shadow-sm flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="text-base">⚠️</span>
+            <span id="workCarryOverText" class="text-xs text-amber-900 font-semibold">มีงานค้างจากวันก่อน</span>
+          </div>
+          <button onclick="carryOverAllTasks()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-3 py-1.5 rounded-xl shadow-sm transition active:scale-95">
+            🔄 ยกมาทำวันนี้ทั้งหมด
+          </button>
+        </div>
+
+        <!-- ⚙️ DOING NOW FOCUS CARD -->
         <div id="doingNowContainer" class="hidden">
-          <div class="bg-gradient-to-r from-cyan-500/10 via-indigo-500/10 to-transparent border-2 border-cyan-500/70 rounded-3xl p-4 shadow-md bg-white">
-            <div class="flex items-center justify-between mb-2">
+          <div class="bg-gradient-to-r from-cyan-500/10 via-indigo-500/10 to-transparent border-2 border-cyan-500/80 rounded-3xl p-4 shadow-md bg-white">
+            <div class="flex items-center justify-between mb-1.5">
               <span class="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-cyan-100 text-cyan-800 text-[10px] font-black uppercase tracking-wider">
                 <span class="w-2 h-2 rounded-full bg-cyan-500 animate-ping"></span>
                 <span>⚙️ DOING NOW (โฟกัสอยู่ตอนนี้)</span>
               </span>
-              <span id="doingNowTag" class="text-[10px] bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded-md">แท็ก</span>
+              <span id="doingNowProject" class="text-[10px] bg-indigo-100 text-indigo-800 font-bold px-2 py-0.5 rounded-lg truncate max-w-[150px]">โปรเจกต์</span>
             </div>
             <h3 id="doingNowTitle" class="text-base font-bold text-slate-900 leading-snug">ชื่องานที่กำลังทำ</h3>
             <div class="mt-3 flex items-center space-x-2">
               <button onclick="completeDoingNowTask()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs py-2 px-3 rounded-xl shadow transition flex items-center justify-center space-x-1">
                 <span>✅ ทำเสร็จแล้ว</span>
               </button>
-              <button onclick="pauseDoingNowTask()" class="bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-semibold text-xs py-2 px-3 rounded-xl transition">
-                <span>⏸️ พักไว้ก่อน</span>
+              <button onclick="pauseDoingNowTask()" class="bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-semibold text-xs py-2 px-2.5 rounded-xl transition">
+                <span>⏸️ พักไว้</span>
+              </button>
+              <button onclick="unpickDoingNowTask()" class="bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-600 font-semibold text-xs py-2 px-2.5 rounded-xl transition" title="เอาออกจากแผนวันนี้">
+                <span>✕ ถอดออก</span>
+              </button>
+              <button onclick="deleteDoingNowTask()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 font-semibold text-xs py-2 px-2.5 rounded-xl transition" title="ลบงานนี้ถาวร">
+                <span>🗑️ ลบ</span>
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Quick Add to Today Bar -->
+        <!-- Quick Add to Today Bar with Project Selection -->
         <div class="bg-white rounded-2xl p-3 border border-slate-200 shadow-sm space-y-2">
           <div class="flex items-center space-x-2">
             <input type="text" id="quickTaskTitle" placeholder="+ เพิ่มงานด่วนเข้ากระดานวันนี้..." 
@@ -527,54 +549,39 @@
               เพิ่ม
             </button>
           </div>
-          <!-- Quick Tag & Priority Selector -->
-          <div class="flex items-center justify-between text-[10px] pt-1 border-t border-slate-100">
-            <div class="flex items-center space-x-1 overflow-x-auto pb-0.5" id="quickTagPills">
-              <button type="button" onclick="selectQuickTag('⚡ HV/Batt')" class="quick-tag-pill active px-2 py-0.5 rounded-full border border-indigo-600 bg-indigo-50 text-indigo-700 font-bold">⚡ HV/Batt</button>
-              <button type="button" onclick="selectQuickTag('💻 VCU')" class="quick-tag-pill px-2 py-0.5 rounded-full border border-slate-200 bg-white text-slate-600">💻 VCU</button>
-              <button type="button" onclick="selectQuickTag('🔧 Mech')" class="quick-tag-pill px-2 py-0.5 rounded-full border border-slate-200 bg-white text-slate-600">🔧 Mech</button>
-              <button type="button" onclick="selectQuickTag('📦 Part')" class="quick-tag-pill px-2 py-0.5 rounded-full border border-slate-200 bg-white text-slate-600">📦 Part</button>
-              <button type="button" onclick="selectQuickTag('📄 Admin')" class="quick-tag-pill px-2 py-0.5 rounded-full border border-slate-200 bg-white text-slate-600">📄 Admin</button>
+          <!-- Select Project & Priority -->
+          <div class="flex items-center justify-between text-[11px] pt-1 border-t border-slate-100">
+            <div class="flex items-center space-x-1.5 flex-1 pr-2">
+              <span class="text-slate-500 font-medium text-[10px]">โปรเจกต์:</span>
+              <select id="quickTaskProjectSelect" class="flex-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 px-2 py-1 focus:outline-none truncate">
+                <!-- populated dynamically -->
+              </select>
             </div>
-            <select id="quickPrioritySelect" class="bg-slate-50 border border-slate-200 rounded-lg text-[10px] font-semibold text-slate-700 px-1.5 py-0.5 focus:outline-none">
-              <option value="Q1">🔥 Q1 ด่วน&สำคัญ</option>
-              <option value="Q2" selected>⭐ Q2 ไม่ด่วนแต่สำคัญ</option>
-              <option value="Q3">⚡ Q3 ด่วนแต่ไม่สำคัญ</option>
-              <option value="Q4">💤 Q4 แบ็กล็อก</option>
+            <select id="quickPrioritySelect" class="bg-slate-50 border border-slate-200 rounded-lg text-[10px] font-semibold text-slate-700 px-1.5 py-1 focus:outline-none">
+              <option value="q1">🔥 Q1 ด่วน&สำคัญ</option>
+              <option value="q2" selected>⭐ Q2 สำคัญ</option>
+              <option value="q3">⚡ Q3 ด่วน</option>
+              <option value="q4">💤 Q4 แบ็กล็อก</option>
             </select>
           </div>
         </div>
 
-        <!-- ⏳ TO DO LIST FOR TODAY -->
-        <div class="space-y-2">
+        <!-- TODAY'S TASKS GROUPED BY PROJECT -->
+        <div class="space-y-3">
           <div class="flex items-center justify-between px-1">
-            <h3 class="text-xs font-bold text-slate-700 flex items-center space-x-1.5">
-              <span>⏳ คิวงอยู่วันนี้</span>
-              <span id="badgePendingCount" class="text-[10px] bg-slate-200 text-slate-700 px-1.5 py-0.2 rounded-full font-bold">0</span>
+            <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-1.5">
+              <span>📋 งานตามโปรเจกต์ที่ต้องทำวันนี้</span>
+              <span id="badgeTodayTotalItems" class="text-[10px] bg-slate-200 text-slate-700 px-1.5 py-0.2 rounded-full font-bold">0</span>
             </h3>
-            <button onclick="switchWorkSubTab('pool')" class="text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 flex items-center space-x-1">
-              <span>+ ดึงจากคลังงาน</span>
+            <button onclick="switchWorkSubTab('projects')" class="text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 flex items-center space-x-1">
+              <span>+ เลือกจากโปรเจกต์ทั้งหมด</span>
               <span>➔</span>
             </button>
           </div>
-          
-          <div id="todayTodoListContainer" class="space-y-2">
-            <!-- Dynamic Task Cards -->
-          </div>
-        </div>
 
-        <!-- ✅ DONE LIST FOR TODAY (Collapsible) -->
-        <div class="space-y-2 pt-1">
-          <button onclick="toggleDoneSection()" class="w-full flex items-center justify-between px-2 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-xl transition text-left">
-            <span class="text-xs font-bold text-slate-600 flex items-center space-x-1.5">
-              <span>✅ งานที่เสร็จแล้ววันนี้</span>
-              <span id="badgeDoneCount" class="text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded-full font-bold">0</span>
-            </span>
-            <span id="doneToggleArrow" class="text-xs text-slate-400">▼</span>
-          </button>
-          
-          <div id="todayDoneListContainer" class="space-y-2">
-            <!-- Dynamic Done Cards -->
+          <!-- Dynamic Projects List for Today -->
+          <div id="todayProjectsListContainer" class="space-y-3">
+            <!-- Populated dynamically: Project cards with subtasks -->
           </div>
         </div>
 
@@ -584,7 +591,7 @@
             <div class="flex items-center space-x-2">
               <div class="w-7 h-7 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xs">📝</div>
               <div>
-                <h3 class="text-xs font-bold text-slate-800">โน้ตหน้างานประจำวัน (Field Notes)</h3>
+                <h3 class="text-xs font-bold text-slate-800">บันทึกหน้างาน & สรุปผลประจำวัน (Field Notes)</h3>
                 <p id="fieldNoteDateSubtitle" class="text-[10px] text-slate-400">บันทึกสำหรับวันนี้</p>
               </div>
             </div>
@@ -617,160 +624,62 @@
       </div>
       <!-- ================= END SUB-VIEW A ================= -->
 
-      <!-- ================= SUB-VIEW B: MASTER WORK POOL & EISENHOWER MATRIX ================= -->
-      <div id="workSubViewPool" class="hidden space-y-3.5">
+      <!-- ================= SUB-VIEW B: ALL PROJECTS & TASKS BOARD ================= -->
+      <div id="workSubViewProjects" class="hidden space-y-3.5">
 
-        <!-- Pool Header Card -->
+        <!-- Projects Header Card -->
         <div class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 text-white rounded-3xl p-4 shadow-lg">
           <div class="flex items-center justify-between">
             <div>
-              <span class="text-[10px] font-bold tracking-wider uppercase bg-white/20 px-2 py-0.5 rounded-full">Work Organizer</span>
-              <h2 class="text-base font-black mt-1">คลังงานรวม & เมทริกซ์ (Master Work Pool)</h2>
-              <p class="text-[11px] text-indigo-200 mt-0.5">จุดพักสมอง ป้องกันล้าทางจิตใจ — แยกเรื่องงานออกจากเรื่องส่วนตัว</p>
+              <span class="text-[10px] font-bold tracking-wider uppercase bg-white/20 px-2 py-0.5 rounded-full">Engineering Work Board</span>
+              <h2 class="text-base font-black mt-1">📁 โปรเจกต์ & งานทั้งหมด</h2>
+              <p class="text-[11px] text-indigo-200 mt-0.5">หัวใหญ่แบ่งตามโครงการ แล้วแยกเป็นงานย่อยเหมือน Work Board</p>
             </div>
             <div class="text-right">
-              <span class="text-[10px] text-indigo-300">งานทั้งหมดในคลัง</span>
-              <div id="poolTotalCountBadge" class="text-xl font-black text-amber-300">0</div>
+              <button onclick="toggleNewProjectForm()" class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold text-xs py-1.5 px-3 rounded-xl shadow transition flex items-center space-x-1">
+                <span>＋ สร้างโปรเจกต์</span>
+              </button>
             </div>
           </div>
         </div>
 
-        <!-- Form: 📥 เพิ่มงานใหม่เข้าคลัง -->
-        <div class="bg-white rounded-3xl p-4 border border-slate-200 shadow-sm space-y-3">
-          <h3 class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
-            <span class="text-indigo-600">📥</span>
-            <span>บันทึกงานใหม่เข้าคลัง (Quick Task Capture)</span>
-          </h3>
-
-          <input type="text" id="poolInputTitle" placeholder="ชื่องาน เช่น ตรวจสอบสัญญาณ CAN Bus VCU, สั่งโซ่ PG-1..." 
+        <!-- Collapsible Form: สร้างโปรเจกต์ใหม่ -->
+        <div id="newProjectFormContainer" class="hidden bg-white rounded-3xl p-4 border border-indigo-200 shadow-md space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+              <span>＋ สร้างหัวข้อโปรเจกต์ใหม่ (New Project)</span>
+            </h3>
+            <button onclick="toggleNewProjectForm()" class="text-slate-400 hover:text-slate-600 text-xs">✕</button>
+          </div>
+          <input type="text" id="inputNewProjectName" placeholder="ชื่อโปรเจกต์ เช่น EBUS VCU, Ferry RISO..." 
             class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-
-          <!-- Priority: 4 Quadrants Radio Pills -->
-          <div>
-            <label class="block text-[11px] font-semibold text-slate-600 mb-1.5">ระดับความสำคัญ (Eisenhower Quadrant):</label>
-            <div class="grid grid-cols-2 gap-2 text-left" id="poolPriorityGroup">
-              <button type="button" onclick="selectPoolPriority('Q1')" id="btnPriQ1" class="pool-pri-btn p-2 rounded-xl border border-rose-200 bg-rose-50 text-rose-800 text-[11px] font-semibold flex items-center space-x-1.5 transition">
-                <span class="text-base">🔥</span>
-                <div>
-                  <div class="font-bold">Q1: ด่วน & สำคัญ</div>
-                  <div class="text-[9px] text-rose-600 font-normal">Do First (รีบทำทันที)</div>
-                </div>
-              </button>
-              <button type="button" onclick="selectPoolPriority('Q2')" id="btnPriQ2" class="pool-pri-btn active ring-2 ring-amber-500 p-2 rounded-xl border border-amber-300 bg-amber-50 text-amber-800 text-[11px] font-semibold flex items-center space-x-1.5 transition">
-                <span class="text-base">⭐</span>
-                <div>
-                  <div class="font-bold">Q2: ไม่ด่วน แต่สำคัญ</div>
-                  <div class="text-[9px] text-amber-600 font-normal">Plan (วางแผน/พัฒนาระบบ)</div>
-                </div>
-              </button>
-              <button type="button" onclick="selectPoolPriority('Q3')" id="btnPriQ3" class="pool-pri-btn p-2 rounded-xl border border-sky-200 bg-sky-50 text-sky-800 text-[11px] font-semibold flex items-center space-x-1.5 transition">
-                <span class="text-base">⚡</span>
-                <div>
-                  <div class="font-bold">Q3: ด่วน แต่ไม่สำคัญ</div>
-                  <div class="text-[9px] text-sky-600 font-normal">Delegate / Quick Win</div>
-                </div>
-              </button>
-              <button type="button" onclick="selectPoolPriority('Q4')" id="btnPriQ4" class="pool-pri-btn p-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 text-[11px] font-semibold flex items-center space-x-1.5 transition">
-                <span class="text-base">💤</span>
-                <div>
-                  <div class="font-bold">Q4: ไม่ด่วน & ไม่สำคัญ</div>
-                  <div class="text-[9px] text-slate-500 font-normal">Backlog / Someday</div>
-                </div>
-              </button>
-            </div>
-          </div>
-
-          <!-- Tags -->
-          <div>
-            <label class="block text-[11px] font-semibold text-slate-600 mb-1.5">แท็กหมวดหมู่หน้างาน (Field Tag):</label>
-            <div class="flex items-center space-x-1.5 overflow-x-auto pb-1" id="poolTagGroup">
-              <button type="button" onclick="selectPoolTag('⚡ HV/Batt')" class="pool-tag-pill active px-2.5 py-1 rounded-full border border-indigo-600 bg-indigo-50 text-indigo-700 font-bold text-[10px]">⚡ HV/Batt</button>
-              <button type="button" onclick="selectPoolTag('💻 VCU')" class="pool-tag-pill px-2.5 py-1 rounded-full border border-slate-200 bg-white text-slate-600 text-[10px]">💻 VCU</button>
-              <button type="button" onclick="selectPoolTag('🔧 Mech')" class="pool-tag-pill px-2.5 py-1 rounded-full border border-slate-200 bg-white text-slate-600 text-[10px]">🔧 Mech</button>
-              <button type="button" onclick="selectPoolTag('📦 Part')" class="pool-tag-pill px-2.5 py-1 rounded-full border border-slate-200 bg-white text-slate-600 text-[10px]">📦 Part</button>
-              <button type="button" onclick="selectPoolTag('📄 Admin')" class="pool-tag-pill px-2.5 py-1 rounded-full border border-slate-200 bg-white text-slate-600 text-[10px]">📄 Admin</button>
-            </div>
-          </div>
-
-          <!-- Schedule Option -->
-          <div class="flex items-center justify-between pt-1">
-            <label class="flex items-center space-x-2 text-xs text-slate-700 cursor-pointer">
-              <input type="checkbox" id="poolAssignTodayCheck" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
-              <span>📌 ดึงเข้ากระดานทำวันนี้ทันที</span>
-            </label>
-            <button onclick="addPoolTask()" class="bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs py-2 px-4 rounded-xl shadow-md transition flex items-center space-x-1">
-              <span>+ บันทึกงานเข้าคลัง</span>
+          <div class="flex items-center space-x-2">
+            <select id="selectNewProjectGroup" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none">
+              <option value="งานหลัก">กลุ่ม: งานหลัก</option>
+              <option value="Ferry Maintenance">กลุ่ม: Ferry Maintenance</option>
+              <option value="อื่นๆ">กลุ่ม: อื่นๆ</option>
+            </select>
+            <button onclick="createNewProject()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-2 px-3 rounded-xl shadow-sm transition">
+              บันทึกสร้างโปรเจกต์
             </button>
           </div>
         </div>
 
-        <!-- EISENHOWER MATRIX 4 QUADRANTS CONTAINER -->
-        <div class="space-y-3">
-          <div class="flex items-center justify-between px-1">
-            <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">🧭 Eisenhower Matrix (4 Quadrants)</h3>
-            <span class="text-[10px] text-slate-400">จัดลำดับความสำคัญชัดเจน</span>
-          </div>
+        <!-- Filter Pills Bar -->
+        <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 text-xs" id="projectFilterPills">
+          <button onclick="setProjectFilter('active')" class="proj-filter-btn active px-3 py-1 rounded-full border border-indigo-600 bg-indigo-50 text-indigo-700 font-bold">ยังไม่เสร็จ</button>
+          <button onclick="setProjectFilter('all')" class="proj-filter-btn px-3 py-1 rounded-full border border-slate-200 bg-white text-slate-600 font-medium">ทั้งหมด</button>
+          <button onclick="setProjectFilter('doing')" class="proj-filter-btn px-3 py-1 rounded-full border border-slate-200 bg-white text-slate-600 font-medium">กำลังทำ</button>
+          <button onclick="setProjectFilter('wait')" class="proj-filter-btn px-3 py-1 rounded-full border border-slate-200 bg-white text-slate-600 font-medium">รอคนอื่น</button>
+          <button onclick="setProjectFilter('main')" class="proj-filter-btn px-3 py-1 rounded-full border border-slate-200 bg-white text-slate-600 font-medium">งานหลัก</button>
+          <button onclick="setProjectFilter('ferry')" class="proj-filter-btn px-3 py-1 rounded-full border border-slate-200 bg-white text-slate-600 font-medium">Ferry</button>
+          <button onclick="setProjectFilter('q1')" class="proj-filter-btn px-3 py-1 rounded-full border border-slate-200 bg-white text-slate-600 font-medium">🔥 Q1</button>
+          <button onclick="setProjectFilter('q2')" class="proj-filter-btn px-3 py-1 rounded-full border border-slate-200 bg-white text-slate-600 font-medium">⭐ Q2</button>
+        </div>
 
-          <!-- QUADRANT 1: DO FIRST -->
-          <div class="bg-white rounded-3xl p-3.5 border-2 border-rose-200 shadow-sm space-y-2">
-            <div class="flex items-center justify-between border-b border-rose-100 pb-2">
-              <div class="flex items-center space-x-2">
-                <span class="text-base">🔥</span>
-                <div>
-                  <h4 class="text-xs font-bold text-rose-900">Q1: ด่วน & สำคัญ (Do First)</h4>
-                  <p class="text-[9px] text-rose-600">วิกฤต, งานส่งผลกระทบทันที, ปัญหาหน้างานเฉพาะหน้า</p>
-                </div>
-              </div>
-              <span id="badgeCountQ1" class="text-xs font-black bg-rose-100 text-rose-800 px-2 py-0.5 rounded-full">0</span>
-            </div>
-            <div id="poolListQ1" class="space-y-2 pt-1"></div>
-          </div>
-
-          <!-- QUADRANT 2: PLAN / SCHEDULE -->
-          <div class="bg-white rounded-3xl p-3.5 border-2 border-amber-200 shadow-sm space-y-2">
-            <div class="flex items-center justify-between border-b border-amber-100 pb-2">
-              <div class="flex items-center space-x-2">
-                <span class="text-base">⭐</span>
-                <div>
-                  <h4 class="text-xs font-bold text-amber-900">Q2: ไม่ด่วน แต่สำคัญ (Plan & Schedule)</h4>
-                  <p class="text-[9px] text-amber-600">วางแผนระยะยาว, วิจัย/ทดสอบ EV, พัฒนาระบบ, ป้องกันปัญหา</p>
-                </div>
-              </div>
-              <span id="badgeCountQ2" class="text-xs font-black bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">0</span>
-            </div>
-            <div id="poolListQ2" class="space-y-2 pt-1"></div>
-          </div>
-
-          <!-- QUADRANT 3: DELEGATE / QUICK WIN -->
-          <div class="bg-white rounded-3xl p-3.5 border-2 border-sky-200 shadow-sm space-y-2">
-            <div class="flex items-center justify-between border-b border-sky-100 pb-2">
-              <div class="flex items-center space-x-2">
-                <span class="text-base">⚡</span>
-                <div>
-                  <h4 class="text-xs font-bold text-sky-900">Q3: ด่วน แต่ไม่สำคัญ (Delegate / Quick Win)</h4>
-                  <p class="text-[9px] text-sky-600">งานแทรกด่วน, นัดหมายสั้นๆ, ประสานงาน/สั่งอะไหล่ทั่วไป</p>
-                </div>
-              </div>
-              <span id="badgeCountQ3" class="text-xs font-black bg-sky-100 text-sky-800 px-2 py-0.5 rounded-full">0</span>
-            </div>
-            <div id="poolListQ3" class="space-y-2 pt-1"></div>
-          </div>
-
-          <!-- QUADRANT 4: BACKLOG / SOMEDAY -->
-          <div class="bg-white rounded-3xl p-3.5 border-2 border-slate-200 shadow-sm space-y-2">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-              <div class="flex items-center space-x-2">
-                <span class="text-base">💤</span>
-                <div>
-                  <h4 class="text-xs font-bold text-slate-800">Q4: ไม่ด่วน & ไม่สำคัญ (Backlog / Someday)</h4>
-                  <p class="text-[9px] text-slate-500">ไอเดียเก็บตก, งานปรับแต่งเล็กน้อย ค่อยทำเมื่อว่าง</p>
-                </div>
-              </div>
-              <span id="badgeCountQ4" class="text-xs font-black bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full">0</span>
-            </div>
-            <div id="poolListQ4" class="space-y-2 pt-1"></div>
-          </div>
-
+        <!-- DYNAMIC PROJECTS LIST (CARDS WITH SUB-TASKS) -->
+        <div id="projectsListContainer" class="space-y-4">
+          <!-- Populated dynamically -->
         </div>
 
       </div>
@@ -3121,20 +3030,25 @@
     }
 
 
+    
     // ====================================================================
-    // 3. WORK MANAGEMENT MODULE (Field Work & Daily Focus OS v2.2)
+    // 3. WORK MANAGEMENT MODULE (Field Work & Project OS v2.3)
+    // Synchronized with Work Board & tasks.js (EA Architecture)
     // ====================================================================
 
     let currentWorkDate = getTodayDateStr();
     let activeWorkSubTab = 'cockpit';
-    let selectedQuickTag = '⚡ HV/Batt';
-    let selectedPoolPriority = 'Q2';
-    let selectedPoolTag = '⚡ HV/Batt';
-    let isDoneSectionCollapsed = false;
+    let currentProjectFilter = 'active';
     let workNoteDebounceTimer = null;
 
-    let workTasks = [];
-    let workNotes = {};
+    // Seed Data imported directly from tasks.js (Energy Absolute Projects)
+    const SEED_WORK_DATA = {"updatedAt": "2026-10-28T02:32:25.342Z", "projects": [{"id": "gd-balance", "name": "GD Balance Battery CALB", "group": "งานหลัก", "order": 1, "priority": "med", "due": null, "note": "", "createdAt": "2026-09-11", "tasks": [{"id": "t1", "text": "Doc and port เคลมผลงาน", "status": "todo", "due": null, "today": null, "q": "q2"}]}, {"id": "tech-portfolio", "name": "ทีมช่าง Portfolio", "group": "งานหลัก", "order": 2, "priority": "med", "due": null, "note": "", "createdAt": "2026-09-11", "tasks": [{"id": "t1", "text": "ทำระบบที่ทำเอกสารผลงานอัตโนมัติ", "status": "todo", "due": null, "q": "q2"}, {"id": "t2", "text": "ถ้าทำได้ เอาไปให้ทีมช่างใช้งานเองได้", "status": "todo", "due": null, "q": "q2"}]}, {"id": "ebus-vcu", "name": "EBUS VCU", "group": "งานหลัก", "order": 3, "priority": "med", "due": null, "note": "", "createdAt": "2026-09-11", "tasks": [{"id": "ay0wip8", "text": "เพิ่ม logic ให้สมบูรณ์มากที่สุด", "status": "todo", "due": null, "createdAt": "2026-10-14", "today": "2026-10-28"}]}, {"id": "ferry-riso", "name": "Ferry Charge RISO Monitoring", "group": "งานหลัก", "order": 4, "priority": "med", "due": null, "note": "", "createdAt": "2026-09-11", "tasks": [{"id": "t1", "text": "ทำ doc software", "status": "done", "due": null, "q": "q2", "today": "2026-10-19", "doneAt": "2026-10-19", "note": "รอเอาไปนำเสนอพี่ P"}, {"id": "t2", "text": "แก้ software", "status": "todo", "due": null, "q": "q2"}, {"id": "oryl9b2", "text": "เชค CAN RISO อีกที", "status": "todo", "due": null, "createdAt": "2026-10-21", "q": "q2", "today": "2026-10-28"}]}, {"id": "rag-demo", "name": "ชุด RAG ทำโชว์ได้", "group": "งานหลัก", "order": 5, "priority": "med", "due": null, "note": "", "createdAt": "2026-09-11", "tasks": [{"id": "t1", "text": "ทำ Diagram", "status": "todo", "due": null, "q": "q2"}, {"id": "t2", "text": "ทำ Matlab firmware DC Charge (เอามาจาก P'Joe)", "status": "todo", "due": null, "q": "q4"}, {"id": "t3", "text": "Software Integration debug ไร้สาย from HMI", "status": "todo", "due": null, "q": "q4"}, {"id": "fetwrkj", "text": "เเก้ EVCC ชาร์จ AC ได้", "status": "todo", "due": null, "createdAt": "2026-10-08", "q": "q2", "today": null}, {"id": "go4tcrm", "text": "ทำ app debug เหมือน เรือสังฆราช", "status": "todo", "due": null, "createdAt": "2026-10-09", "q": "q2"}]}, {"id": "gd-soh-soc", "name": "GD Usable SOH and SOC Drift", "group": "งานหลัก", "order": 6, "priority": "med", "due": null, "note": "", "createdAt": "2026-09-11", "tasks": []}, {"id": "royal-boat", "name": "เรือพระสังฆราช", "group": "งานหลัก", "order": 7, "priority": "med", "due": null, "note": "", "createdAt": "2026-09-11", "tasks": [{"id": "t2", "text": "Timeline integration", "status": "todo", "due": null, "q": "q4"}, {"id": "5l6g0fh", "text": "ทดสอบระบบกับ MT30 แบบยกขึ้นห้อย", "status": "todo", "due": null, "createdAt": "2026-10-09", "q": "q4"}]}, {"id": "ferry-gcu", "name": "GCU", "group": "Ferry Maintenance", "order": 1, "priority": "med", "due": null, "note": "", "createdAt": "2026-09-11", "tasks": [{"id": "t1", "text": "Check logic", "status": "done", "due": null, "q": "q2", "today": "2026-10-20", "doneAt": "2026-10-20"}, {"id": "t2", "text": "Check fault", "status": "done", "due": null, "q": "q2", "today": "2026-10-20", "doneAt": "2026-10-20"}, {"id": "t3", "text": "Check hardware", "status": "todo", "due": null, "q": "q2"}]}, {"id": "ferry-sbcu", "name": "SBCU", "group": "Ferry Maintenance", "order": 3, "priority": "med", "due": null, "note": "", "createdAt": "2026-09-11", "tasks": [{"id": "t1", "text": "Check วิธีการ check ดี/เสีย, วิธีลง parameter", "status": "wait", "due": null, "q": "q2", "today": null, "note": "วิธีเชค SBCU มีชุดทดสอบอยู่ ต่อ CAN ได้ , สั่ง Relay ได้ เเต่ต้องรออุปกรณ์ อาทิตย์หน้า , ลำ41เอาตัวที่ใช้ได้ไปเปลี่ยนก่อน เเละก่อนจะเอาไปลงเรือต้อง flash program ใหม่เเละ parameter ใหม่"}, {"id": "t2", "text": "ทำ software ให้ง่ายขึ้น", "status": "doing", "due": null, "q": "q2", "today": null, "note": "ต้องรอ dbc ไฟล์กับพี่โต้งเเล้วค่อยทำต่อ"}, {"id": "t3", "text": "ทำ stock SBCU", "status": "wait", "due": null, "q": "q2", "note": "รอพี่นิคเเกะออกมา เเล้วมาเชคว่าใช้ได้ไหม เเล้วทำ stock ไว้มี SBCU,Relay,Current Sensor"}]}, {"id": "ferry-dashboard", "name": "Ferry Dashboard System", "group": "Ferry Maintenance", "order": 4, "priority": "med", "due": null, "note": "", "createdAt": "2026-09-11", "tasks": [{"id": "t1", "text": "ปรับ UI", "status": "todo", "due": null, "q": "q2"}, {"id": "t3", "text": "ทำ check QR code app + ขึ้น online ตอนเปลี่ยน pack", "status": "todo", "due": null, "q": "q2"}, {"id": "t5", "text": "ทำ prove + รายงานติด chiller", "status": "todo", "due": null, "q": "q2"}, {"id": "ijhjcua", "text": "MCU Investigate", "status": "doing", "due": null, "createdAt": "2026-10-15", "q": "q2", "today": null, "note": "พักไว้ก่อนจบที่เรื่องน้ำยา coolant รั่ว"}, {"id": "pnwe5bc", "text": "check สถานะเเบตเตอรี่ที่ต้องสำรวจ", "status": "todo", "due": null, "createdAt": "2026-10-28", "today": "2026-10-28"}]}, {"id": "mbula1o", "name": "Ferry SOC", "group": "Ferry Maintenance", "order": 5, "priority": "med", "due": null, "note": "", "createdAt": "2026-10-09", "tasks": []}, {"id": "ir81f6k", "name": "Ferry System", "group": "Ferry Maintenance", "order": 6, "priority": "med", "due": null, "note": "", "createdAt": "2026-10-20", "tasks": [{"id": "0xzb404", "text": "ทำ doc Ferry System", "status": "todo", "due": null, "createdAt": "2026-10-20", "q": "q2", "today": "2026-10-28"}]}], "log": {"2026-10-02": {"planned": {"ferry-query/t1": {"text": "Check query script", "project": "Ferry Query"}, "ferry-dashboard/t2": {"text": "ทำ list pack ข้อมูลไม่ครบ", "project": "Ferry Dashboard System"}, "ebus-vcu/t1": {"text": "วางแผน master ก่อน", "project": "EBUS VCU"}}, "done": {"ferry-query/t1": {"text": "Check query script", "project": "Ferry Query"}, "ebus-vcu/t1": {"text": "วางแผน master ก่อน", "project": "EBUS VCU"}, "ferry-dashboard/t2": {"text": "ทำ list pack ข้อมูลไม่ครบ", "project": "Ferry Dashboard System"}}, "added": {}, "note": ""}, "2026-10-04": {"planned": {"aipwe2a/9ky75i6": {"text": "เชค logic+วิธีเชค NTC +ค่า R", "project": "MSF10 Pack17 NTC failure"}}, "done": {}, "added": {"ynq80xo": {"text": "โปรเจกต์ใหม่: Meeting AMT เปลี่ยน Battery", "project": "Ferry Maintenance"}, "ynq80xo/a8vo5oz": {"text": "เตรียมความเป็นไปได้ เเละอายุการใช้ Battery เปลี่ยนเเบต ลำ41", "project": "Meeting AMT เปลี่ยน Battery"}, "aipwe2a": {"text": "โปรเจกต์ใหม่: MSF10 Pack17 NTC failure", "project": "Ferry Maintenance"}, "aipwe2a/9ky75i6": {"text": "เชค logic+วิธีเชค NTC +ค่า R", "project": "MSF10 Pack17 NTC failure"}, "aipwe2a/ts25e3m": {"text": "ลงหน้างานเชค NTC+เเก้ปัญหา", "project": "MSF10 Pack17 NTC failure"}}, "note": ""}, "2026-10-05": {"planned": {}, "done": {"ynq80xo/a8vo5oz": {"text": "เตรียมความเป็นไปได้ เเละอายุการใช้ Battery เปลี่ยนเเบต ลำ41", "project": "Meeting AMT เปลี่ยน Battery"}, "aipwe2a/ts25e3m": {"text": "ลงหน้างานเชค NTC+เเก้ปัญหา", "project": "MSF10 Pack17 NTC failure"}, "ynq80xo/m848aay": {"text": "Meet AMT", "project": "Meeting AMT เปลี่ยน Battery"}, "aipwe2a/9ky75i6": {"text": "เชค logic+วิธีเชค NTC +ค่า R", "project": "MSF10 Pack17 NTC failure"}, "ebus-vcu/t3": {"text": "เขียนโครงสร้าง software", "project": "EBUS VCU"}}, "added": {"ynq80xo/m848aay": {"text": "Meet AMT", "project": "Meeting AMT เปลี่ยน Battery"}, "ebus-vcu/ug4frd2": {"text": "เทส GPIO ALL PIN", "project": "EBUS VCU"}, "ebus-vcu/9zrdwkt": {"text": "Logic Dev", "project": "EBUS VCU"}, "4441q30": {"text": "โปรเจกต์ใหม่: MSF41 กู้ Battery Pack1", "project": "Ferry Maintenance"}, "4441q30/3ye4agk": {"text": "ลงหน้างานกู้ Battery Pack1", "project": "MSF41 กู้ Battery Pack1"}}, "note": ""}, "2026-10-06": {"planned": {"ebus-vcu/ug4frd2": {"text": "เทส GPIO ALL PIN", "project": "EBUS VCU"}, "ebus-vcu/9zrdwkt": {"text": "Logic Dev", "project": "EBUS VCU"}, "4441q30/3ye4agk": {"text": "ลงหน้างานกู้ Battery Pack1", "project": "MSF41 กู้ Battery Pack1"}, "rag-demo/w0y9abh": {"text": "เตรียมชุดโชวว์ไว้ก่อนวันที่ 2026-10-06", "project": "ชุด RAG ทำโชว์ได้"}}, "done": {"4441q30/3ye4agk": {"text": "ลงหน้างานกู้ Battery Pack1", "project": "MSF41 กู้ Battery Pack1"}}, "added": {"rag-demo/w0y9abh": {"text": "เตรียมชุดโชวว์ไว้ก่อนวันที่ 2026-10-06", "project": "ชุด RAG ทำโชว์ได้"}}, "note": ""}, "2026-10-07": {"planned": {"ebus-vcu/ug4frd2": {"text": "เทส GPIO ALL PIN", "project": "EBUS VCU"}, "ebus-vcu/9zrdwkt": {"text": "Logic Dev", "project": "EBUS VCU"}, "ferry-dashboard/afqps7t": {"text": "Monitor MSF41 เเละอื่นๆ Consumption", "project": "Ferry Dashboard System"}, "ferry-dashboard/25q68mw": {"text": "วิเคราะห์ข้อมูลลำ 30 เเละ 37 ที่เก็บ SD-Card มา", "project": "Ferry Dashboard System"}, "rag-demo/u07k3t1": {"text": "ลองใช้ VCU ตัว 2274A", "project": "ชุด RAG ทำโชว์ได้"}, "rag-demo/l2dpj2e": {"text": "เก็บสายไฟให้เรียบร้อย", "project": "ชุด RAG ทำโชว์ได้"}, "rag-demo/ddmog8p": {"text": "เก็บ project ไว้อีกที่1", "project": "ชุด RAG ทำโชว์ได้"}, "royal-boat/t1": {"text": "เตรียม software integration", "project": "เรือพระสังฆราช"}}, "done": {"rag-demo/u07k3t1": {"text": "ลองใช้ VCU ตัว 2274A", "project": "ชุด RAG ทำโชว์ได้"}, "rag-demo/l2dpj2e": {"text": "เก็บสายไฟให้เรียบร้อย", "project": "ชุด RAG ทำโชว์ได้"}, "rag-demo/ddmog8p": {"text": "เก็บ project ไว้อีกที่1", "project": "ชุด RAG ทำโชว์ได้"}, "ebus-vcu/9zrdwkt": {"text": "Logic Dev", "project": "EBUS VCU"}, "ebus-vcu/ug4frd2": {"text": "เทส GPIO ALL PIN", "project": "EBUS VCU"}, "ferry-dashboard/afqps7t": {"text": "Monitor MSF41 เเละอื่นๆ Consumption", "project": "Ferry Dashboard System"}}, "added": {"ferry-dashboard/afqps7t": {"text": "Monitor MSF41 เเละอื่นๆ Consumption", "project": "Ferry Dashboard System"}, "ferry-dashboard/25q68mw": {"text": "วิเคราะห์ข้อมูลลำ 30 เเละ 37 ที่เก็บ SD-Card มา", "project": "Ferry Dashboard System"}, "rag-demo/u07k3t1": {"text": "ลองใช้ VCU ตัว 2274A", "project": "ชุด RAG ทำโชว์ได้"}, "rag-demo/l2dpj2e": {"text": "เก็บสายไฟให้เรียบร้อย", "project": "ชุด RAG ทำโชว์ได้"}, "rag-demo/ddmog8p": {"text": "เก็บ project ไว้อีกที่1", "project": "ชุด RAG ทำโชว์ได้"}}, "note": ""}, "2026-10-08": {"planned": {"royal-boat/t1": {"text": "เตรียม software integration", "project": "เรือพระสังฆราช"}, "ferry-dashboard/25q68mw": {"text": "วิเคราะห์ข้อมูลลำ 30 เเละ 37 ที่เก็บ SD-Card มา", "project": "Ferry Dashboard System"}, "ferry-dashboard/lk6oay7": {"text": "หาข้อมูล DTC", "project": "Ferry Dashboard System"}, "ferry-dashboard/d5ilazd": {"text": "ปรับดูกราฟย้อนหลัง", "project": "Ferry Dashboard System"}}, "done": {"ferry-dashboard/lk6oay7": {"text": "หาข้อมูล DTC", "project": "Ferry Dashboard System"}, "ferry-dashboard/d5ilazd": {"text": "ปรับดูกราฟย้อนหลัง", "project": "Ferry Dashboard System"}, "royal-boat/t1": {"text": "เตรียม software integration", "project": "เรือพระสังฆราช"}}, "added": {"ferry-dashboard/d5ilazd": {"text": "ปรับดูกราฟย้อนหลัง", "project": "Ferry Dashboard System"}, "ferry-dashboard/lk6oay7": {"text": "หาข้อมูล DTC", "project": "Ferry Dashboard System"}, "rag-demo/fetwrkj": {"text": "เเก้ EVCC ชาร์จ AC ได้", "project": "ชุด RAG ทำโชว์ได้"}}, "note": ""}, "2026-10-09": {"planned": {"ferry-dashboard/25q68mw": {"text": "วิเคราะห์ข้อมูลลำ 30 เเละ 37 ที่เก็บ SD-Card มา", "project": "Ferry Dashboard System"}, "ferry-gcu/t1": {"text": "Check logic", "project": "GCU"}, "ferry-gcu/t2": {"text": "Check fault", "project": "GCU"}, "mbula1o/gzou5we": {"text": "วางแผน + เวลาที่จะทำ", "project": "Ferry SOC"}, "ferry-dashboard/maukg7a": {"text": "วิเคราะห์ SOH จากห้อง EOL", "project": "Ferry Dashboard System"}, "ferry-dashboard/vnbzk1v": {"text": "คิดแผน spark จากระบบนี้", "project": "Ferry Dashboard System"}}, "done": {"ferry-dashboard/vnbzk1v": {"text": "คิดแผน spark จากระบบนี้", "project": "Ferry Dashboard System"}, "mbula1o/gzou5we": {"text": "วางแผน + เวลาที่จะทำ", "project": "Ferry SOC"}}, "added": {"royal-boat/5l6g0fh": {"text": "ทดสอบระบบกับ MT30 แบบยกขึ้นห้อย", "project": "เรือพระสังฆราช"}, "rag-demo/go4tcrm": {"text": "ทำ app debug เหมือน เรือสังฆราช", "project": "ชุด RAG ทำโชว์ได้"}, "mbula1o": {"text": "โปรเจกต์ใหม่: Ferry SOC", "project": "Ferry Maintenance"}, "mbula1o/gzou5we": {"text": "วางแผน + เวลาที่จะทำ", "project": "Ferry SOC"}, "ferry-dashboard/maukg7a": {"text": "วิเคราะห์ SOH จากห้อง EOL", "project": "Ferry Dashboard System"}, "ferry-dashboard/vnbzk1v": {"text": "คิดแผน spark จากระบบนี้", "project": "Ferry Dashboard System"}}, "note": ""}, "2026-10-12": {"planned": {"ferry-dashboard/25q68mw": {"text": "วิเคราะห์ข้อมูลลำ 30 เเละ 37 ที่เก็บ SD-Card มา", "project": "Ferry Dashboard System"}, "ferry-dashboard/maukg7a": {"text": "วิเคราะห์ SOH จากห้อง EOL", "project": "Ferry Dashboard System"}, "mbula1o/q0r67m0": {"text": "ทำรายงาน Algorithm", "project": "Ferry SOC"}, "mbula1o/4nhlegc": {"text": "dev matlab model", "project": "Ferry SOC"}, "ferry-dashboard/sw7uu89": {"text": "ปรับปรุง bot ใหม่ให้ฉลาดขึ้น", "project": "Ferry Dashboard System"}, "m1ub6qf/mss9omu": {"text": "ทำ Download Version ใหม่", "project": "TSB Download"}}, "done": {"m1ub6qf/mss9omu": {"text": "ทำ Download Version ใหม่", "project": "TSB Download"}, "ferry-dashboard/maukg7a": {"text": "วิเคราะห์ SOH จากห้อง EOL", "project": "Ferry Dashboard System"}, "ferry-dashboard/sw7uu89": {"text": "ปรับปรุง bot ใหม่ให้ฉลาดขึ้น", "project": "Ferry Dashboard System"}}, "added": {"mbula1o/q0r67m0": {"text": "ทำรายงาน Algorithm", "project": "Ferry SOC"}, "mbula1o/4nhlegc": {"text": "dev matlab model", "project": "Ferry SOC"}, "ferry-dashboard/sw7uu89": {"text": "ปรับปรุง bot ใหม่ให้ฉลาดขึ้น", "project": "Ferry Dashboard System"}, "m1ub6qf": {"text": "โปรเจกต์ใหม่: TSB Download", "project": "งานหลัก"}, "m1ub6qf/mss9omu": {"text": "ทำ Download Version ใหม่", "project": "TSB Download"}}, "note": ""}, "2026-10-14": {"planned": {"ferry-dashboard/25q68mw": {"text": "วิเคราะห์ข้อมูลลำ 30 เเละ 37 ที่เก็บ SD-Card มา", "project": "Ferry Dashboard System"}, "mbula1o/q0r67m0": {"text": "ทำรายงาน Algorithm", "project": "Ferry SOC"}, "mbula1o/4nhlegc": {"text": "dev matlab model", "project": "Ferry SOC"}, "ferry-dashboard/bkwrin5": {"text": "ิbot ทำสรุปงานเเต่ละวัน เเละทำให้ในกลุ่มใช้งานได้", "project": "Ferry Dashboard System"}, "ferry-dashboard/7q8vf3c": {"text": "list ลำดับที่เข้ามาเปลี่ยนเเบต+ติด chiller", "project": "Ferry Dashboard System"}, "ferry-dashboard/whnue3f": {"text": "Ferry41 Battery SOH Report AMT", "project": "Ferry Dashboard System"}, "ferry-dashboard/piremsc": {"text": "List Commissioning Chiller", "project": "Ferry Dashboard System"}}, "done": {"ferry-dashboard/25q68mw": {"text": "วิเคราะห์ข้อมูลลำ 30 เเละ 37 ที่เก็บ SD-Card มา", "project": "Ferry Dashboard System"}, "ferry-dashboard/7q8vf3c": {"text": "list ลำดับที่เข้ามาเปลี่ยนเเบต+ติด chiller", "project": "Ferry Dashboard System"}, "ferry-dashboard/whnue3f": {"text": "Ferry41 Battery SOH Report AMT", "project": "Ferry Dashboard System"}, "ferry-dashboard/bkwrin5": {"text": "ิbot ทำสรุปงานเเต่ละวัน เเละทำให้ในกลุ่มใช้งานได้", "project": "Ferry Dashboard System"}, "ferry-dashboard/piremsc": {"text": "List Commissioning Chiller", "project": "Ferry Dashboard System"}, "mbula1o/4nhlegc": {"text": "dev matlab model", "project": "Ferry SOC"}}, "added": {"ebus-vcu/ay0wip8": {"text": "เพิ่ม logic ให้สมบูรณ์มากที่สุด", "project": "EBUS VCU"}, "ferry-dashboard/bkwrin5": {"text": "ิbot ทำสรุปงานเเต่ละวัน เเละทำให้ในกลุ่มใช้งานได้", "project": "Ferry Dashboard System"}, "ferry-dashboard/7q8vf3c": {"text": "list ลำดับที่เข้ามาเปลี่ยนเเบต+ติด chiller", "project": "Ferry Dashboard System"}, "ferry-dashboard/whnue3f": {"text": "Ferry41 Battery SOH Report AMT", "project": "Ferry Dashboard System"}, "ferry-dashboard/piremsc": {"text": "List Commissioning Chiller", "project": "Ferry Dashboard System"}}, "note": ""}, "2026-10-15": {"planned": {"mbula1o/q0r67m0": {"text": "ทำรายงาน Algorithm", "project": "Ferry SOC"}, "ferry-gcu/t1": {"text": "Check logic", "project": "GCU"}, "ferry-gcu/t2": {"text": "Check fault", "project": "GCU"}, "ferry-dashboard/q4r2307": {"text": "Tools EOL Data recorde + Cal SOH + บันทึกเปลี่ยนเเบต", "project": "Ferry Dashboard System"}, "ferry-dashboard/ijhjcua": {"text": "MCU Investigate", "project": "Ferry Dashboard System"}}, "done": {}, "added": {"ferry-dashboard/q4r2307": {"text": "Tools EOL Data recorde + Cal SOH + บันทึกเปลี่ยนเเบต", "project": "Ferry Dashboard System"}, "ferry-dashboard/ijhjcua": {"text": "MCU Investigate", "project": "Ferry Dashboard System"}}, "note": ""}, "2026-10-16": {"planned": {"ferry-gcu/t1": {"text": "Check logic", "project": "GCU"}, "ferry-gcu/t2": {"text": "Check fault", "project": "GCU"}, "ferry-dashboard/q4r2307": {"text": "Tools EOL Data recorde + Cal SOH + บันทึกเปลี่ยนเเบต", "project": "Ferry Dashboard System"}, "ferry-dashboard/ijhjcua": {"text": "MCU Investigate", "project": "Ferry Dashboard System"}, "mbula1o/q0r67m0": {"text": "ทำรายงาน Algorithm", "project": "Ferry SOC"}, "ferry-dashboard/1yuvwe4": {"text": "Check 4 pack EOL Test เหลือ1 Pack", "project": "Ferry Dashboard System"}}, "done": {}, "added": {"ferry-dashboard/1yuvwe4": {"text": "Check 4 pack EOL Test เหลือ1 Pack", "project": "Ferry Dashboard System"}}, "note": ""}, "2026-10-19": {"planned": {"ferry-gcu/t1": {"text": "Check logic", "project": "GCU"}, "ferry-gcu/t2": {"text": "Check fault", "project": "GCU"}, "ferry-dashboard/1yuvwe4": {"text": "Check 4 pack EOL Test เหลือ1 Pack", "project": "Ferry Dashboard System"}, "mbula1o/q0r67m0": {"text": "ทำรายงาน Algorithm", "project": "Ferry SOC"}, "ferry-riso/t1": {"text": "ทำ doc software", "project": "Ferry Charge RISO Monitoring"}}, "done": {"mbula1o/q0r67m0": {"text": "ทำรายงาน Algorithm", "project": "Ferry SOC"}, "ferry-riso/t1": {"text": "ทำ doc software", "project": "Ferry Charge RISO Monitoring"}, "ferry-dashboard/1yuvwe4": {"text": "Check 4 pack EOL Test เหลือ1 Pack", "project": "Ferry Dashboard System"}}, "added": {}, "note": ""}, "2026-10-20": {"planned": {"ferry-gcu/t1": {"text": "Check logic", "project": "GCU"}, "ferry-gcu/t2": {"text": "Check fault", "project": "GCU"}, "ir81f6k/0xzb404": {"text": "ทำ doc Ferry System", "project": "Ferry System"}}, "done": {"ferry-gcu/t1": {"text": "Check logic", "project": "GCU"}, "ferry-gcu/t2": {"text": "Check fault", "project": "GCU"}}, "added": {"ir81f6k": {"text": "โปรเจกต์ใหม่: Ferry System", "project": "Ferry Maintenance"}, "ir81f6k/0xzb404": {"text": "ทำ doc Ferry System", "project": "Ferry System"}}, "note": ""}, "2026-10-21": {"planned": {"ir81f6k/0xzb404": {"text": "ทำ doc Ferry System", "project": "Ferry System"}, "ferry-riso/oryl9b2": {"text": "เชค CAN RISO อีกที", "project": "Ferry Charge RISO Monitoring"}}, "done": {}, "added": {"ferry-riso/oryl9b2": {"text": "เชค CAN RISO อีกที", "project": "Ferry Charge RISO Monitoring"}}, "note": ""}, "2026-10-22": {"planned": {"ferry-riso/oryl9b2": {"text": "เชค CAN RISO อีกที", "project": "Ferry Charge RISO Monitoring"}, "ir81f6k/0xzb404": {"text": "ทำ doc Ferry System", "project": "Ferry System"}}, "done": {}, "added": {}, "note": ""}, "2026-10-26": {"planned": {"ferry-riso/oryl9b2": {"text": "เชค CAN RISO อีกที", "project": "Ferry Charge RISO Monitoring"}, "ir81f6k/0xzb404": {"text": "ทำ doc Ferry System", "project": "Ferry System"}, "ebus-vcu/ay0wip8": {"text": "เพิ่ม logic ให้สมบูรณ์มากที่สุด", "project": "EBUS VCU"}}, "done": {}, "added": {}, "note": ""}, "2026-10-28": {"planned": {"ebus-vcu/ay0wip8": {"text": "เพิ่ม logic ให้สมบูรณ์มากที่สุด", "project": "EBUS VCU"}, "ferry-riso/oryl9b2": {"text": "เชค CAN RISO อีกที", "project": "Ferry Charge RISO Monitoring"}, "ir81f6k/0xzb404": {"text": "ทำ doc Ferry System", "project": "Ferry System"}, "ferry-dashboard/pnwe5bc": {"text": "check สถานะเเบตเตอรี่ที่ต้องสำรวจ", "project": "Ferry Dashboard System"}}, "done": {}, "added": {"ferry-dashboard/pnwe5bc": {"text": "check สถานะเเบตเตอรี่ที่ต้องสำรวจ", "project": "Ferry Dashboard System"}}, "note": ""}}};
+
+    let workData = {
+      updatedAt: null,
+      projects: [],
+      log: {}
+    };
 
     function getTodayDateStr() {
       const now = new Date();
@@ -3165,161 +3079,76 @@
       return `${prefix}${dayName} ${d} ${monthName} ${thaiYear}`;
     }
 
-    // Default Seed Tasks for EA Engineering Field Work
-    function getSeedWorkTasks() {
-      const today = getTodayDateStr();
-      return [
-        {
-          id: 'TASK-1',
-          title: 'ตรวจสอบแรงดันเซลล์ HV Battery Pack #1 หน้างาน',
-          priority: 'Q1',
-          tag: '⚡ HV/Batt',
-          status: 'IN_PROGRESS',
-          assignedDate: today,
-          createdAt: today + ' 09:00',
-          updatedAt: today + ' 09:00'
-        },
-        {
-          id: 'TASK-2',
-          title: 'อัปเดต Firmware VCU Ver 2.3 และทดสอบส่งคำสั่ง CAN Bus',
-          priority: 'Q1',
-          tag: '💻 VCU',
-          status: 'TODO',
-          assignedDate: today,
-          createdAt: today + ' 09:15',
-          updatedAt: today + ' 09:15'
-        },
-        {
-          id: 'TASK-3',
-          title: 'ติดตั้งชุดสเตอร์หน้า-หลังและโซ่ทดเกียร์ มอเตอร์ PG-1',
-          priority: 'Q2',
-          tag: '🔧 Mech',
-          status: 'TODO',
-          assignedDate: today,
-          createdAt: today + ' 09:30',
-          updatedAt: today + ' 09:30'
-        },
-        {
-          id: 'TASK-4',
-          title: 'สั่งซื้อ Waterproof Connector IP67 สำหรับ Harness หน้างาน',
-          priority: 'Q3',
-          tag: '📦 Part',
-          status: 'TODO',
-          assignedDate: '',
-          createdAt: today + ' 10:00',
-          updatedAt: today + ' 10:00'
-        },
-        {
-          id: 'TASK-5',
-          title: 'ทำสรุปรายงานผลการทดสอบ Dyno Test ส่งผู้จัดการ',
-          priority: 'Q2',
-          tag: '📄 Admin',
-          status: 'TODO',
-          assignedDate: '',
-          createdAt: today + ' 10:30',
-          updatedAt: today + ' 10:30'
-        }
-      ];
-    }
-
-    // Load from LocalStorage
     function loadWorkFromStorage() {
       try {
-        const storedTasks = localStorage.getItem('LIFE_OS_WORK_TASKS');
-        if (storedTasks) {
-          workTasks = JSON.parse(storedTasks);
+        const stored = localStorage.getItem('LIFE_OS_WORK_DATA');
+        if (stored) {
+          workData = JSON.parse(stored);
+          if (!workData.projects || workData.projects.length === 0) {
+            workData = JSON.parse(JSON.stringify(SEED_WORK_DATA));
+            saveWorkToStorage();
+          }
         } else {
-          workTasks = getSeedWorkTasks();
-          saveWorkToStorage();
-        }
-
-        const storedNotes = localStorage.getItem('LIFE_OS_WORK_NOTES');
-        if (storedNotes) {
-          workNotes = JSON.parse(storedNotes);
-        } else {
-          const today = getTodayDateStr();
-          workNotes = {
-            [today]: 'บันทึกหน้างานเบื้องต้น: ระบบพร้อมทดสอบ VCU รอบบ่าย ตรวจสอบแรงดันไฟหลักเรียบร้อย'
-          };
+          workData = JSON.parse(JSON.stringify(SEED_WORK_DATA));
           saveWorkToStorage();
         }
       } catch (e) {
         console.error('loadWorkFromStorage error:', e);
-        workTasks = getSeedWorkTasks();
-        workNotes = {};
+        workData = JSON.parse(JSON.stringify(SEED_WORK_DATA));
       }
     }
 
-    // Save to LocalStorage
     function saveWorkToStorage() {
       try {
-        localStorage.setItem('LIFE_OS_WORK_TASKS', JSON.stringify(workTasks));
-        localStorage.setItem('LIFE_OS_WORK_NOTES', JSON.stringify(workNotes));
+        workData.updatedAt = new Date().toISOString();
+        localStorage.setItem('LIFE_OS_WORK_DATA', JSON.stringify(workData));
       } catch (e) {
         console.error('saveWorkToStorage error:', e);
       }
     }
 
-    // Fetch from Backend (API / Cloud)
     async function fetchWorkData() {
       loadWorkFromStorage();
       renderWorkView();
 
       try {
         const res = await callApi('getWorkData', { date: currentWorkDate });
-        if (res && res.success) {
-          if (res.tasks && Array.isArray(res.tasks) && res.tasks.length > 0) {
-            // Merge with local tasks
-            const cloudMap = new Map(res.tasks.map(t => [t.id, t]));
-            workTasks.forEach(lt => {
-              if (!cloudMap.has(lt.id)) {
-                cloudMap.set(lt.id, lt);
-              }
-            });
-            workTasks = Array.from(cloudMap.values());
-          }
-          if (res.note !== undefined && res.date) {
-            if (res.note && !workNotes[res.date]) {
-              workNotes[res.date] = res.note;
-            }
-          }
+        if (res && res.success && res.workData && res.workData.projects) {
+          workData = res.workData;
           saveWorkToStorage();
           renderWorkView();
         }
       } catch (err) {
-        console.warn('fetchWorkData network warning (using local):', err.message);
+        console.warn('fetchWorkData network fallback:', err.message);
       }
     }
 
-    // Sub-Tab Switcher (Cockpit vs Pool)
     function switchWorkSubTab(subTab) {
       activeWorkSubTab = subTab;
       const btnCockpit = document.getElementById('btnWorkSubCockpit');
-      const btnPool = document.getElementById('btnWorkSubPool');
+      const btnProjects = document.getElementById('btnWorkSubProjects');
       const viewCockpit = document.getElementById('workSubViewCockpit');
-      const viewPool = document.getElementById('workSubViewPool');
+      const viewProjects = document.getElementById('workSubViewProjects');
 
       if (subTab === 'cockpit') {
         viewCockpit.classList.remove('hidden');
-        viewPool.classList.add('hidden');
+        viewProjects.classList.add('hidden');
         btnCockpit.className = 'flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 bg-white text-indigo-700 shadow-sm flex items-center justify-center space-x-1.5';
-        btnPool.className = 'flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 text-slate-600 flex items-center justify-center space-x-1.5';
+        btnProjects.className = 'flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 text-slate-600 flex items-center justify-center space-x-1.5';
       } else {
         viewCockpit.classList.add('hidden');
-        viewPool.classList.remove('hidden');
-        btnPool.className = 'flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 bg-white text-indigo-700 shadow-sm flex items-center justify-center space-x-1.5';
+        viewProjects.classList.remove('hidden');
+        btnProjects.className = 'flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 bg-white text-indigo-700 shadow-sm flex items-center justify-center space-x-1.5';
         btnCockpit.className = 'flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 text-slate-600 flex items-center justify-center space-x-1.5';
       }
 
       renderWorkView();
     }
 
-    // Date Navigation
     function changeWorkDate(deltaDays) {
       const parts = currentWorkDate.split('-');
       const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
       d.setDate(d.getDate() + deltaDays);
-      
       const y = d.getFullYear();
       const m = String(d.getMonth() + 1).padStart(2, '0');
       const day = String(d.getDate()).padStart(2, '0');
@@ -3357,7 +3186,6 @@
     function renderWorkView() {
       const todayStr = getTodayDateStr();
       
-      // Update Date Display
       const dateDisplay = document.getElementById('workDateDisplay');
       if (dateDisplay) {
         dateDisplay.textContent = formatThaiWorkDate(currentWorkDate);
@@ -3365,482 +3193,740 @@
 
       const btnTodayReset = document.getElementById('btnTodayReset');
       if (btnTodayReset) {
-        if (currentWorkDate !== todayStr) {
-          btnTodayReset.classList.remove('hidden');
-        } else {
-          btnTodayReset.classList.add('hidden');
-        }
+        if (currentWorkDate !== todayStr) btnTodayReset.classList.remove('hidden');
+        else btnTodayReset.classList.add('hidden');
       }
 
+      // Populate Project Dropdown for Quick Add
+      populateProjectDropdown();
+
       renderWorkCockpit();
-      renderWorkPool();
+      renderWorkProjects();
     }
 
-    // Render Cockpit (Daily View)
-    function renderWorkCockpit() {
-      const todayTasks = workTasks.filter(t => t.assignedDate === currentWorkDate);
-      
-      const inProgressTask = todayTasks.find(t => t.status === 'IN_PROGRESS');
-      const todoTasks = todayTasks.filter(t => t.status === 'TODO');
-      const doneTasks = todayTasks.filter(t => t.status === 'DONE');
+    function populateProjectDropdown() {
+      const select = document.getElementById('quickTaskProjectSelect');
+      if (!select) return;
+      const curVal = select.value;
+      select.innerHTML = (workData.projects || []).map(p => {
+        return `<option value="${p.id}" ${p.id === curVal ? 'selected' : ''}>${escapeHtml(p.name)}</option>`;
+      }).join('');
+    }
 
-      // Update counters
+    // ==========================================
+    // VIEW 1: DAILY WORK COCKPIT (TODAY)
+    // ==========================================
+    function renderWorkCockpit() {
+      const todayStr = getTodayDateStr();
+      const allProjects = workData.projects || [];
+      
+      // Gather all tasks scheduled for currentWorkDate
+      const todayTasks = [];
+      const carryOverTasks = [];
+
+      allProjects.forEach(p => {
+        (p.tasks || []).forEach(t => {
+          if (t.today === currentWorkDate) {
+            todayTasks.push({ project: p, task: t });
+          } else if (t.today && t.today < todayStr && t.status !== 'done') {
+            carryOverTasks.push({ project: p, task: t });
+          }
+        });
+      });
+
+      const inProgressItem = todayTasks.find(x => x.task.status === 'doing');
+      const todoItems = todayTasks.filter(x => x.task.status === 'todo');
+      const waitItems = todayTasks.filter(x => x.task.status === 'wait');
+      const doneItems = todayTasks.filter(x => x.task.status === 'done');
+
       const totalCount = todayTasks.length;
-      const doneCount = doneTasks.length;
+      const doneCount = doneItems.length;
       const progressPercent = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
 
+      // Update counters
       const countTodoEl = document.getElementById('countWorkTodo');
       const countInProgEl = document.getElementById('countWorkInProgress');
+      const countWaitEl = document.getElementById('countWorkWait');
       const countDoneEl = document.getElementById('countWorkDone');
       const progressTextEl = document.getElementById('workProgressText');
       const progressBarEl = document.getElementById('workProgressBar');
       const cockpitRateEl = document.getElementById('workCockpitRate');
       const badgeTodayTaskCount = document.getElementById('badgeTodayTaskCount');
-      const badgePendingCount = document.getElementById('badgePendingCount');
-      const badgeDoneCount = document.getElementById('badgeDoneCount');
+      const badgeTodayTotalItems = document.getElementById('badgeTodayTotalItems');
 
-      if (countTodoEl) countTodoEl.textContent = todoTasks.length;
-      if (countInProgEl) countInProgEl.textContent = inProgressTask ? 1 : 0;
+      if (countTodoEl) countTodoEl.textContent = todoItems.length;
+      if (countInProgEl) countInProgEl.textContent = inProgressItem ? 1 : 0;
+      if (countWaitEl) countWaitEl.textContent = waitItems.length;
       if (countDoneEl) countDoneEl.textContent = doneCount;
       if (progressTextEl) progressTextEl.textContent = `${doneCount} / ${totalCount} งานเสร็จสิ้น (${progressPercent}%)`;
       if (progressBarEl) progressBarEl.style.width = `${progressPercent}%`;
       if (cockpitRateEl) cockpitRateEl.textContent = `${progressPercent}%`;
-      if (badgeTodayTaskCount) badgeTodayTaskCount.textContent = (todoTasks.length + (inProgressTask ? 1 : 0));
-      if (badgePendingCount) badgePendingCount.textContent = todoTasks.length;
-      if (badgeDoneCount) badgeDoneCount.textContent = doneCount;
+      if (badgeTodayTaskCount) badgeTodayTaskCount.textContent = (todoItems.length + (inProgressItem ? 1 : 0) + waitItems.length);
+      if (badgeTodayTotalItems) badgeTodayTotalItems.textContent = totalCount;
+
+      // Carry Over Banner
+      const carryBanner = document.getElementById('workCarryOverBanner');
+      const carryText = document.getElementById('workCarryOverText');
+      if (carryBanner) {
+        if (currentWorkDate === todayStr && carryOverTasks.length > 0) {
+          carryBanner.classList.remove('hidden');
+          if (carryText) carryText.textContent = `มีงาน ${carryOverTasks.length} ข้อที่ค้างจากวันก่อนแต่ยังไม่เสร็จ`;
+        } else {
+          carryBanner.classList.add('hidden');
+        }
+      }
 
       // Doing Now Banner
       const doingNowContainer = document.getElementById('doingNowContainer');
+      const doingNowProject = document.getElementById('doingNowProject');
       const doingNowTitle = document.getElementById('doingNowTitle');
-      const doingNowTag = document.getElementById('doingNowTag');
       if (doingNowContainer) {
-        if (inProgressTask) {
+        if (inProgressItem) {
           doingNowContainer.classList.remove('hidden');
-          if (doingNowTitle) doingNowTitle.textContent = inProgressTask.title;
-          if (doingNowTag) doingNowTag.textContent = inProgressTask.tag || '⚡ หน้างาน';
+          if (doingNowProject) doingNowProject.textContent = inProgressItem.project.name;
+          if (doingNowTitle) doingNowTitle.textContent = inProgressItem.task.text;
         } else {
           doingNowContainer.classList.add('hidden');
         }
       }
 
-      // Render To-Do List
-      const todoListContainer = document.getElementById('todayTodoListContainer');
-      if (todoListContainer) {
-        if (todoTasks.length === 0) {
-          todoListContainer.innerHTML = `
-            <div class="bg-slate-50 border border-dashed border-slate-200 rounded-2xl p-4 text-center text-xs text-slate-400 space-y-1">
-              <div>🎯 ไม่มีคิวงอยู่วันนี้</div>
-              <div class="text-[11px] text-slate-400">ดึงงานจากคลังรวม หรือพิมพ์เพิ่มงานด่วนด้านบนได้ทันที</div>
+      // Render Today's Tasks Grouped by Project (หัวใหญ่ ➔ งานย่อย)
+      const container = document.getElementById('todayProjectsListContainer');
+      if (container) {
+        if (todayTasks.length === 0) {
+          container.innerHTML = `
+            <div class="bg-slate-50 border border-dashed border-slate-200 rounded-3xl p-6 text-center text-xs text-slate-400 space-y-2">
+              <div class="text-2xl">🎯</div>
+              <div class="font-bold text-slate-600">ยังไม่มีงานในกระดานสำหรับวันนี้</div>
+              <p class="text-[11px] text-slate-400 max-w-xs mx-auto">
+                พิมพ์เพิ่มงานด่วนด้านบน หรือแตะแท็บ <strong>'📁 โปรเจกต์ & งานทั้งหมด'</strong> เพื่อเลือกงานที่ต้องทำ
+              </p>
             </div>`;
         } else {
-          todoListContainer.innerHTML = todoTasks.map(t => {
-            const priBadge = getPriorityBadge(t.priority);
+          // Group by project ID
+          const projectMap = new Map();
+          todayTasks.forEach(x => {
+            if (!projectMap.has(x.project.id)) {
+              projectMap.set(x.project.id, { project: x.project, items: [] });
+            }
+            projectMap.get(x.project.id).items.push(x.task);
+          });
+
+          container.innerHTML = Array.from(projectMap.values()).map(group => {
+            const p = group.project;
+            const items = group.items;
+            const doneN = items.filter(t => t.status === 'done').length;
+
             return `
-              <div class="bg-white rounded-2xl p-3 border border-slate-200 shadow-sm flex flex-col space-y-2 hover:border-slate-300 transition">
-                <div class="flex items-start justify-between">
-                  <div class="flex-1 pr-2">
-                    <div class="flex items-center space-x-1.5 mb-1">
-                      ${priBadge}
-                      <span class="text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.2 rounded-md">${escapeHtml(t.tag || 'หน้างาน')}</span>
+              <div class="bg-white rounded-3xl p-3.5 border border-slate-200 shadow-sm space-y-2.5">
+                <!-- Project Header (หัวใหญ่) -->
+                <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                  <div class="flex items-center space-x-2">
+                    <span class="text-sm">📁</span>
+                    <div>
+                      <h4 class="text-xs font-bold text-slate-900">${escapeHtml(p.name)}</h4>
+                      <span class="text-[9px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded">${escapeHtml(p.group || 'งานหลัก')}</span>
                     </div>
-                    <div class="text-xs font-bold text-slate-800 leading-snug">${escapeHtml(t.title)}</div>
                   </div>
-                  <button onclick="deleteWorkTask('${t.id}')" class="text-slate-300 hover:text-rose-500 text-xs p-1" title="ลบงาน">✕</button>
+                  <span class="text-[10px] font-bold text-slate-500">${doneN}/${items.length} เสร็จ</span>
                 </div>
-                <div class="flex items-center justify-between pt-1 border-t border-slate-100 text-[11px]">
-                  <div class="flex items-center space-x-1">
-                    <button onclick="setTaskStatus('${t.id}', 'IN_PROGRESS')" class="bg-cyan-50 hover:bg-cyan-100 text-cyan-800 font-bold px-2.5 py-1 rounded-xl transition flex items-center space-x-1">
-                      <span>⚙️ เริ่มทำ</span>
-                    </button>
-                    <button onclick="setTaskStatus('${t.id}', 'DONE')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-xl transition flex items-center space-x-1">
-                      <span>✅ เสร็จ</span>
-                    </button>
-                  </div>
-                  <button onclick="postponeTaskToTomorrow('${t.id}')" class="text-slate-500 hover:text-indigo-600 font-medium px-2 py-1 rounded-lg hover:bg-slate-50 transition" title="เลื่อนไปทำพรุ่งนี้">
-                    🔄 ยกยอดไปพรุ่งนี้
-                  </button>
+
+                <!-- Sub-tasks Checklist under this Project -->
+                <div class="space-y-2">
+                  ${items.map(t => {
+                    const isDone = t.status === 'done';
+                    const isDoing = t.status === 'doing';
+                    const qBadge = getPriorityBadge(t.q || 'q2');
+
+                    return `
+                      <div class="p-2.5 rounded-2xl border ${isDoing ? 'border-cyan-400 bg-cyan-50/30 ring-1 ring-cyan-400' : (isDone ? 'border-slate-100 bg-slate-50/60' : 'border-slate-200 bg-slate-50/40')} flex flex-col space-y-2 transition">
+                        <div class="flex items-start justify-between">
+                          <div class="flex items-start space-x-2 flex-1 pr-2">
+                            <input type="checkbox" ${isDone ? 'checked' : ''} 
+                              onchange="toggleTaskDone('${p.id}', '${t.id}')" 
+                              class="mt-0.5 rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer">
+                            <div class="flex-1 min-w-0">
+                              <div class="flex items-center space-x-1.5 mb-1">
+                                ${qBadge}
+                                <button onclick="cycleTaskStatus('${p.id}', '${t.id}')" class="text-[9px] font-bold px-1.5 py-0.2 rounded ${getStatusBadgeClass(t.status)}">
+                                  ${getStatusLabel(t.status)}
+                                </button>
+                              </div>
+                              <span class="text-xs font-bold text-slate-800 leading-snug ${isDone ? 'line-through text-slate-400' : ''}">
+                                ${escapeHtml(t.text)}
+                              </span>
+                              ${t.note ? `<div class="mt-1 text-[10px] text-slate-500 bg-white p-1.5 rounded-lg border border-slate-200">${escapeHtml(t.note)}</div>` : ''}
+                            </div>
+                          </div>
+                          <!-- PROMINENT DELETE BUTTON -->
+                          <button onclick="deleteWorkTask('${p.id}', '${t.id}')" class="text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 p-1.5 rounded-lg transition" title="ลบงานนี้อย่างถาวร">
+                            <span class="text-xs font-bold">🗑️</span>
+                          </button>
+                        </div>
+
+                        <!-- Action Toolbar -->
+                        <div class="flex items-center justify-between pt-1 border-t border-slate-200/50 text-[10px]">
+                          <div class="flex items-center space-x-1">
+                            ${!isDone ? `
+                              <button onclick="setTaskStatusDoing('${p.id}', '${t.id}')" class="bg-cyan-100 hover:bg-cyan-200 text-cyan-900 font-bold px-2 py-0.5 rounded-lg transition">
+                                ⚙️ เริ่มทำ
+                              </button>` : ''}
+                            <button onclick="postponeTaskToTomorrow('${p.id}', '${t.id}')" class="text-slate-600 hover:text-indigo-600 bg-white border border-slate-200 px-2 py-0.5 rounded-lg transition">
+                              🔄 ยกยอดไปพรุ่งนี้
+                            </button>
+                          </div>
+                          <button onclick="unpickTaskFromToday('${p.id}', '${t.id}')" class="text-slate-400 hover:text-slate-700 font-semibold px-2 py-0.5 transition" title="เอาออกจากแผนวันนี้">
+                            ✕ เอาออก
+                          </button>
+                        </div>
+                      </div>`;
+                  }).join('')}
                 </div>
               </div>`;
           }).join('');
         }
       }
 
-      // Render Done List
-      const doneListContainer = document.getElementById('todayDoneListContainer');
-      if (doneListContainer) {
-        if (isDoneSectionCollapsed) {
-          doneListContainer.classList.add('hidden');
-        } else {
-          doneListContainer.classList.remove('hidden');
-          if (doneTasks.length === 0) {
-            doneListContainer.innerHTML = `
-              <div class="text-center text-[11px] text-slate-400 py-2">ยังไม่มีงานที่เสร็จสิ้นสำหรับวันนี้</div>`;
-          } else {
-            doneListContainer.innerHTML = doneTasks.map(t => {
-              return `
-                <div class="bg-emerald-50/50 rounded-2xl p-2.5 border border-emerald-100 flex items-center justify-between">
-                  <div class="flex items-center space-x-2 flex-1 pr-2">
-                    <span class="text-emerald-600 font-bold text-xs">✓</span>
-                    <span class="text-xs text-slate-500 line-through">${escapeHtml(t.title)}</span>
-                  </div>
-                  <button onclick="setTaskStatus('${t.id}', 'TODO')" class="text-[10px] text-indigo-600 hover:text-indigo-800 font-semibold px-2 py-1 rounded-lg hover:bg-indigo-50 transition">
-                    ↩️ ทำใหม่
-                  </button>
-                </div>`;
-            }).join('');
-          }
-        }
-      }
-
-      // Render Field Notes for currentWorkDate
+      // Field Notes for current date
       const noteInput = document.getElementById('workFieldNotesInput');
-      const noteDateSubtitle = document.getElementById('fieldNoteDateSubtitle');
-      if (noteDateSubtitle) {
-        noteDateSubtitle.textContent = `บันทึกสำหรับวันที่ ${formatThaiWorkDate(currentWorkDate)}`;
-      }
+      const noteSubtitle = document.getElementById('fieldNoteDateSubtitle');
+      if (noteSubtitle) noteSubtitle.textContent = `บันทึกสำหรับวันที่ ${formatThaiWorkDate(currentWorkDate)}`;
       if (noteInput && document.activeElement !== noteInput) {
-        noteInput.value = workNotes[currentWorkDate] || '';
+        noteInput.value = (workData.log && workData.log[currentWorkDate] && workData.log[currentWorkDate].note) || '';
       }
     }
 
-    // Render Master Work Pool (4 Quadrants)
-    function renderWorkPool() {
-      const q1Tasks = workTasks.filter(t => t.priority === 'Q1');
-      const q2Tasks = workTasks.filter(t => t.priority === 'Q2');
-      const q3Tasks = workTasks.filter(t => t.priority === 'Q3');
-      const q4Tasks = workTasks.filter(t => t.priority === 'Q4');
+    // ==========================================
+    // VIEW 2: ALL PROJECTS & TASKS BOARD
+    // ==========================================
+    function renderWorkProjects() {
+      const allProjects = workData.projects || [];
+      const badgeProjectsTaskCount = document.getElementById('badgeProjectsTaskCount');
+      
+      let totalAllTasks = 0;
+      allProjects.forEach(p => totalAllTasks += (p.tasks || []).length);
+      if (badgeProjectsTaskCount) badgeProjectsTaskCount.textContent = totalAllTasks;
 
-      const badgePoolTaskCount = document.getElementById('badgePoolTaskCount');
-      const poolTotalCountBadge = document.getElementById('poolTotalCountBadge');
-      const badgeCountQ1 = document.getElementById('badgeCountQ1');
-      const badgeCountQ2 = document.getElementById('badgeCountQ2');
-      const badgeCountQ3 = document.getElementById('badgeCountQ3');
-      const badgeCountQ4 = document.getElementById('badgeCountQ4');
+      const container = document.getElementById('projectsListContainer');
+      if (!container) return;
 
-      if (badgePoolTaskCount) badgePoolTaskCount.textContent = workTasks.length;
-      if (poolTotalCountBadge) poolTotalCountBadge.textContent = workTasks.length;
-      if (badgeCountQ1) badgeCountQ1.textContent = q1Tasks.length;
-      if (badgeCountQ2) badgeCountQ2.textContent = q2Tasks.length;
-      if (badgeCountQ3) badgeCountQ3.textContent = q3Tasks.length;
-      if (badgeCountQ4) badgeCountQ4.textContent = q4Tasks.length;
-
-      renderQuadrantList('poolListQ1', q1Tasks);
-      renderQuadrantList('poolListQ2', q2Tasks);
-      renderQuadrantList('poolListQ3', q3Tasks);
-      renderQuadrantList('poolListQ4', q4Tasks);
-    }
-
-    function renderQuadrantList(containerId, taskList) {
-      const el = document.getElementById(containerId);
-      if (!el) return;
-
-      if (taskList.length === 0) {
-        el.innerHTML = '<div class="text-[11px] text-slate-400 py-1.5 text-center">ไม่มีงานในช่องนี้</div>';
-        return;
-      }
-
+      const filter = currentProjectFilter;
       const todayStr = getTodayDateStr();
 
-      el.innerHTML = taskList.map(t => {
-        let scheduleBadge = '';
-        if (t.assignedDate === todayStr) {
-          scheduleBadge = '<span class="text-[9px] bg-cyan-100 text-cyan-800 font-bold px-1.5 py-0.2 rounded-md">🎯 วันนี้</span>';
-        } else if (t.assignedDate) {
-          scheduleBadge = `<span class="text-[9px] bg-slate-100 text-slate-600 font-medium px-1.5 py-0.2 rounded-md">📅 ${t.assignedDate}</span>`;
-        } else {
-          scheduleBadge = '<span class="text-[9px] bg-slate-100 text-slate-400 px-1.5 py-0.2 rounded-md">ในคลัง</span>';
+      container.innerHTML = allProjects.map(p => {
+        const allT = p.tasks || [];
+        
+        // Filter subtasks
+        const visT = allT.filter(t => {
+          if (filter === 'active') return t.status !== 'done';
+          if (filter === 'doing') return t.status === 'doing';
+          if (filter === 'wait') return t.status === 'wait';
+          if (filter === 'main') return (p.group || 'งานหลัก') === 'งานหลัก';
+          if (filter === 'ferry') return (p.group || '').includes('Ferry');
+          if (filter === 'q1' || filter === 'q2' || filter === 'q3' || filter === 'q4') return t.q === filter && t.status !== 'done';
+          return true; // all
+        });
+
+        if (filter !== 'all' && visT.length === 0 && !(filter === 'active' && allT.length === 0)) {
+          return '';
         }
 
-        let statusBadge = '';
-        if (t.status === 'DONE') {
-          statusBadge = '<span class="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded-md">✅ เสร็จแล้ว</span>';
-        } else if (t.status === 'IN_PROGRESS') {
-          statusBadge = '<span class="text-[9px] bg-cyan-100 text-cyan-800 font-bold px-1.5 py-0.2 rounded-md">⚙️ กำลังทำ</span>';
-        }
+        const doneN = allT.filter(t => t.status === 'done').length;
+        const pct = allT.length > 0 ? Math.round((doneN / allT.length) * 100) : 0;
 
         return `
-          <div class="bg-slate-50/80 rounded-2xl p-2.5 border border-slate-200 hover:border-slate-300 transition flex flex-col space-y-1.5">
+          <div class="bg-white rounded-3xl p-4 border border-slate-200 shadow-sm space-y-3">
+            <!-- Project Header (หัวใหญ่) -->
             <div class="flex items-start justify-between">
               <div class="flex-1 pr-2">
-                <div class="flex items-center space-x-1.5 mb-0.5">
-                  <span class="text-[9px] font-semibold bg-white border border-slate-200 text-slate-600 px-1.5 py-0.2 rounded-md">${escapeHtml(t.tag || 'หน้างาน')}</span>
-                  ${scheduleBadge}
-                  ${statusBadge}
+                <div class="flex items-center space-x-1.5 mb-1">
+                  <span class="text-xs font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-lg">${escapeHtml(p.group || 'งานหลัก')}</span>
+                  <span class="text-[10px] font-bold text-slate-400">${doneN}/${allT.length} (${pct}%)</span>
                 </div>
-                <div class="text-xs font-bold text-slate-800 leading-snug ${t.status === 'DONE' ? 'line-through text-slate-400' : ''}">${escapeHtml(t.title)}</div>
+                <h3 class="text-sm font-bold text-slate-900 leading-snug">${escapeHtml(p.name)}</h3>
               </div>
-              <button onclick="deleteWorkTask('${t.id}')" class="text-slate-300 hover:text-rose-500 text-xs p-1" title="ลบงาน">✕</button>
-            </div>
-            <div class="flex items-center justify-between pt-1 border-t border-slate-200/60 text-[10px]">
-              <button onclick="assignTaskToToday('${t.id}')" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded-lg transition">
-                📌 ทำวันนี้
+              <button onclick="deleteWorkProject('${p.id}')" class="text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 text-xs px-2 py-1 rounded-xl transition font-semibold" title="ลบทั้งโปรเจกต์">
+                🗑️ ลบโปรเจกต์
               </button>
-              <div class="flex items-center space-x-1">
-                <button onclick="promptScheduleDate('${t.id}')" class="text-slate-600 hover:text-slate-900 bg-white border border-slate-200 px-2 py-0.5 rounded-lg transition">
-                  📅 กำหนดวัน
-                </button>
-              </div>
             </div>
+
+            <!-- Mini Progress bar -->
+            <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+              <div class="bg-indigo-600 h-full rounded-full transition-all duration-300" style="width: ${pct}%"></div>
+            </div>
+
+            <!-- Sub-tasks Checklist -->
+            <div class="space-y-2 pt-1">
+              ${visT.map(t => {
+                const isDone = t.status === 'done';
+                const isToday = t.today === todayStr;
+                const qBadge = getPriorityBadge(t.q || 'q2');
+
+                return `
+                  <div class="p-2.5 rounded-2xl border border-slate-200 bg-slate-50/70 hover:border-slate-300 transition flex flex-col space-y-2">
+                    <div class="flex items-start justify-between">
+                      <div class="flex items-start space-x-2 flex-1 pr-2">
+                        <input type="checkbox" ${isDone ? 'checked' : ''} 
+                          onchange="toggleTaskDone('${p.id}', '${t.id}')" 
+                          class="mt-0.5 rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer">
+                        <div class="flex-1 min-w-0">
+                          <div class="flex items-center space-x-1.5 mb-1">
+                            ${qBadge}
+                            <button onclick="cycleTaskStatus('${p.id}', '${t.id}')" class="text-[9px] font-bold px-1.5 py-0.2 rounded ${getStatusBadgeClass(t.status)}">
+                              ${getStatusLabel(t.status)}
+                            </button>
+                            ${isToday ? '<span class="text-[9px] font-bold bg-cyan-100 text-cyan-800 px-1.5 py-0.2 rounded">🎯 แผนวันนี้</span>' : (t.today ? `<span class="text-[9px] text-slate-500">📅 ${t.today}</span>` : '')}
+                          </div>
+                          <span class="text-xs font-semibold text-slate-800 leading-snug ${isDone ? 'line-through text-slate-400' : ''}">
+                            ${escapeHtml(t.text)}
+                          </span>
+                        </div>
+                      </div>
+                      <!-- DELETE SUBTASK BUTTON -->
+                      <button onclick="deleteWorkTask('${p.id}', '${t.id}')" class="text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 p-1.5 rounded-lg transition" title="ลบงานย่อยนี้">
+                        <span class="text-xs font-bold">🗑️</span>
+                      </button>
+                    </div>
+
+                    <!-- Bottom Toolbar -->
+                    <div class="flex items-center justify-between pt-1 border-t border-slate-200/50 text-[10px]">
+                      <div class="flex items-center space-x-1.5">
+                        <button onclick="togglePlanToday('${p.id}', '${t.id}')" class="font-bold px-2 py-0.5 rounded-lg transition ${isToday ? 'bg-indigo-600 text-white' : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'}">
+                          ${isToday ? '✓ ในแผนวันนี้' : '📌 ดึงทำวันนี้'}
+                        </button>
+                        <button onclick="promptScheduleTask('${p.id}', '${t.id}')" class="text-slate-600 bg-white border border-slate-200 px-2 py-0.5 rounded-lg hover:bg-slate-50 transition">
+                          📅 กำหนดวัน
+                        </button>
+                      </div>
+                      <select onchange="changeTaskQuadrant('${p.id}', '${t.id}', this.value)" class="text-[10px] bg-white border border-slate-200 rounded px-1.5 py-0.5 text-slate-700">
+                        <option value="q1" ${t.q==='q1'?'selected':''}>🔥 Q1</option>
+                        <option value="q2" ${(!t.q||t.q==='q2')?'selected':''}>⭐ Q2</option>
+                        <option value="q3" ${t.q==='q3'?'selected':''}>⚡ Q3</option>
+                        <option value="q4" ${t.q==='q4'?'selected':''}>💤 Q4</option>
+                      </select>
+                    </div>
+                  </div>`;
+              }).join('')}
+            </div>
+
+            <!-- Inline Add Sub-task Form -->
+            <form onsubmit="event.preventDefault(); addSubTaskInline('${p.id}');" class="flex items-center space-x-1.5 pt-1">
+              <input type="text" id="inputAddSubTask_${p.id}" placeholder="+ เพิ่มงานย่อยในโปรเจกต์นี้..." 
+                class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-3 py-1.5 rounded-xl transition shadow-sm">
+                เพิ่ม
+              </button>
+            </form>
           </div>`;
       }).join('');
     }
 
-    function getPriorityBadge(priority) {
-      if (priority === 'Q1') {
-        return '<span class="text-[9px] font-bold bg-rose-100 text-rose-700 px-1.5 py-0.2 rounded-md">🔥 Q1 ด่วน&สำคัญ</span>';
-      } else if (priority === 'Q2') {
-        return '<span class="text-[9px] font-bold bg-amber-100 text-amber-700 px-1.5 py-0.2 rounded-md">⭐ Q2 สำคัญ</span>';
-      } else if (priority === 'Q3') {
-        return '<span class="text-[9px] font-bold bg-sky-100 text-sky-700 px-1.5 py-0.2 rounded-md">⚡ Q3 ด่วน</span>';
-      } else {
-        return '<span class="text-[9px] font-bold bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded-md">💤 Q4 แบ็กล็อก</span>';
-      }
-    }
-
-    // Toggle Collapsible Done Section
-    function toggleDoneSection() {
-      isDoneSectionCollapsed = !isDoneSectionCollapsed;
-      const arrow = document.getElementById('doneToggleArrow');
-      if (arrow) arrow.textContent = isDoneSectionCollapsed ? '▶' : '▼';
-      const container = document.getElementById('todayDoneListContainer');
-      if (container) {
-        if (isDoneSectionCollapsed) container.classList.add('hidden');
-        else container.classList.remove('hidden');
-      }
-    }
-
-    // Quick Tag Selection for Today Form
-    function selectQuickTag(tag) {
-      selectedQuickTag = tag;
-      const pills = document.querySelectorAll('#quickTagPills .quick-tag-pill');
-      pills.forEach(p => {
-        if (p.textContent.trim() === tag) {
-          p.className = 'quick-tag-pill active px-2 py-0.5 rounded-full border border-indigo-600 bg-indigo-50 text-indigo-700 font-bold';
-        } else {
-          p.className = 'quick-tag-pill px-2 py-0.5 rounded-full border border-slate-200 bg-white text-slate-600';
-        }
-      });
-    }
-
-    // Pool Form Selectors
-    function selectPoolPriority(pri) {
-      selectedPoolPriority = pri;
-      const buttons = document.querySelectorAll('#poolPriorityGroup .pool-pri-btn');
+    function setProjectFilter(f) {
+      currentProjectFilter = f;
+      const buttons = document.querySelectorAll('#projectFilterPills .proj-filter-btn');
       buttons.forEach(btn => {
-        btn.classList.remove('active', 'ring-2', 'ring-amber-500', 'ring-rose-500', 'ring-sky-500', 'ring-slate-500');
+        btn.className = 'proj-filter-btn px-3 py-1 rounded-full border border-slate-200 bg-white text-slate-600 font-medium';
       });
-      const activeBtn = document.getElementById('btnPri' + pri);
-      if (activeBtn) {
-        const ringColor = pri === 'Q1' ? 'ring-rose-500' : (pri === 'Q2' ? 'ring-amber-500' : (pri === 'Q3' ? 'ring-sky-500' : 'ring-slate-500'));
-        activeBtn.classList.add('active', 'ring-2', ringColor);
+      if (event && event.target) {
+        event.target.className = 'proj-filter-btn active px-3 py-1 rounded-full border border-indigo-600 bg-indigo-50 text-indigo-700 font-bold';
       }
+      renderWorkProjects();
     }
 
-    function selectPoolTag(tag) {
-      selectedPoolTag = tag;
-      const pills = document.querySelectorAll('#poolTagGroup .pool-tag-pill');
-      pills.forEach(p => {
-        if (p.textContent.trim() === tag) {
-          p.className = 'pool-tag-pill active px-2.5 py-1 rounded-full border border-indigo-600 bg-indigo-50 text-indigo-700 font-bold text-[10px]';
-        } else {
-          p.className = 'pool-tag-pill px-2.5 py-1 rounded-full border border-slate-200 bg-white text-slate-600 text-[10px]';
-        }
-      });
+    // ==========================================
+    // HELPER FUNCTIONS & ACTIONS
+    // ==========================================
+    function getPriorityBadge(q) {
+      if (q === 'q1') return '<span class="text-[9px] font-bold bg-rose-100 text-rose-700 px-1.5 py-0.2 rounded">🔥 Q1 ด่วน&สำคัญ</span>';
+      if (q === 'q2') return '<span class="text-[9px] font-bold bg-amber-100 text-amber-700 px-1.5 py-0.2 rounded">⭐ Q2 สำคัญ</span>';
+      if (q === 'q3') return '<span class="text-[9px] font-bold bg-sky-100 text-sky-700 px-1.5 py-0.2 rounded">⚡ Q3 ด่วน</span>';
+      return '<span class="text-[9px] font-bold bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded">💤 Q4 แบ็กล็อก</span>';
     }
 
-    // Quick Add Today Task
-    function quickAddTodayTask() {
-      const input = document.getElementById('quickTaskTitle');
-      const title = input ? input.value.trim() : '';
-      if (!title) {
-        showToast('กรุณากรอกชื่องาน', true);
-        return;
-      }
-
-      const prioritySelect = document.getElementById('quickPrioritySelect');
-      const priority = prioritySelect ? prioritySelect.value : 'Q2';
-      const now = new Date();
-      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-      const id = 'TASK-' + Date.now();
-
-      const newTask = {
-        id: id,
-        title: title,
-        priority: priority,
-        tag: selectedQuickTag,
-        status: 'TODO',
-        assignedDate: currentWorkDate,
-        createdAt: `${currentWorkDate} ${timeStr}`,
-        updatedAt: `${currentWorkDate} ${timeStr}`
-      };
-
-      workTasks.unshift(newTask);
-      saveWorkToStorage();
-      input.value = '';
-      showToast('เพิ่มงานเข้ากระดานวันนี้แล้ว ⚡');
-      renderWorkView();
-
-      // Cloud Sync
-      callApi('saveWorkTask', newTask).catch(e => console.warn('Cloud sync error:', e));
+    function getStatusLabel(s) {
+      if (s === 'doing') return '⚙️ กำลังทำ';
+      if (s === 'wait') return '⏸️ รอคนอื่น';
+      if (s === 'done') return '✅ เสร็จ';
+      return '⏳ รอเริ่ม';
     }
 
-    // Add Pool Task
-    function addPoolTask() {
-      const input = document.getElementById('poolInputTitle');
-      const title = input ? input.value.trim() : '';
-      if (!title) {
-        showToast('กรุณากรอกชื่องาน', true);
-        return;
-      }
+    function getStatusBadgeClass(s) {
+      if (s === 'doing') return 'bg-cyan-100 text-cyan-800';
+      if (s === 'wait') return 'bg-amber-100 text-amber-800';
+      if (s === 'done') return 'bg-emerald-100 text-emerald-800';
+      return 'bg-slate-200 text-slate-700';
+    }
 
-      const assignTodayCheck = document.getElementById('poolAssignTodayCheck');
-      const assignToday = assignTodayCheck ? assignTodayCheck.checked : false;
+    // Toggle Task Done (Checkbox)
+    function toggleTaskDone(projectId, taskId) {
+      const p = (workData.projects || []).find(x => x.id === projectId);
+      if (!p) return;
+      const t = (p.tasks || []).find(x => x.id === taskId);
+      if (!t) return;
+
+      const isNowDone = t.status !== 'done';
+      t.status = isNowDone ? 'done' : 'todo';
+      t.doneAt = isNowDone ? getTodayDateStr() : null;
+
+      // Log in daily log
       const todayStr = getTodayDateStr();
-
-      const now = new Date();
-      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-      const id = 'TASK-' + Date.now();
-
-      const newTask = {
-        id: id,
-        title: title,
-        priority: selectedPoolPriority,
-        tag: selectedPoolTag,
-        status: 'TODO',
-        assignedDate: assignToday ? todayStr : '',
-        createdAt: `${todayStr} ${timeStr}`,
-        updatedAt: `${todayStr} ${timeStr}`
-      };
-
-      workTasks.unshift(newTask);
-      saveWorkToStorage();
-      input.value = '';
-      if (assignTodayCheck) assignTodayCheck.checked = false;
-      
-      showToast(assignToday ? 'บันทึกเข้าคลังและดึงเข้ากระดานวันนี้แล้ว 📌' : 'บันทึกงานเข้าคลังเรียบร้อย 📥');
-      renderWorkView();
-
-      // Cloud Sync
-      callApi('saveWorkTask', newTask).catch(e => console.warn('Cloud sync error:', e));
-    }
-
-    // Set Task Status
-    function setTaskStatus(taskId, newStatus) {
-      const task = workTasks.find(t => t.id === taskId);
-      if (!task) return;
-
-      // If promoting to IN_PROGRESS, pause any other currently IN_PROGRESS task for single focus!
-      if (newStatus === 'IN_PROGRESS') {
-        workTasks.forEach(t => {
-          if (t.id !== taskId && t.status === 'IN_PROGRESS') {
-            t.status = 'TODO';
-          }
-        });
-        showToast('🎯 โฟกัสงานนี้ทีละอย่าง!');
-      } else if (newStatus === 'DONE') {
-        showToast('ยอดเยี่ยม! งานเสร็จสิ้นแล้ว ✅');
+      workData.log = workData.log || {};
+      workData.log[todayStr] = workData.log[todayStr] || { planned: {}, done: {}, note: '' };
+      if (isNowDone) {
+        workData.log[todayStr].done = workData.log[todayStr].done || {};
+        workData.log[todayStr].done[`${projectId}/${taskId}`] = { text: t.text, project: p.name };
+        showToast('เยี่ยมมาก! งานเสร็จสิ้นแล้ว ✅');
+      } else {
+        if (workData.log[todayStr].done) delete workData.log[todayStr].done[`${projectId}/${taskId}`];
       }
 
-      task.status = newStatus;
-      task.updatedAt = new Date().toISOString();
       saveWorkToStorage();
       renderWorkView();
+      syncCloud();
+    }
 
-      // Cloud Sync
-      callApi('updateWorkTaskStatus', { id: taskId, status: newStatus }).catch(e => console.warn('Cloud sync error:', e));
+    // Cycle Status: todo -> doing -> wait -> done -> todo
+    function cycleTaskStatus(projectId, taskId) {
+      const p = (workData.projects || []).find(x => x.id === projectId);
+      if (!p) return;
+      const t = (p.tasks || []).find(x => x.id === taskId);
+      if (!t) return;
+
+      const nextStatus = { todo: 'doing', doing: 'wait', wait: 'done', done: 'todo' };
+      t.status = nextStatus[t.status || 'todo'] || 'todo';
+      t.doneAt = (t.status === 'done') ? getTodayDateStr() : null;
+
+      saveWorkToStorage();
+      renderWorkView();
+      syncCloud();
+    }
+
+    function setTaskStatusDoing(projectId, taskId) {
+      // Pause any other task currently doing for Single Focus
+      (workData.projects || []).forEach(p => {
+        (p.tasks || []).forEach(t => {
+          if (t.status === 'doing') t.status = 'todo';
+        });
+      });
+
+      const p = (workData.projects || []).find(x => x.id === projectId);
+      if (p) {
+        const t = (p.tasks || []).find(x => x.id === taskId);
+        if (t) {
+          t.status = 'doing';
+          t.today = currentWorkDate;
+          showToast('🎯 โฟกัสงานนี้ทีละอย่าง!');
+        }
+      }
+
+      saveWorkToStorage();
+      renderWorkView();
+      syncCloud();
     }
 
     // Doing Now Controls
     function completeDoingNowTask() {
-      const task = workTasks.find(t => t.assignedDate === currentWorkDate && t.status === 'IN_PROGRESS');
-      if (task) {
-        setTaskStatus(task.id, 'DONE');
-      }
+      (workData.projects || []).forEach(p => {
+        (p.tasks || []).forEach(t => {
+          if (t.today === currentWorkDate && t.status === 'doing') {
+            toggleTaskDone(p.id, t.id);
+          }
+        });
+      });
     }
 
     function pauseDoingNowTask() {
-      const task = workTasks.find(t => t.assignedDate === currentWorkDate && t.status === 'IN_PROGRESS');
-      if (task) {
-        setTaskStatus(task.id, 'TODO');
+      (workData.projects || []).forEach(p => {
+        (p.tasks || []).forEach(t => {
+          if (t.today === currentWorkDate && t.status === 'doing') {
+            t.status = 'todo';
+          }
+        });
+      });
+      saveWorkToStorage();
+      renderWorkView();
+      syncCloud();
+    }
+
+    function unpickDoingNowTask() {
+      (workData.projects || []).forEach(p => {
+        (p.tasks || []).forEach(t => {
+          if (t.today === currentWorkDate && t.status === 'doing') {
+            t.today = null;
+            t.status = 'todo';
+          }
+        });
+      });
+      saveWorkToStorage();
+      showToast('เอาออกจากแผนวันนี้แล้ว');
+      renderWorkView();
+      syncCloud();
+    }
+
+    function deleteDoingNowTask() {
+      (workData.projects || []).forEach(p => {
+        const target = (p.tasks || []).find(t => t.today === currentWorkDate && t.status === 'doing');
+        if (target) {
+          deleteWorkTask(p.id, target.id);
+        }
+      });
+    }
+
+    // DELETE TASK (SUBTASK) - CLEAR & IMMEDIATE
+    function deleteWorkTask(projectId, taskId) {
+      const p = (workData.projects || []).find(x => x.id === projectId);
+      if (!p) return;
+      const t = (p.tasks || []).find(x => x.id === taskId);
+      if (!t) return;
+
+      if (confirm(`คุณต้องการลบงาน "${t.text}" หรือไม่?`)) {
+        p.tasks = (p.tasks || []).filter(x => x.id !== taskId);
+        saveWorkToStorage();
+        showToast('ลบงานเรียบร้อยแล้ว 🗑️');
+        renderWorkView();
+        syncCloud();
       }
     }
 
-    // Postpone to Tomorrow
-    function postponeTaskToTomorrow(taskId) {
-      const task = workTasks.find(t => t.id === taskId);
-      if (!task) return;
+    // DELETE ENTIRE PROJECT
+    function deleteWorkProject(projectId) {
+      const p = (workData.projects || []).find(x => x.id === projectId);
+      if (!p) return;
+
+      if (confirm(`คุณต้องการลบโปรเจกต์ "${p.name}" พร้อมงานย่อยทั้งหมดหรือไม่?`)) {
+        workData.projects = (workData.projects || []).filter(x => x.id !== projectId);
+        saveWorkToStorage();
+        showToast('ลบโปรเจกต์เรียบร้อยแล้ว');
+        renderWorkView();
+        syncCloud();
+      }
+    }
+
+    // Postpone Task to Tomorrow
+    function postponeTaskToTomorrow(projectId, taskId) {
+      const p = (workData.projects || []).find(x => x.id === projectId);
+      if (!p) return;
+      const t = (p.tasks || []).find(x => x.id === taskId);
+      if (!t) return;
 
       const parts = currentWorkDate.split('-');
       const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
       d.setDate(d.getDate() + 1);
-
       const y = d.getFullYear();
       const m = String(d.getMonth() + 1).padStart(2, '0');
       const day = String(d.getDate()).padStart(2, '0');
       const tomorrowStr = `${y}-${m}-${day}`;
 
-      task.assignedDate = tomorrowStr;
-      task.status = 'TODO';
-      task.updatedAt = new Date().toISOString();
+      t.today = tomorrowStr;
+      t.status = 'todo';
       saveWorkToStorage();
-      showToast('ยกยอดงานไปวันพรุ่งนี้แล้ว 🔄');
+      showToast('ยกยอดไปทำพรุ่งนี้แล้ว 🔄');
       renderWorkView();
-
-      // Cloud Sync
-      callApi('updateWorkTaskStatus', { id: taskId, status: 'TODO', assignedDate: tomorrowStr }).catch(e => console.warn('Cloud sync error:', e));
+      syncCloud();
     }
 
-    // Assign Task to Today
-    function assignTaskToToday(taskId) {
-      const task = workTasks.find(t => t.id === taskId);
-      if (!task) return;
+    // Unpick task from today back to project backlog
+    function unpickTaskFromToday(projectId, taskId) {
+      const p = (workData.projects || []).find(x => x.id === projectId);
+      if (!p) return;
+      const t = (p.tasks || []).find(x => x.id === taskId);
+      if (!t) return;
+
+      t.today = null;
+      if (t.status === 'doing') t.status = 'todo';
+      saveWorkToStorage();
+      showToast('เอาออกจากแผนวันนี้แล้ว (กลับไปอยู่ในคลังโปรเจกต์)');
+      renderWorkView();
+      syncCloud();
+    }
+
+    // Toggle Plan Today from Projects view
+    function togglePlanToday(projectId, taskId) {
+      const p = (workData.projects || []).find(x => x.id === projectId);
+      if (!p) return;
+      const t = (p.tasks || []).find(x => x.id === taskId);
+      if (!t) return;
 
       const todayStr = getTodayDateStr();
-      task.assignedDate = todayStr;
-      task.updatedAt = new Date().toISOString();
+      if (t.today === todayStr) {
+        t.today = null;
+        showToast('เอาออกจากแผนวันนี้แล้ว');
+      } else {
+        t.today = todayStr;
+        showToast('ดึงเข้าแผนวันนี้แล้ว 📌');
+      }
+
       saveWorkToStorage();
-      showToast('ดึงเข้ากระดานหน้างานวันนี้แล้ว 📌');
       renderWorkView();
-
-      // Cloud Sync
-      callApi('updateWorkTaskStatus', { id: taskId, assignedDate: todayStr }).catch(e => console.warn('Cloud sync error:', e));
+      syncCloud();
     }
 
-    // Schedule Task Date
-    function promptScheduleDate(taskId) {
-      const task = workTasks.find(t => t.id === taskId);
-      if (!task) return;
+    function promptScheduleTask(projectId, taskId) {
+      const p = (workData.projects || []).find(x => x.id === projectId);
+      if (!p) return;
+      const t = (p.tasks || []).find(x => x.id === taskId);
+      if (!t) return;
 
-      const inputDate = prompt('กำหนดวันที่เป้าหมาย (YYYY-MM-DD):', task.assignedDate || getTodayDateStr());
-      if (inputDate && /^\d{4}-\d{2}-\d{2}$/.test(inputDate.trim())) {
-        task.assignedDate = inputDate.trim();
-        task.updatedAt = new Date().toISOString();
+      const dateInput = prompt('กำหนดวันที่ทำงานนี้ (YYYY-MM-DD):', t.today || getTodayDateStr());
+      if (dateInput && /^\d{4}-\d{2}-\d{2}$/.test(dateInput.trim())) {
+        t.today = dateInput.trim();
         saveWorkToStorage();
-        showToast(`กำหนดวันที่เป็น ${task.assignedDate} แล้ว 📅`);
+        showToast(`กำหนดวันที่เป็น ${t.today} แล้ว 📅`);
         renderWorkView();
-
-        // Cloud Sync
-        callApi('updateWorkTaskStatus', { id: taskId, assignedDate: task.assignedDate }).catch(e => console.warn('Cloud sync error:', e));
+        syncCloud();
       }
     }
 
-    // Delete Work Task
-    function deleteWorkTask(taskId) {
-      const task = workTasks.find(t => t.id === taskId);
-      if (!task) return;
+    function changeTaskQuadrant(projectId, taskId, q) {
+      const p = (workData.projects || []).find(x => x.id === projectId);
+      if (!p) return;
+      const t = (p.tasks || []).find(x => x.id === taskId);
+      if (!t) return;
 
-      if (confirm(`คุณต้องการลบงาน "${task.title}" หรือไม่?`)) {
-        workTasks = workTasks.filter(t => t.id !== taskId);
-        saveWorkToStorage();
-        showToast('ลบงานเรียบร้อยแล้ว');
-        renderWorkView();
-
-        // Cloud Sync
-        callApi('deleteWorkTask', { id: taskId }).catch(e => console.warn('Cloud sync error:', e));
-      }
+      t.q = q;
+      saveWorkToStorage();
+      renderWorkProjects();
+      syncCloud();
     }
 
-    // Field Note Auto-Save & Manual Save
+    // Quick Add Today Task with selected Project
+    function quickAddTodayTask() {
+      const input = document.getElementById('quickTaskTitle');
+      const text = input ? input.value.trim() : '';
+      if (!text) {
+        showToast('กรุณากรอกชื่องาน', true);
+        return;
+      }
+
+      const select = document.getElementById('quickTaskProjectSelect');
+      let projectId = select ? select.value : '';
+
+      // If no project exists, create a default one
+      if (!projectId && (workData.projects || []).length === 0) {
+        projectId = 'p-main';
+        workData.projects = [{
+          id: projectId,
+          name: 'งานหลัก',
+          group: 'งานหลัก',
+          order: 1,
+          tasks: []
+        }];
+      }
+
+      let p = (workData.projects || []).find(x => x.id === projectId);
+      if (!p) {
+        p = workData.projects[0];
+      }
+
+      const priSelect = document.getElementById('quickPrioritySelect');
+      const q = priSelect ? priSelect.value : 'q2';
+      const id = 't-' + Date.now();
+
+      p.tasks = p.tasks || [];
+      p.tasks.unshift({
+        id: id,
+        text: text,
+        status: 'todo',
+        due: null,
+        today: currentWorkDate,
+        q: q,
+        createdAt: currentWorkDate
+      });
+
+      saveWorkToStorage();
+      input.value = '';
+      showToast('เพิ่มงานเข้ากระดานวันนี้แล้ว ⚡');
+      renderWorkView();
+      syncCloud();
+    }
+
+    // Add Sub-Task Inline in Project Card
+    function addSubTaskInline(projectId) {
+      const input = document.getElementById('inputAddSubTask_' + projectId);
+      const text = input ? input.value.trim() : '';
+      if (!text) return;
+
+      const p = (workData.projects || []).find(x => x.id === projectId);
+      if (!p) return;
+
+      const id = 't-' + Date.now();
+      p.tasks = p.tasks || [];
+      p.tasks.push({
+        id: id,
+        text: text,
+        status: 'todo',
+        due: null,
+        today: null,
+        q: 'q2',
+        createdAt: getTodayDateStr()
+      });
+
+      saveWorkToStorage();
+      input.value = '';
+      showToast('เพิ่มงานย่อยเรียบร้อยแล้ว ＋');
+      renderWorkProjects();
+      syncCloud();
+    }
+
+    // Carry Over All Pending Tasks
+    function carryOverAllTasks() {
+      const todayStr = getTodayDateStr();
+      let count = 0;
+      (workData.projects || []).forEach(p => {
+        (p.tasks || []).forEach(t => {
+          if (t.today && t.today < todayStr && t.status !== 'done') {
+            t.today = todayStr;
+            count++;
+          }
+        });
+      });
+
+      saveWorkToStorage();
+      showToast(`ยกงานค้าง ${count} ข้อมาทำวันนี้แล้ว 🔄`);
+      renderWorkView();
+      syncCloud();
+    }
+
+    // Toggle & Create New Project
+    function toggleNewProjectForm() {
+      const form = document.getElementById('newProjectFormContainer');
+      if (form) form.classList.toggle('hidden');
+    }
+
+    function createNewProject() {
+      const nameInput = document.getElementById('inputNewProjectName');
+      const groupSelect = document.getElementById('selectNewProjectGroup');
+      const name = nameInput ? nameInput.value.trim() : '';
+      if (!name) {
+        showToast('กรุณาระบุชื่อโปรเจกต์', true);
+        return;
+      }
+
+      const group = groupSelect ? groupSelect.value : 'งานหลัก';
+      const id = 'p-' + Date.now();
+
+      workData.projects = workData.projects || [];
+      workData.projects.unshift({
+        id: id,
+        name: name,
+        group: group,
+        order: workData.projects.length + 1,
+        priority: 'med',
+        due: null,
+        note: '',
+        createdAt: getTodayDateStr(),
+        tasks: []
+      });
+
+      saveWorkToStorage();
+      nameInput.value = '';
+      toggleNewProjectForm();
+      showToast('สร้างโปรเจกต์ใหม่เรียบร้อย 📁');
+      renderWorkView();
+      syncCloud();
+    }
+
+    // Field Notes Handling
     function handleFieldNoteInput() {
       const statusEl = document.getElementById('noteAutoSaveStatus');
       if (statusEl) {
@@ -3863,7 +3949,9 @@
       if (!input) return;
 
       const content = input.value;
-      workNotes[currentWorkDate] = content;
+      workData.log = workData.log || {};
+      workData.log[currentWorkDate] = workData.log[currentWorkDate] || { planned: {}, done: {} };
+      workData.log[currentWorkDate].note = content;
       saveWorkToStorage();
 
       const statusEl = document.getElementById('noteAutoSaveStatus');
@@ -3872,12 +3960,8 @@
         statusEl.className = 'text-[10px] font-medium text-emerald-600';
       }
 
-      if (showToastMsg) {
-        showToast('บันทึกโน้ตหน้างานเรียบร้อย 📝');
-      }
-
-      // Cloud Sync
-      callApi('saveWorkNote', { date: currentWorkDate, content: content }).catch(e => console.warn('saveWorkNote cloud sync error:', e));
+      if (showToastMsg) showToast('บันทึกโน้ตหน้างานเรียบร้อย 📝');
+      syncCloud();
     }
 
     function copyCurrentFieldNote() {
@@ -3886,27 +3970,28 @@
         showToast('ไม่มีข้อความโน้ตให้คัดลอก', true);
         return;
       }
-
       navigator.clipboard.writeText(input.value).then(() => {
         showToast('คัดลอกโน้ตลงคลิปบอร์ดแล้ว 📋');
-      }).catch(err => {
+      }).catch(() => {
         showToast('คัดลอกล้มเหลว', true);
       });
     }
 
-    // Notes History Modal
     function showNotesHistoryModal() {
       const modal = document.getElementById('workNotesHistoryModal');
       const listEl = document.getElementById('workNotesHistoryList');
       if (!modal || !listEl) return;
 
-      const dates = Object.keys(workNotes).sort().reverse();
+      const log = workData.log || {};
+      const dates = Object.keys(log).filter(d => log[d] && (log[d].note || Object.keys(log[d].done||{}).length > 0)).sort().reverse();
+      
       if (dates.length === 0) {
         listEl.innerHTML = '<div class="text-center text-slate-400 py-4">ยังไม่มีประวัติโน้ต</div>';
       } else {
         listEl.innerHTML = dates.map(d => {
-          const noteText = workNotes[d] || '';
-          const preview = noteText.length > 60 ? noteText.substring(0, 60) + '...' : (noteText || '(ว่างเปล่า)');
+          const noteText = (log[d] && log[d].note) || '';
+          const doneCount = Object.keys((log[d] && log[d].done) || {}).length;
+          const preview = noteText ? (noteText.length > 60 ? noteText.substring(0, 60) + '...' : noteText) : `(เสร็จ ${doneCount} งาน)`;
           return `
             <div onclick="selectNoteHistoryDate('${d}')" class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-indigo-50 hover:border-indigo-200 transition cursor-pointer">
               <div class="flex items-center justify-between mb-1">
@@ -3930,6 +4015,10 @@
       currentWorkDate = dateStr;
       closeNotesHistoryModal();
       renderWorkView();
+    }
+
+    function syncCloud() {
+      callApi('saveWorkData', workData).catch(e => console.warn('Cloud sync background info:', e.message));
     }
 
   </script>

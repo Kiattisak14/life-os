@@ -410,6 +410,375 @@
       </div>
     </div>
 
+    
+    <!-- ================== VIEW 2: FIELD WORK & DAILY FOCUS OS (NEW v2.2) ================== -->
+    <div id="viewWork" class="hidden space-y-3.5">
+      
+      <!-- Sub-Tab Switcher: Cockpit vs Master Pool -->
+      <div class="bg-slate-200 p-1 rounded-2xl flex shadow-inner">
+        <button id="btnWorkSubCockpit" onclick="switchWorkSubTab('cockpit')" 
+          class="flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 bg-white text-indigo-700 shadow-sm flex items-center justify-center space-x-1.5">
+          <span>⚡ หน้างานวันนี้</span>
+          <span id="badgeTodayTaskCount" class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-1.5 py-0.2 rounded-full">0</span>
+        </button>
+        <button id="btnWorkSubPool" onclick="switchWorkSubTab('pool')" 
+          class="flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 text-slate-600 flex items-center justify-center space-x-1.5">
+          <span>📋 คลังงานรวม & เมทริกซ์</span>
+          <span id="badgePoolTaskCount" class="text-[10px] bg-slate-300 text-slate-700 font-bold px-1.5 py-0.2 rounded-full">0</span>
+        </button>
+      </div>
+
+      <!-- ================= SUB-VIEW A: DAILY WORK COCKPIT ================= -->
+      <div id="workSubViewCockpit" class="space-y-3.5">
+
+        <!-- Engineering Cockpit Status Hero -->
+        <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 text-white rounded-3xl p-4 shadow-xl border border-slate-700/60 relative overflow-hidden">
+          <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none"></div>
+          <div class="absolute -left-6 -top-6 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+          <div class="relative z-10 space-y-3">
+            <!-- Header bar with Title & Date navigator -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-1.5">
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-300 text-xs font-black">⚡</span>
+                <div>
+                  <h2 class="text-xs font-black tracking-wide uppercase text-slate-200">Daily Work Cockpit</h2>
+                  <p class="text-[10px] text-cyan-400/90 font-medium">EA Engineering & Field Focus</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-1 bg-slate-800/80 px-2 py-1 rounded-xl border border-slate-700 text-xs">
+                <button onclick="changeWorkDate(-1)" class="p-1 hover:text-cyan-400 active:scale-95 transition" title="วันก่อนหน้า">◀</button>
+                <span id="workDateDisplay" class="font-bold text-[11px] text-cyan-300 px-1 cursor-pointer" onclick="openWorkDatePicker()" title="แตะเพื่อเลือกวัน">กำลังโหลด...</span>
+                <button onclick="changeWorkDate(1)" class="p-1 hover:text-cyan-400 active:scale-95 transition" title="วันถัดไป">▶</button>
+                <button id="btnTodayReset" onclick="resetWorkDateToToday()" class="hidden ml-1 text-[9px] bg-cyan-600/60 text-white px-1.5 py-0.5 rounded hover:bg-cyan-600">วันนี้</button>
+              </div>
+            </div>
+
+            <!-- Single Focus Rule Banner -->
+            <div class="bg-indigo-900/40 border border-indigo-500/30 rounded-2xl px-3 py-2 flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <span class="text-xs">🎯</span>
+                <span class="text-[11px] text-slate-300 font-medium">กฎเหล็ก: <strong class="text-cyan-300">โฟกัสทำทีละงาน</strong> ไม่เปิดหลายแท็บพร้อมกัน</span>
+              </div>
+              <span id="workCockpitRate" class="text-[11px] font-bold text-emerald-400">0%</span>
+            </div>
+
+            <!-- Progress Bar -->
+            <div>
+              <div class="flex justify-between text-[11px] font-medium text-slate-300 mb-1">
+                <span>ความคืบหน้างานวันนี้</span>
+                <span id="workProgressText" class="font-bold text-white">0 / 0 งานเสร็จสิ้น</span>
+              </div>
+              <div class="w-full bg-slate-700/70 h-2.5 rounded-full overflow-hidden p-0.5 border border-slate-600/40">
+                <div id="workProgressBar" class="bg-gradient-to-r from-cyan-400 to-emerald-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <!-- 3 Status Metric Badges -->
+            <div class="grid grid-cols-3 gap-2 pt-1 text-center">
+              <div class="bg-slate-800/90 rounded-2xl p-2 border border-slate-700/60">
+                <div class="text-[10px] text-slate-400 font-medium">⏳ รอเริ่ม</div>
+                <div id="countWorkTodo" class="text-base font-black text-slate-200 mt-0.5">0</div>
+              </div>
+              <div class="bg-cyan-950/40 rounded-2xl p-2 border border-cyan-500/40">
+                <div class="text-[10px] text-cyan-300 font-medium flex items-center justify-center space-x-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                  <span>⚙️ กำลังทำ</span>
+                </div>
+                <div id="countWorkInProgress" class="text-base font-black text-cyan-300 mt-0.5">0</div>
+              </div>
+              <div class="bg-emerald-950/40 rounded-2xl p-2 border border-emerald-500/40">
+                <div class="text-[10px] text-emerald-300 font-medium">✅ เสร็จสิ้น</div>
+                <div id="countWorkDone" class="text-base font-black text-emerald-300 mt-0.5">0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ⚙️ DOING NOW FOCUS CARD (Highlighted when in progress) -->
+        <div id="doingNowContainer" class="hidden">
+          <div class="bg-gradient-to-r from-cyan-500/10 via-indigo-500/10 to-transparent border-2 border-cyan-500/70 rounded-3xl p-4 shadow-md bg-white">
+            <div class="flex items-center justify-between mb-2">
+              <span class="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-cyan-100 text-cyan-800 text-[10px] font-black uppercase tracking-wider">
+                <span class="w-2 h-2 rounded-full bg-cyan-500 animate-ping"></span>
+                <span>⚙️ DOING NOW (โฟกัสอยู่ตอนนี้)</span>
+              </span>
+              <span id="doingNowTag" class="text-[10px] bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded-md">แท็ก</span>
+            </div>
+            <h3 id="doingNowTitle" class="text-base font-bold text-slate-900 leading-snug">ชื่องานที่กำลังทำ</h3>
+            <div class="mt-3 flex items-center space-x-2">
+              <button onclick="completeDoingNowTask()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs py-2 px-3 rounded-xl shadow transition flex items-center justify-center space-x-1">
+                <span>✅ ทำเสร็จแล้ว</span>
+              </button>
+              <button onclick="pauseDoingNowTask()" class="bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-semibold text-xs py-2 px-3 rounded-xl transition">
+                <span>⏸️ พักไว้ก่อน</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Add to Today Bar -->
+        <div class="bg-white rounded-2xl p-3 border border-slate-200 shadow-sm space-y-2">
+          <div class="flex items-center space-x-2">
+            <input type="text" id="quickTaskTitle" placeholder="+ เพิ่มงานด่วนเข้ากระดานวันนี้..." 
+              class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              onkeydown="if(event.key==='Enter') quickAddTodayTask()">
+            <button onclick="quickAddTodayTask()" class="bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition shadow-sm">
+              เพิ่ม
+            </button>
+          </div>
+          <!-- Quick Tag & Priority Selector -->
+          <div class="flex items-center justify-between text-[10px] pt-1 border-t border-slate-100">
+            <div class="flex items-center space-x-1 overflow-x-auto pb-0.5" id="quickTagPills">
+              <button type="button" onclick="selectQuickTag('⚡ HV/Batt')" class="quick-tag-pill active px-2 py-0.5 rounded-full border border-indigo-600 bg-indigo-50 text-indigo-700 font-bold">⚡ HV/Batt</button>
+              <button type="button" onclick="selectQuickTag('💻 VCU')" class="quick-tag-pill px-2 py-0.5 rounded-full border border-slate-200 bg-white text-slate-600">💻 VCU</button>
+              <button type="button" onclick="selectQuickTag('🔧 Mech')" class="quick-tag-pill px-2 py-0.5 rounded-full border border-slate-200 bg-white text-slate-600">🔧 Mech</button>
+              <button type="button" onclick="selectQuickTag('📦 Part')" class="quick-tag-pill px-2 py-0.5 rounded-full border border-slate-200 bg-white text-slate-600">📦 Part</button>
+              <button type="button" onclick="selectQuickTag('📄 Admin')" class="quick-tag-pill px-2 py-0.5 rounded-full border border-slate-200 bg-white text-slate-600">📄 Admin</button>
+            </div>
+            <select id="quickPrioritySelect" class="bg-slate-50 border border-slate-200 rounded-lg text-[10px] font-semibold text-slate-700 px-1.5 py-0.5 focus:outline-none">
+              <option value="Q1">🔥 Q1 ด่วน&สำคัญ</option>
+              <option value="Q2" selected>⭐ Q2 ไม่ด่วนแต่สำคัญ</option>
+              <option value="Q3">⚡ Q3 ด่วนแต่ไม่สำคัญ</option>
+              <option value="Q4">💤 Q4 แบ็กล็อก</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- ⏳ TO DO LIST FOR TODAY -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between px-1">
+            <h3 class="text-xs font-bold text-slate-700 flex items-center space-x-1.5">
+              <span>⏳ คิวงอยู่วันนี้</span>
+              <span id="badgePendingCount" class="text-[10px] bg-slate-200 text-slate-700 px-1.5 py-0.2 rounded-full font-bold">0</span>
+            </h3>
+            <button onclick="switchWorkSubTab('pool')" class="text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 flex items-center space-x-1">
+              <span>+ ดึงจากคลังงาน</span>
+              <span>➔</span>
+            </button>
+          </div>
+          
+          <div id="todayTodoListContainer" class="space-y-2">
+            <!-- Dynamic Task Cards -->
+          </div>
+        </div>
+
+        <!-- ✅ DONE LIST FOR TODAY (Collapsible) -->
+        <div class="space-y-2 pt-1">
+          <button onclick="toggleDoneSection()" class="w-full flex items-center justify-between px-2 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-xl transition text-left">
+            <span class="text-xs font-bold text-slate-600 flex items-center space-x-1.5">
+              <span>✅ งานที่เสร็จแล้ววันนี้</span>
+              <span id="badgeDoneCount" class="text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded-full font-bold">0</span>
+            </span>
+            <span id="doneToggleArrow" class="text-xs text-slate-400">▼</span>
+          </button>
+          
+          <div id="todayDoneListContainer" class="space-y-2">
+            <!-- Dynamic Done Cards -->
+          </div>
+        </div>
+
+        <!-- 📝 DAILY FIELD NOTES BOX -->
+        <div class="bg-white rounded-3xl p-4 border border-slate-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <div class="w-7 h-7 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xs">📝</div>
+              <div>
+                <h3 class="text-xs font-bold text-slate-800">โน้ตหน้างานประจำวัน (Field Notes)</h3>
+                <p id="fieldNoteDateSubtitle" class="text-[10px] text-slate-400">บันทึกสำหรับวันนี้</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-1.5">
+              <span id="noteAutoSaveStatus" class="text-[10px] font-medium text-emerald-600">🟢 พร้อมใช้งาน</span>
+              <button onclick="showNotesHistoryModal()" class="text-[10px] font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded-lg transition" title="ดูประวัติโน้ต">
+                📅 ประวัติ
+              </button>
+            </div>
+          </div>
+
+          <textarea id="workFieldNotesInput" rows="4" 
+            placeholder="จดบันทึกค่าพารามิเตอร์, ปัญหาหน้างาน, ค่าแรงดัน CAN bus, ข้อมูลมอเตอร์ PG-1, หรือข้อสังเกตหน้างานทันที..."
+            class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs leading-relaxed text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition resize-none"
+            oninput="handleFieldNoteInput()"></textarea>
+
+          <div class="flex items-center justify-between pt-1 text-xs">
+            <span class="text-[10px] text-slate-400">บันทึกลง LocalStorage อัตโนมัติ & Sync Cloud</span>
+            <div class="flex items-center space-x-2">
+              <button onclick="copyCurrentFieldNote()" class="text-[11px] font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl transition flex items-center space-x-1">
+                <span>📋 คัดลอก</span>
+              </button>
+              <button onclick="saveFieldNoteManual()" class="text-[11px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 px-3.5 py-1.5 rounded-xl shadow-sm transition flex items-center space-x-1">
+                <span>💾 บันทึกโน้ต</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- ================= END SUB-VIEW A ================= -->
+
+      <!-- ================= SUB-VIEW B: MASTER WORK POOL & EISENHOWER MATRIX ================= -->
+      <div id="workSubViewPool" class="hidden space-y-3.5">
+
+        <!-- Pool Header Card -->
+        <div class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 text-white rounded-3xl p-4 shadow-lg">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-[10px] font-bold tracking-wider uppercase bg-white/20 px-2 py-0.5 rounded-full">Work Organizer</span>
+              <h2 class="text-base font-black mt-1">คลังงานรวม & เมทริกซ์ (Master Work Pool)</h2>
+              <p class="text-[11px] text-indigo-200 mt-0.5">จุดพักสมอง ป้องกันล้าทางจิตใจ — แยกเรื่องงานออกจากเรื่องส่วนตัว</p>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] text-indigo-300">งานทั้งหมดในคลัง</span>
+              <div id="poolTotalCountBadge" class="text-xl font-black text-amber-300">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form: 📥 เพิ่มงานใหม่เข้าคลัง -->
+        <div class="bg-white rounded-3xl p-4 border border-slate-200 shadow-sm space-y-3">
+          <h3 class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+            <span class="text-indigo-600">📥</span>
+            <span>บันทึกงานใหม่เข้าคลัง (Quick Task Capture)</span>
+          </h3>
+
+          <input type="text" id="poolInputTitle" placeholder="ชื่องาน เช่น ตรวจสอบสัญญาณ CAN Bus VCU, สั่งโซ่ PG-1..." 
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+
+          <!-- Priority: 4 Quadrants Radio Pills -->
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1.5">ระดับความสำคัญ (Eisenhower Quadrant):</label>
+            <div class="grid grid-cols-2 gap-2 text-left" id="poolPriorityGroup">
+              <button type="button" onclick="selectPoolPriority('Q1')" id="btnPriQ1" class="pool-pri-btn p-2 rounded-xl border border-rose-200 bg-rose-50 text-rose-800 text-[11px] font-semibold flex items-center space-x-1.5 transition">
+                <span class="text-base">🔥</span>
+                <div>
+                  <div class="font-bold">Q1: ด่วน & สำคัญ</div>
+                  <div class="text-[9px] text-rose-600 font-normal">Do First (รีบทำทันที)</div>
+                </div>
+              </button>
+              <button type="button" onclick="selectPoolPriority('Q2')" id="btnPriQ2" class="pool-pri-btn active ring-2 ring-amber-500 p-2 rounded-xl border border-amber-300 bg-amber-50 text-amber-800 text-[11px] font-semibold flex items-center space-x-1.5 transition">
+                <span class="text-base">⭐</span>
+                <div>
+                  <div class="font-bold">Q2: ไม่ด่วน แต่สำคัญ</div>
+                  <div class="text-[9px] text-amber-600 font-normal">Plan (วางแผน/พัฒนาระบบ)</div>
+                </div>
+              </button>
+              <button type="button" onclick="selectPoolPriority('Q3')" id="btnPriQ3" class="pool-pri-btn p-2 rounded-xl border border-sky-200 bg-sky-50 text-sky-800 text-[11px] font-semibold flex items-center space-x-1.5 transition">
+                <span class="text-base">⚡</span>
+                <div>
+                  <div class="font-bold">Q3: ด่วน แต่ไม่สำคัญ</div>
+                  <div class="text-[9px] text-sky-600 font-normal">Delegate / Quick Win</div>
+                </div>
+              </button>
+              <button type="button" onclick="selectPoolPriority('Q4')" id="btnPriQ4" class="pool-pri-btn p-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 text-[11px] font-semibold flex items-center space-x-1.5 transition">
+                <span class="text-base">💤</span>
+                <div>
+                  <div class="font-bold">Q4: ไม่ด่วน & ไม่สำคัญ</div>
+                  <div class="text-[9px] text-slate-500 font-normal">Backlog / Someday</div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Tags -->
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1.5">แท็กหมวดหมู่หน้างาน (Field Tag):</label>
+            <div class="flex items-center space-x-1.5 overflow-x-auto pb-1" id="poolTagGroup">
+              <button type="button" onclick="selectPoolTag('⚡ HV/Batt')" class="pool-tag-pill active px-2.5 py-1 rounded-full border border-indigo-600 bg-indigo-50 text-indigo-700 font-bold text-[10px]">⚡ HV/Batt</button>
+              <button type="button" onclick="selectPoolTag('💻 VCU')" class="pool-tag-pill px-2.5 py-1 rounded-full border border-slate-200 bg-white text-slate-600 text-[10px]">💻 VCU</button>
+              <button type="button" onclick="selectPoolTag('🔧 Mech')" class="pool-tag-pill px-2.5 py-1 rounded-full border border-slate-200 bg-white text-slate-600 text-[10px]">🔧 Mech</button>
+              <button type="button" onclick="selectPoolTag('📦 Part')" class="pool-tag-pill px-2.5 py-1 rounded-full border border-slate-200 bg-white text-slate-600 text-[10px]">📦 Part</button>
+              <button type="button" onclick="selectPoolTag('📄 Admin')" class="pool-tag-pill px-2.5 py-1 rounded-full border border-slate-200 bg-white text-slate-600 text-[10px]">📄 Admin</button>
+            </div>
+          </div>
+
+          <!-- Schedule Option -->
+          <div class="flex items-center justify-between pt-1">
+            <label class="flex items-center space-x-2 text-xs text-slate-700 cursor-pointer">
+              <input type="checkbox" id="poolAssignTodayCheck" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+              <span>📌 ดึงเข้ากระดานทำวันนี้ทันที</span>
+            </label>
+            <button onclick="addPoolTask()" class="bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs py-2 px-4 rounded-xl shadow-md transition flex items-center space-x-1">
+              <span>+ บันทึกงานเข้าคลัง</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- EISENHOWER MATRIX 4 QUADRANTS CONTAINER -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between px-1">
+            <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">🧭 Eisenhower Matrix (4 Quadrants)</h3>
+            <span class="text-[10px] text-slate-400">จัดลำดับความสำคัญชัดเจน</span>
+          </div>
+
+          <!-- QUADRANT 1: DO FIRST -->
+          <div class="bg-white rounded-3xl p-3.5 border-2 border-rose-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between border-b border-rose-100 pb-2">
+              <div class="flex items-center space-x-2">
+                <span class="text-base">🔥</span>
+                <div>
+                  <h4 class="text-xs font-bold text-rose-900">Q1: ด่วน & สำคัญ (Do First)</h4>
+                  <p class="text-[9px] text-rose-600">วิกฤต, งานส่งผลกระทบทันที, ปัญหาหน้างานเฉพาะหน้า</p>
+                </div>
+              </div>
+              <span id="badgeCountQ1" class="text-xs font-black bg-rose-100 text-rose-800 px-2 py-0.5 rounded-full">0</span>
+            </div>
+            <div id="poolListQ1" class="space-y-2 pt-1"></div>
+          </div>
+
+          <!-- QUADRANT 2: PLAN / SCHEDULE -->
+          <div class="bg-white rounded-3xl p-3.5 border-2 border-amber-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between border-b border-amber-100 pb-2">
+              <div class="flex items-center space-x-2">
+                <span class="text-base">⭐</span>
+                <div>
+                  <h4 class="text-xs font-bold text-amber-900">Q2: ไม่ด่วน แต่สำคัญ (Plan & Schedule)</h4>
+                  <p class="text-[9px] text-amber-600">วางแผนระยะยาว, วิจัย/ทดสอบ EV, พัฒนาระบบ, ป้องกันปัญหา</p>
+                </div>
+              </div>
+              <span id="badgeCountQ2" class="text-xs font-black bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">0</span>
+            </div>
+            <div id="poolListQ2" class="space-y-2 pt-1"></div>
+          </div>
+
+          <!-- QUADRANT 3: DELEGATE / QUICK WIN -->
+          <div class="bg-white rounded-3xl p-3.5 border-2 border-sky-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between border-b border-sky-100 pb-2">
+              <div class="flex items-center space-x-2">
+                <span class="text-base">⚡</span>
+                <div>
+                  <h4 class="text-xs font-bold text-sky-900">Q3: ด่วน แต่ไม่สำคัญ (Delegate / Quick Win)</h4>
+                  <p class="text-[9px] text-sky-600">งานแทรกด่วน, นัดหมายสั้นๆ, ประสานงาน/สั่งอะไหล่ทั่วไป</p>
+                </div>
+              </div>
+              <span id="badgeCountQ3" class="text-xs font-black bg-sky-100 text-sky-800 px-2 py-0.5 rounded-full">0</span>
+            </div>
+            <div id="poolListQ3" class="space-y-2 pt-1"></div>
+          </div>
+
+          <!-- QUADRANT 4: BACKLOG / SOMEDAY -->
+          <div class="bg-white rounded-3xl p-3.5 border-2 border-slate-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+              <div class="flex items-center space-x-2">
+                <span class="text-base">💤</span>
+                <div>
+                  <h4 class="text-xs font-bold text-slate-800">Q4: ไม่ด่วน & ไม่สำคัญ (Backlog / Someday)</h4>
+                  <p class="text-[9px] text-slate-500">ไอเดียเก็บตก, งานปรับแต่งเล็กน้อย ค่อยทำเมื่อว่าง</p>
+                </div>
+              </div>
+              <span id="badgeCountQ4" class="text-xs font-black bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full">0</span>
+            </div>
+            <div id="poolListQ4" class="space-y-2 pt-1"></div>
+          </div>
+
+        </div>
+
+      </div>
+      <!-- ================= END SUB-VIEW B ================= -->
+
+    </div>
+    <!-- ================== END VIEW 2: FIELD WORK & DAILY FOCUS OS ================== -->
+
     <!-- ================== VIEW 3: ENGLISH LEARNING TRACKER ================== -->
     
     <!-- ================== VIEW 3: ENGLISH LEARNING HUB ================== -->
@@ -651,6 +1020,45 @@
 
   </main>
 
+  
+  <!-- ================== MODAL: WORK DATE PICKER ================== -->
+  <div id="workDatePickerModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-xs rounded-3xl p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-bold text-slate-800">เลือกวันที่สำหรับกระดานหน้างาน</h3>
+        <button onclick="closeWorkDatePicker()" class="text-slate-400 hover:text-slate-600 text-sm">✕</button>
+      </div>
+      <div>
+        <label class="block text-[11px] font-semibold text-slate-600 mb-1">ระบุวันที่:</label>
+        <input type="date" id="workDatePickerInput" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+      </div>
+      <div class="flex items-center space-x-2">
+        <button onclick="applyWorkDatePicker()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs py-2 rounded-xl transition">
+          ดูวันที่นี้
+        </button>
+        <button onclick="resetWorkDateToToday(); closeWorkDatePicker();" class="bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-semibold text-xs py-2 px-3 rounded-xl transition">
+          วันนี้
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================== MODAL: WORK NOTES HISTORY ================== -->
+  <div id="workNotesHistoryModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl space-y-3.5 max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+        <div>
+          <h3 class="text-sm font-bold text-slate-800">📅 ประวัติสมุดบันทึกหน้างาน</h3>
+          <p class="text-[10px] text-slate-400">เลือกวันที่เพื่อเปิดดูหรือแก้ไขโน้ต</p>
+        </div>
+        <button onclick="closeNotesHistoryModal()" class="text-slate-400 hover:text-slate-600 text-sm">✕</button>
+      </div>
+      <div id="workNotesHistoryList" class="overflow-y-auto space-y-2 flex-1 pr-1 text-xs">
+        <!-- populated dynamically -->
+      </div>
+    </div>
+  </div>
+
   <!-- ================== MODAL: SETTINGS (API URL CONFIG) ================== -->
   <div id="settingsModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white w-full max-w-sm rounded-3xl p-5 space-y-3 shadow-2xl">
@@ -730,9 +1138,9 @@
     </button>
   </div>
 
-  <!-- Bottom Navigation Bar (3 Tabs: การเงิน / ภาษาอังกฤษ / ประวัติ) -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 py-1.5 px-4 z-40">
-    <div class="max-w-md mx-auto grid grid-cols-3 items-center text-center">
+  <!-- Bottom Navigation Bar (4 Tabs: การเงิน / หน้างาน / ภาษาอังกฤษ / ประวัติ) -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 py-1.5 px-2 z-40">
+    <div class="max-w-md mx-auto grid grid-cols-4 items-center text-center">
       
       <!-- Tab 1: การเงิน (Finance Dashboard + FAB) -->
       <button onclick="switchTab('dashboard')" id="tabBtnDashboard" class="flex flex-col items-center text-indigo-600 font-semibold text-[11px] py-1 transition">
@@ -742,15 +1150,23 @@
         <span>การเงิน</span>
       </button>
 
-      <!-- Tab 2: ภาษาอังกฤษ (English & Vocab) -->
+      <!-- Tab 2: หน้างาน (Field Work & Daily Focus OS - NEW v2.2) -->
+      <button onclick="switchTab('work')" id="tabBtnWork" class="flex flex-col items-center text-slate-400 hover:text-slate-600 font-medium text-[11px] py-1 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        <span>หน้างาน</span>
+      </button>
+
+      <!-- Tab 3: ภาษาอังกฤษ (English & Vocab) -->
       <button onclick="switchTab('english')" id="tabBtnEnglish" class="flex flex-col items-center text-slate-400 hover:text-slate-600 font-medium text-[11px] py-1 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </svg>
-        <span>ภาษาอังกฤษ</span>
+        <span>อังกฤษ</span>
       </button>
 
-      <!-- Tab 3: ประวัติ (History) -->
+      <!-- Tab 4: ประวัติ (History) -->
       <button onclick="switchTab('history')" id="tabBtnHistory" class="flex flex-col items-center text-slate-400 hover:text-slate-600 font-medium text-[11px] py-1 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -810,11 +1226,16 @@
 
       // Check if running in Google Apps Script directly or via GitHub Pages
       const isGAS = typeof google !== 'undefined' && google.script && google.script.run;
+      // Initialize Work Module
+      loadWorkFromStorage();
+      renderWorkView();
+
       if (!isGAS && !API_URL) {
         // First time on GitHub Pages
         setTimeout(openSettingsModal, 400);
       } else {
         fetchDashboardData();
+        fetchWorkData();
         fetchEnglishData();
       }
     };
@@ -1013,7 +1434,7 @@
 
     function switchTab(tab) {
       activeTab = tab;
-      const views = ['Dashboard', 'English', 'History'];
+      const views = ['Dashboard', 'Work', 'English', 'History'];
       views.forEach(v => {
         const el = document.getElementById('view' + v);
         if (el) el.classList.add('hidden');
@@ -1038,6 +1459,8 @@
 
       if (tab === 'dashboard' || tab === 'history') {
         fetchDashboardData();
+      } else if (tab === 'work') {
+        fetchWorkData();
       } else if (tab === 'english') {
         fetchEnglishData();
       }
@@ -1046,6 +1469,7 @@
     function refreshData() {
       showToast('กำลังรีเฟรชข้อมูล...');
       fetchDashboardData();
+      fetchWorkData();
       fetchEnglishData();
     }
 
@@ -1061,6 +1485,11 @@
           else if (action === 'getEnglishData') google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).getEnglishData();
           else if (action === 'recordTransaction') google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).recordTransaction(data);
           else if (action === 'recordEnglishSentence') google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).recordEnglishSentence(data);
+          else if (action === 'getWorkData') google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).getWorkData(data);
+          else if (action === 'saveWorkTask') google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).saveWorkTask(data);
+          else if (action === 'updateWorkTaskStatus') google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).updateWorkTaskStatus(data);
+          else if (action === 'deleteWorkTask') google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).deleteWorkTask(data);
+          else if (action === 'saveWorkNote') google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).saveWorkNote(data);
         });
       }
 
@@ -2689,6 +3118,818 @@
         `;
         container.appendChild(row);
       });
+    }
+
+
+    // ====================================================================
+    // 3. WORK MANAGEMENT MODULE (Field Work & Daily Focus OS v2.2)
+    // ====================================================================
+
+    let currentWorkDate = getTodayDateStr();
+    let activeWorkSubTab = 'cockpit';
+    let selectedQuickTag = '⚡ HV/Batt';
+    let selectedPoolPriority = 'Q2';
+    let selectedPoolTag = '⚡ HV/Batt';
+    let isDoneSectionCollapsed = false;
+    let workNoteDebounceTimer = null;
+
+    let workTasks = [];
+    let workNotes = {};
+
+    function getTodayDateStr() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const d = String(now.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function formatThaiWorkDate(dateStr) {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-');
+      if (parts.length !== 3) return dateStr;
+      const y = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10) - 1;
+      const d = parseInt(parts[2], 10);
+      const date = new Date(y, m, d);
+
+      const days = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสฯ', 'ศุกร์', 'เสาร์'];
+      const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+
+      const dayName = days[date.getDay()];
+      const monthName = months[m];
+      const thaiYear = y + 543;
+
+      const todayStr = getTodayDateStr();
+      const prefix = (dateStr === todayStr) ? 'วันนี้: ' : '';
+      return `${prefix}${dayName} ${d} ${monthName} ${thaiYear}`;
+    }
+
+    // Default Seed Tasks for EA Engineering Field Work
+    function getSeedWorkTasks() {
+      const today = getTodayDateStr();
+      return [
+        {
+          id: 'TASK-1',
+          title: 'ตรวจสอบแรงดันเซลล์ HV Battery Pack #1 หน้างาน',
+          priority: 'Q1',
+          tag: '⚡ HV/Batt',
+          status: 'IN_PROGRESS',
+          assignedDate: today,
+          createdAt: today + ' 09:00',
+          updatedAt: today + ' 09:00'
+        },
+        {
+          id: 'TASK-2',
+          title: 'อัปเดต Firmware VCU Ver 2.3 และทดสอบส่งคำสั่ง CAN Bus',
+          priority: 'Q1',
+          tag: '💻 VCU',
+          status: 'TODO',
+          assignedDate: today,
+          createdAt: today + ' 09:15',
+          updatedAt: today + ' 09:15'
+        },
+        {
+          id: 'TASK-3',
+          title: 'ติดตั้งชุดสเตอร์หน้า-หลังและโซ่ทดเกียร์ มอเตอร์ PG-1',
+          priority: 'Q2',
+          tag: '🔧 Mech',
+          status: 'TODO',
+          assignedDate: today,
+          createdAt: today + ' 09:30',
+          updatedAt: today + ' 09:30'
+        },
+        {
+          id: 'TASK-4',
+          title: 'สั่งซื้อ Waterproof Connector IP67 สำหรับ Harness หน้างาน',
+          priority: 'Q3',
+          tag: '📦 Part',
+          status: 'TODO',
+          assignedDate: '',
+          createdAt: today + ' 10:00',
+          updatedAt: today + ' 10:00'
+        },
+        {
+          id: 'TASK-5',
+          title: 'ทำสรุปรายงานผลการทดสอบ Dyno Test ส่งผู้จัดการ',
+          priority: 'Q2',
+          tag: '📄 Admin',
+          status: 'TODO',
+          assignedDate: '',
+          createdAt: today + ' 10:30',
+          updatedAt: today + ' 10:30'
+        }
+      ];
+    }
+
+    // Load from LocalStorage
+    function loadWorkFromStorage() {
+      try {
+        const storedTasks = localStorage.getItem('LIFE_OS_WORK_TASKS');
+        if (storedTasks) {
+          workTasks = JSON.parse(storedTasks);
+        } else {
+          workTasks = getSeedWorkTasks();
+          saveWorkToStorage();
+        }
+
+        const storedNotes = localStorage.getItem('LIFE_OS_WORK_NOTES');
+        if (storedNotes) {
+          workNotes = JSON.parse(storedNotes);
+        } else {
+          const today = getTodayDateStr();
+          workNotes = {
+            [today]: 'บันทึกหน้างานเบื้องต้น: ระบบพร้อมทดสอบ VCU รอบบ่าย ตรวจสอบแรงดันไฟหลักเรียบร้อย'
+          };
+          saveWorkToStorage();
+        }
+      } catch (e) {
+        console.error('loadWorkFromStorage error:', e);
+        workTasks = getSeedWorkTasks();
+        workNotes = {};
+      }
+    }
+
+    // Save to LocalStorage
+    function saveWorkToStorage() {
+      try {
+        localStorage.setItem('LIFE_OS_WORK_TASKS', JSON.stringify(workTasks));
+        localStorage.setItem('LIFE_OS_WORK_NOTES', JSON.stringify(workNotes));
+      } catch (e) {
+        console.error('saveWorkToStorage error:', e);
+      }
+    }
+
+    // Fetch from Backend (API / Cloud)
+    async function fetchWorkData() {
+      loadWorkFromStorage();
+      renderWorkView();
+
+      try {
+        const res = await callApi('getWorkData', { date: currentWorkDate });
+        if (res && res.success) {
+          if (res.tasks && Array.isArray(res.tasks) && res.tasks.length > 0) {
+            // Merge with local tasks
+            const cloudMap = new Map(res.tasks.map(t => [t.id, t]));
+            workTasks.forEach(lt => {
+              if (!cloudMap.has(lt.id)) {
+                cloudMap.set(lt.id, lt);
+              }
+            });
+            workTasks = Array.from(cloudMap.values());
+          }
+          if (res.note !== undefined && res.date) {
+            if (res.note && !workNotes[res.date]) {
+              workNotes[res.date] = res.note;
+            }
+          }
+          saveWorkToStorage();
+          renderWorkView();
+        }
+      } catch (err) {
+        console.warn('fetchWorkData network warning (using local):', err.message);
+      }
+    }
+
+    // Sub-Tab Switcher (Cockpit vs Pool)
+    function switchWorkSubTab(subTab) {
+      activeWorkSubTab = subTab;
+      const btnCockpit = document.getElementById('btnWorkSubCockpit');
+      const btnPool = document.getElementById('btnWorkSubPool');
+      const viewCockpit = document.getElementById('workSubViewCockpit');
+      const viewPool = document.getElementById('workSubViewPool');
+
+      if (subTab === 'cockpit') {
+        viewCockpit.classList.remove('hidden');
+        viewPool.classList.add('hidden');
+        btnCockpit.className = 'flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 bg-white text-indigo-700 shadow-sm flex items-center justify-center space-x-1.5';
+        btnPool.className = 'flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 text-slate-600 flex items-center justify-center space-x-1.5';
+      } else {
+        viewCockpit.classList.add('hidden');
+        viewPool.classList.remove('hidden');
+        btnPool.className = 'flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 bg-white text-indigo-700 shadow-sm flex items-center justify-center space-x-1.5';
+        btnCockpit.className = 'flex-1 py-1.5 rounded-xl font-semibold text-xs transition-all duration-200 text-slate-600 flex items-center justify-center space-x-1.5';
+      }
+
+      renderWorkView();
+    }
+
+    // Date Navigation
+    function changeWorkDate(deltaDays) {
+      const parts = currentWorkDate.split('-');
+      const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+      d.setDate(d.getDate() + deltaDays);
+      
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      currentWorkDate = `${y}-${m}-${day}`;
+      renderWorkView();
+    }
+
+    function resetWorkDateToToday() {
+      currentWorkDate = getTodayDateStr();
+      renderWorkView();
+    }
+
+    function openWorkDatePicker() {
+      const input = document.getElementById('workDatePickerInput');
+      if (input) input.value = currentWorkDate;
+      const modal = document.getElementById('workDatePickerModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeWorkDatePicker() {
+      const modal = document.getElementById('workDatePickerModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function applyWorkDatePicker() {
+      const input = document.getElementById('workDatePickerInput');
+      if (input && input.value) {
+        currentWorkDate = input.value;
+        closeWorkDatePicker();
+        renderWorkView();
+      }
+    }
+
+    // Master Render Function
+    function renderWorkView() {
+      const todayStr = getTodayDateStr();
+      
+      // Update Date Display
+      const dateDisplay = document.getElementById('workDateDisplay');
+      if (dateDisplay) {
+        dateDisplay.textContent = formatThaiWorkDate(currentWorkDate);
+      }
+
+      const btnTodayReset = document.getElementById('btnTodayReset');
+      if (btnTodayReset) {
+        if (currentWorkDate !== todayStr) {
+          btnTodayReset.classList.remove('hidden');
+        } else {
+          btnTodayReset.classList.add('hidden');
+        }
+      }
+
+      renderWorkCockpit();
+      renderWorkPool();
+    }
+
+    // Render Cockpit (Daily View)
+    function renderWorkCockpit() {
+      const todayTasks = workTasks.filter(t => t.assignedDate === currentWorkDate);
+      
+      const inProgressTask = todayTasks.find(t => t.status === 'IN_PROGRESS');
+      const todoTasks = todayTasks.filter(t => t.status === 'TODO');
+      const doneTasks = todayTasks.filter(t => t.status === 'DONE');
+
+      // Update counters
+      const totalCount = todayTasks.length;
+      const doneCount = doneTasks.length;
+      const progressPercent = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
+
+      const countTodoEl = document.getElementById('countWorkTodo');
+      const countInProgEl = document.getElementById('countWorkInProgress');
+      const countDoneEl = document.getElementById('countWorkDone');
+      const progressTextEl = document.getElementById('workProgressText');
+      const progressBarEl = document.getElementById('workProgressBar');
+      const cockpitRateEl = document.getElementById('workCockpitRate');
+      const badgeTodayTaskCount = document.getElementById('badgeTodayTaskCount');
+      const badgePendingCount = document.getElementById('badgePendingCount');
+      const badgeDoneCount = document.getElementById('badgeDoneCount');
+
+      if (countTodoEl) countTodoEl.textContent = todoTasks.length;
+      if (countInProgEl) countInProgEl.textContent = inProgressTask ? 1 : 0;
+      if (countDoneEl) countDoneEl.textContent = doneCount;
+      if (progressTextEl) progressTextEl.textContent = `${doneCount} / ${totalCount} งานเสร็จสิ้น (${progressPercent}%)`;
+      if (progressBarEl) progressBarEl.style.width = `${progressPercent}%`;
+      if (cockpitRateEl) cockpitRateEl.textContent = `${progressPercent}%`;
+      if (badgeTodayTaskCount) badgeTodayTaskCount.textContent = (todoTasks.length + (inProgressTask ? 1 : 0));
+      if (badgePendingCount) badgePendingCount.textContent = todoTasks.length;
+      if (badgeDoneCount) badgeDoneCount.textContent = doneCount;
+
+      // Doing Now Banner
+      const doingNowContainer = document.getElementById('doingNowContainer');
+      const doingNowTitle = document.getElementById('doingNowTitle');
+      const doingNowTag = document.getElementById('doingNowTag');
+      if (doingNowContainer) {
+        if (inProgressTask) {
+          doingNowContainer.classList.remove('hidden');
+          if (doingNowTitle) doingNowTitle.textContent = inProgressTask.title;
+          if (doingNowTag) doingNowTag.textContent = inProgressTask.tag || '⚡ หน้างาน';
+        } else {
+          doingNowContainer.classList.add('hidden');
+        }
+      }
+
+      // Render To-Do List
+      const todoListContainer = document.getElementById('todayTodoListContainer');
+      if (todoListContainer) {
+        if (todoTasks.length === 0) {
+          todoListContainer.innerHTML = `
+            <div class="bg-slate-50 border border-dashed border-slate-200 rounded-2xl p-4 text-center text-xs text-slate-400 space-y-1">
+              <div>🎯 ไม่มีคิวงอยู่วันนี้</div>
+              <div class="text-[11px] text-slate-400">ดึงงานจากคลังรวม หรือพิมพ์เพิ่มงานด่วนด้านบนได้ทันที</div>
+            </div>`;
+        } else {
+          todoListContainer.innerHTML = todoTasks.map(t => {
+            const priBadge = getPriorityBadge(t.priority);
+            return `
+              <div class="bg-white rounded-2xl p-3 border border-slate-200 shadow-sm flex flex-col space-y-2 hover:border-slate-300 transition">
+                <div class="flex items-start justify-between">
+                  <div class="flex-1 pr-2">
+                    <div class="flex items-center space-x-1.5 mb-1">
+                      ${priBadge}
+                      <span class="text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.2 rounded-md">${escapeHtml(t.tag || 'หน้างาน')}</span>
+                    </div>
+                    <div class="text-xs font-bold text-slate-800 leading-snug">${escapeHtml(t.title)}</div>
+                  </div>
+                  <button onclick="deleteWorkTask('${t.id}')" class="text-slate-300 hover:text-rose-500 text-xs p-1" title="ลบงาน">✕</button>
+                </div>
+                <div class="flex items-center justify-between pt-1 border-t border-slate-100 text-[11px]">
+                  <div class="flex items-center space-x-1">
+                    <button onclick="setTaskStatus('${t.id}', 'IN_PROGRESS')" class="bg-cyan-50 hover:bg-cyan-100 text-cyan-800 font-bold px-2.5 py-1 rounded-xl transition flex items-center space-x-1">
+                      <span>⚙️ เริ่มทำ</span>
+                    </button>
+                    <button onclick="setTaskStatus('${t.id}', 'DONE')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-xl transition flex items-center space-x-1">
+                      <span>✅ เสร็จ</span>
+                    </button>
+                  </div>
+                  <button onclick="postponeTaskToTomorrow('${t.id}')" class="text-slate-500 hover:text-indigo-600 font-medium px-2 py-1 rounded-lg hover:bg-slate-50 transition" title="เลื่อนไปทำพรุ่งนี้">
+                    🔄 ยกยอดไปพรุ่งนี้
+                  </button>
+                </div>
+              </div>`;
+          }).join('');
+        }
+      }
+
+      // Render Done List
+      const doneListContainer = document.getElementById('todayDoneListContainer');
+      if (doneListContainer) {
+        if (isDoneSectionCollapsed) {
+          doneListContainer.classList.add('hidden');
+        } else {
+          doneListContainer.classList.remove('hidden');
+          if (doneTasks.length === 0) {
+            doneListContainer.innerHTML = `
+              <div class="text-center text-[11px] text-slate-400 py-2">ยังไม่มีงานที่เสร็จสิ้นสำหรับวันนี้</div>`;
+          } else {
+            doneListContainer.innerHTML = doneTasks.map(t => {
+              return `
+                <div class="bg-emerald-50/50 rounded-2xl p-2.5 border border-emerald-100 flex items-center justify-between">
+                  <div class="flex items-center space-x-2 flex-1 pr-2">
+                    <span class="text-emerald-600 font-bold text-xs">✓</span>
+                    <span class="text-xs text-slate-500 line-through">${escapeHtml(t.title)}</span>
+                  </div>
+                  <button onclick="setTaskStatus('${t.id}', 'TODO')" class="text-[10px] text-indigo-600 hover:text-indigo-800 font-semibold px-2 py-1 rounded-lg hover:bg-indigo-50 transition">
+                    ↩️ ทำใหม่
+                  </button>
+                </div>`;
+            }).join('');
+          }
+        }
+      }
+
+      // Render Field Notes for currentWorkDate
+      const noteInput = document.getElementById('workFieldNotesInput');
+      const noteDateSubtitle = document.getElementById('fieldNoteDateSubtitle');
+      if (noteDateSubtitle) {
+        noteDateSubtitle.textContent = `บันทึกสำหรับวันที่ ${formatThaiWorkDate(currentWorkDate)}`;
+      }
+      if (noteInput && document.activeElement !== noteInput) {
+        noteInput.value = workNotes[currentWorkDate] || '';
+      }
+    }
+
+    // Render Master Work Pool (4 Quadrants)
+    function renderWorkPool() {
+      const q1Tasks = workTasks.filter(t => t.priority === 'Q1');
+      const q2Tasks = workTasks.filter(t => t.priority === 'Q2');
+      const q3Tasks = workTasks.filter(t => t.priority === 'Q3');
+      const q4Tasks = workTasks.filter(t => t.priority === 'Q4');
+
+      const badgePoolTaskCount = document.getElementById('badgePoolTaskCount');
+      const poolTotalCountBadge = document.getElementById('poolTotalCountBadge');
+      const badgeCountQ1 = document.getElementById('badgeCountQ1');
+      const badgeCountQ2 = document.getElementById('badgeCountQ2');
+      const badgeCountQ3 = document.getElementById('badgeCountQ3');
+      const badgeCountQ4 = document.getElementById('badgeCountQ4');
+
+      if (badgePoolTaskCount) badgePoolTaskCount.textContent = workTasks.length;
+      if (poolTotalCountBadge) poolTotalCountBadge.textContent = workTasks.length;
+      if (badgeCountQ1) badgeCountQ1.textContent = q1Tasks.length;
+      if (badgeCountQ2) badgeCountQ2.textContent = q2Tasks.length;
+      if (badgeCountQ3) badgeCountQ3.textContent = q3Tasks.length;
+      if (badgeCountQ4) badgeCountQ4.textContent = q4Tasks.length;
+
+      renderQuadrantList('poolListQ1', q1Tasks);
+      renderQuadrantList('poolListQ2', q2Tasks);
+      renderQuadrantList('poolListQ3', q3Tasks);
+      renderQuadrantList('poolListQ4', q4Tasks);
+    }
+
+    function renderQuadrantList(containerId, taskList) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+
+      if (taskList.length === 0) {
+        el.innerHTML = '<div class="text-[11px] text-slate-400 py-1.5 text-center">ไม่มีงานในช่องนี้</div>';
+        return;
+      }
+
+      const todayStr = getTodayDateStr();
+
+      el.innerHTML = taskList.map(t => {
+        let scheduleBadge = '';
+        if (t.assignedDate === todayStr) {
+          scheduleBadge = '<span class="text-[9px] bg-cyan-100 text-cyan-800 font-bold px-1.5 py-0.2 rounded-md">🎯 วันนี้</span>';
+        } else if (t.assignedDate) {
+          scheduleBadge = `<span class="text-[9px] bg-slate-100 text-slate-600 font-medium px-1.5 py-0.2 rounded-md">📅 ${t.assignedDate}</span>`;
+        } else {
+          scheduleBadge = '<span class="text-[9px] bg-slate-100 text-slate-400 px-1.5 py-0.2 rounded-md">ในคลัง</span>';
+        }
+
+        let statusBadge = '';
+        if (t.status === 'DONE') {
+          statusBadge = '<span class="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded-md">✅ เสร็จแล้ว</span>';
+        } else if (t.status === 'IN_PROGRESS') {
+          statusBadge = '<span class="text-[9px] bg-cyan-100 text-cyan-800 font-bold px-1.5 py-0.2 rounded-md">⚙️ กำลังทำ</span>';
+        }
+
+        return `
+          <div class="bg-slate-50/80 rounded-2xl p-2.5 border border-slate-200 hover:border-slate-300 transition flex flex-col space-y-1.5">
+            <div class="flex items-start justify-between">
+              <div class="flex-1 pr-2">
+                <div class="flex items-center space-x-1.5 mb-0.5">
+                  <span class="text-[9px] font-semibold bg-white border border-slate-200 text-slate-600 px-1.5 py-0.2 rounded-md">${escapeHtml(t.tag || 'หน้างาน')}</span>
+                  ${scheduleBadge}
+                  ${statusBadge}
+                </div>
+                <div class="text-xs font-bold text-slate-800 leading-snug ${t.status === 'DONE' ? 'line-through text-slate-400' : ''}">${escapeHtml(t.title)}</div>
+              </div>
+              <button onclick="deleteWorkTask('${t.id}')" class="text-slate-300 hover:text-rose-500 text-xs p-1" title="ลบงาน">✕</button>
+            </div>
+            <div class="flex items-center justify-between pt-1 border-t border-slate-200/60 text-[10px]">
+              <button onclick="assignTaskToToday('${t.id}')" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded-lg transition">
+                📌 ทำวันนี้
+              </button>
+              <div class="flex items-center space-x-1">
+                <button onclick="promptScheduleDate('${t.id}')" class="text-slate-600 hover:text-slate-900 bg-white border border-slate-200 px-2 py-0.5 rounded-lg transition">
+                  📅 กำหนดวัน
+                </button>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function getPriorityBadge(priority) {
+      if (priority === 'Q1') {
+        return '<span class="text-[9px] font-bold bg-rose-100 text-rose-700 px-1.5 py-0.2 rounded-md">🔥 Q1 ด่วน&สำคัญ</span>';
+      } else if (priority === 'Q2') {
+        return '<span class="text-[9px] font-bold bg-amber-100 text-amber-700 px-1.5 py-0.2 rounded-md">⭐ Q2 สำคัญ</span>';
+      } else if (priority === 'Q3') {
+        return '<span class="text-[9px] font-bold bg-sky-100 text-sky-700 px-1.5 py-0.2 rounded-md">⚡ Q3 ด่วน</span>';
+      } else {
+        return '<span class="text-[9px] font-bold bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded-md">💤 Q4 แบ็กล็อก</span>';
+      }
+    }
+
+    // Toggle Collapsible Done Section
+    function toggleDoneSection() {
+      isDoneSectionCollapsed = !isDoneSectionCollapsed;
+      const arrow = document.getElementById('doneToggleArrow');
+      if (arrow) arrow.textContent = isDoneSectionCollapsed ? '▶' : '▼';
+      const container = document.getElementById('todayDoneListContainer');
+      if (container) {
+        if (isDoneSectionCollapsed) container.classList.add('hidden');
+        else container.classList.remove('hidden');
+      }
+    }
+
+    // Quick Tag Selection for Today Form
+    function selectQuickTag(tag) {
+      selectedQuickTag = tag;
+      const pills = document.querySelectorAll('#quickTagPills .quick-tag-pill');
+      pills.forEach(p => {
+        if (p.textContent.trim() === tag) {
+          p.className = 'quick-tag-pill active px-2 py-0.5 rounded-full border border-indigo-600 bg-indigo-50 text-indigo-700 font-bold';
+        } else {
+          p.className = 'quick-tag-pill px-2 py-0.5 rounded-full border border-slate-200 bg-white text-slate-600';
+        }
+      });
+    }
+
+    // Pool Form Selectors
+    function selectPoolPriority(pri) {
+      selectedPoolPriority = pri;
+      const buttons = document.querySelectorAll('#poolPriorityGroup .pool-pri-btn');
+      buttons.forEach(btn => {
+        btn.classList.remove('active', 'ring-2', 'ring-amber-500', 'ring-rose-500', 'ring-sky-500', 'ring-slate-500');
+      });
+      const activeBtn = document.getElementById('btnPri' + pri);
+      if (activeBtn) {
+        const ringColor = pri === 'Q1' ? 'ring-rose-500' : (pri === 'Q2' ? 'ring-amber-500' : (pri === 'Q3' ? 'ring-sky-500' : 'ring-slate-500'));
+        activeBtn.classList.add('active', 'ring-2', ringColor);
+      }
+    }
+
+    function selectPoolTag(tag) {
+      selectedPoolTag = tag;
+      const pills = document.querySelectorAll('#poolTagGroup .pool-tag-pill');
+      pills.forEach(p => {
+        if (p.textContent.trim() === tag) {
+          p.className = 'pool-tag-pill active px-2.5 py-1 rounded-full border border-indigo-600 bg-indigo-50 text-indigo-700 font-bold text-[10px]';
+        } else {
+          p.className = 'pool-tag-pill px-2.5 py-1 rounded-full border border-slate-200 bg-white text-slate-600 text-[10px]';
+        }
+      });
+    }
+
+    // Quick Add Today Task
+    function quickAddTodayTask() {
+      const input = document.getElementById('quickTaskTitle');
+      const title = input ? input.value.trim() : '';
+      if (!title) {
+        showToast('กรุณากรอกชื่องาน', true);
+        return;
+      }
+
+      const prioritySelect = document.getElementById('quickPrioritySelect');
+      const priority = prioritySelect ? prioritySelect.value : 'Q2';
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      const id = 'TASK-' + Date.now();
+
+      const newTask = {
+        id: id,
+        title: title,
+        priority: priority,
+        tag: selectedQuickTag,
+        status: 'TODO',
+        assignedDate: currentWorkDate,
+        createdAt: `${currentWorkDate} ${timeStr}`,
+        updatedAt: `${currentWorkDate} ${timeStr}`
+      };
+
+      workTasks.unshift(newTask);
+      saveWorkToStorage();
+      input.value = '';
+      showToast('เพิ่มงานเข้ากระดานวันนี้แล้ว ⚡');
+      renderWorkView();
+
+      // Cloud Sync
+      callApi('saveWorkTask', newTask).catch(e => console.warn('Cloud sync error:', e));
+    }
+
+    // Add Pool Task
+    function addPoolTask() {
+      const input = document.getElementById('poolInputTitle');
+      const title = input ? input.value.trim() : '';
+      if (!title) {
+        showToast('กรุณากรอกชื่องาน', true);
+        return;
+      }
+
+      const assignTodayCheck = document.getElementById('poolAssignTodayCheck');
+      const assignToday = assignTodayCheck ? assignTodayCheck.checked : false;
+      const todayStr = getTodayDateStr();
+
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      const id = 'TASK-' + Date.now();
+
+      const newTask = {
+        id: id,
+        title: title,
+        priority: selectedPoolPriority,
+        tag: selectedPoolTag,
+        status: 'TODO',
+        assignedDate: assignToday ? todayStr : '',
+        createdAt: `${todayStr} ${timeStr}`,
+        updatedAt: `${todayStr} ${timeStr}`
+      };
+
+      workTasks.unshift(newTask);
+      saveWorkToStorage();
+      input.value = '';
+      if (assignTodayCheck) assignTodayCheck.checked = false;
+      
+      showToast(assignToday ? 'บันทึกเข้าคลังและดึงเข้ากระดานวันนี้แล้ว 📌' : 'บันทึกงานเข้าคลังเรียบร้อย 📥');
+      renderWorkView();
+
+      // Cloud Sync
+      callApi('saveWorkTask', newTask).catch(e => console.warn('Cloud sync error:', e));
+    }
+
+    // Set Task Status
+    function setTaskStatus(taskId, newStatus) {
+      const task = workTasks.find(t => t.id === taskId);
+      if (!task) return;
+
+      // If promoting to IN_PROGRESS, pause any other currently IN_PROGRESS task for single focus!
+      if (newStatus === 'IN_PROGRESS') {
+        workTasks.forEach(t => {
+          if (t.id !== taskId && t.status === 'IN_PROGRESS') {
+            t.status = 'TODO';
+          }
+        });
+        showToast('🎯 โฟกัสงานนี้ทีละอย่าง!');
+      } else if (newStatus === 'DONE') {
+        showToast('ยอดเยี่ยม! งานเสร็จสิ้นแล้ว ✅');
+      }
+
+      task.status = newStatus;
+      task.updatedAt = new Date().toISOString();
+      saveWorkToStorage();
+      renderWorkView();
+
+      // Cloud Sync
+      callApi('updateWorkTaskStatus', { id: taskId, status: newStatus }).catch(e => console.warn('Cloud sync error:', e));
+    }
+
+    // Doing Now Controls
+    function completeDoingNowTask() {
+      const task = workTasks.find(t => t.assignedDate === currentWorkDate && t.status === 'IN_PROGRESS');
+      if (task) {
+        setTaskStatus(task.id, 'DONE');
+      }
+    }
+
+    function pauseDoingNowTask() {
+      const task = workTasks.find(t => t.assignedDate === currentWorkDate && t.status === 'IN_PROGRESS');
+      if (task) {
+        setTaskStatus(task.id, 'TODO');
+      }
+    }
+
+    // Postpone to Tomorrow
+    function postponeTaskToTomorrow(taskId) {
+      const task = workTasks.find(t => t.id === taskId);
+      if (!task) return;
+
+      const parts = currentWorkDate.split('-');
+      const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+      d.setDate(d.getDate() + 1);
+
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const tomorrowStr = `${y}-${m}-${day}`;
+
+      task.assignedDate = tomorrowStr;
+      task.status = 'TODO';
+      task.updatedAt = new Date().toISOString();
+      saveWorkToStorage();
+      showToast('ยกยอดงานไปวันพรุ่งนี้แล้ว 🔄');
+      renderWorkView();
+
+      // Cloud Sync
+      callApi('updateWorkTaskStatus', { id: taskId, status: 'TODO', assignedDate: tomorrowStr }).catch(e => console.warn('Cloud sync error:', e));
+    }
+
+    // Assign Task to Today
+    function assignTaskToToday(taskId) {
+      const task = workTasks.find(t => t.id === taskId);
+      if (!task) return;
+
+      const todayStr = getTodayDateStr();
+      task.assignedDate = todayStr;
+      task.updatedAt = new Date().toISOString();
+      saveWorkToStorage();
+      showToast('ดึงเข้ากระดานหน้างานวันนี้แล้ว 📌');
+      renderWorkView();
+
+      // Cloud Sync
+      callApi('updateWorkTaskStatus', { id: taskId, assignedDate: todayStr }).catch(e => console.warn('Cloud sync error:', e));
+    }
+
+    // Schedule Task Date
+    function promptScheduleDate(taskId) {
+      const task = workTasks.find(t => t.id === taskId);
+      if (!task) return;
+
+      const inputDate = prompt('กำหนดวันที่เป้าหมาย (YYYY-MM-DD):', task.assignedDate || getTodayDateStr());
+      if (inputDate && /^\d{4}-\d{2}-\d{2}$/.test(inputDate.trim())) {
+        task.assignedDate = inputDate.trim();
+        task.updatedAt = new Date().toISOString();
+        saveWorkToStorage();
+        showToast(`กำหนดวันที่เป็น ${task.assignedDate} แล้ว 📅`);
+        renderWorkView();
+
+        // Cloud Sync
+        callApi('updateWorkTaskStatus', { id: taskId, assignedDate: task.assignedDate }).catch(e => console.warn('Cloud sync error:', e));
+      }
+    }
+
+    // Delete Work Task
+    function deleteWorkTask(taskId) {
+      const task = workTasks.find(t => t.id === taskId);
+      if (!task) return;
+
+      if (confirm(`คุณต้องการลบงาน "${task.title}" หรือไม่?`)) {
+        workTasks = workTasks.filter(t => t.id !== taskId);
+        saveWorkToStorage();
+        showToast('ลบงานเรียบร้อยแล้ว');
+        renderWorkView();
+
+        // Cloud Sync
+        callApi('deleteWorkTask', { id: taskId }).catch(e => console.warn('Cloud sync error:', e));
+      }
+    }
+
+    // Field Note Auto-Save & Manual Save
+    function handleFieldNoteInput() {
+      const statusEl = document.getElementById('noteAutoSaveStatus');
+      if (statusEl) {
+        statusEl.textContent = '⏳ กำลังบันทึก...';
+        statusEl.className = 'text-[10px] font-medium text-amber-500';
+      }
+
+      if (workNoteDebounceTimer) clearTimeout(workNoteDebounceTimer);
+      workNoteDebounceTimer = setTimeout(() => {
+        saveFieldNoteInternal(false);
+      }, 1200);
+    }
+
+    function saveFieldNoteManual() {
+      saveFieldNoteInternal(true);
+    }
+
+    function saveFieldNoteInternal(showToastMsg) {
+      const input = document.getElementById('workFieldNotesInput');
+      if (!input) return;
+
+      const content = input.value;
+      workNotes[currentWorkDate] = content;
+      saveWorkToStorage();
+
+      const statusEl = document.getElementById('noteAutoSaveStatus');
+      if (statusEl) {
+        statusEl.textContent = '🟢 บันทึกแล้ว';
+        statusEl.className = 'text-[10px] font-medium text-emerald-600';
+      }
+
+      if (showToastMsg) {
+        showToast('บันทึกโน้ตหน้างานเรียบร้อย 📝');
+      }
+
+      // Cloud Sync
+      callApi('saveWorkNote', { date: currentWorkDate, content: content }).catch(e => console.warn('saveWorkNote cloud sync error:', e));
+    }
+
+    function copyCurrentFieldNote() {
+      const input = document.getElementById('workFieldNotesInput');
+      if (!input || !input.value.trim()) {
+        showToast('ไม่มีข้อความโน้ตให้คัดลอก', true);
+        return;
+      }
+
+      navigator.clipboard.writeText(input.value).then(() => {
+        showToast('คัดลอกโน้ตลงคลิปบอร์ดแล้ว 📋');
+      }).catch(err => {
+        showToast('คัดลอกล้มเหลว', true);
+      });
+    }
+
+    // Notes History Modal
+    function showNotesHistoryModal() {
+      const modal = document.getElementById('workNotesHistoryModal');
+      const listEl = document.getElementById('workNotesHistoryList');
+      if (!modal || !listEl) return;
+
+      const dates = Object.keys(workNotes).sort().reverse();
+      if (dates.length === 0) {
+        listEl.innerHTML = '<div class="text-center text-slate-400 py-4">ยังไม่มีประวัติโน้ต</div>';
+      } else {
+        listEl.innerHTML = dates.map(d => {
+          const noteText = workNotes[d] || '';
+          const preview = noteText.length > 60 ? noteText.substring(0, 60) + '...' : (noteText || '(ว่างเปล่า)');
+          return `
+            <div onclick="selectNoteHistoryDate('${d}')" class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-indigo-50 hover:border-indigo-200 transition cursor-pointer">
+              <div class="flex items-center justify-between mb-1">
+                <span class="font-bold text-slate-800 text-xs">📅 ${formatThaiWorkDate(d)}</span>
+                ${d === currentWorkDate ? '<span class="text-[9px] bg-indigo-100 text-indigo-700 font-bold px-1.5 py-0.2 rounded">กำลังดู</span>' : ''}
+              </div>
+              <p class="text-[11px] text-slate-600 line-clamp-2">${escapeHtml(preview)}</p>
+            </div>`;
+        }).join('');
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeNotesHistoryModal() {
+      const modal = document.getElementById('workNotesHistoryModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function selectNoteHistoryDate(dateStr) {
+      currentWorkDate = dateStr;
+      closeNotesHistoryModal();
+      renderWorkView();
     }
 
   </script>

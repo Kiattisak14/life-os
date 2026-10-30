@@ -126,26 +126,26 @@
       <div id="miniBurnWidget" class="bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-indigo-500/10 border border-emerald-200/60 rounded-2xl p-3 shadow-xs">
         <div class="flex items-center justify-between text-xs">
           <div class="flex items-center space-x-1 font-bold text-slate-700">
-            <span id="miniBurnTitle">⚡ งบปลายเดือน ต.ค.:</span>
-            <span class="text-emerald-600 font-extrabold" id="miniBurnRemaining">฿2,001.73</span>
-            <span class="text-slate-400 font-normal text-[10px]" id="miniBurnTotal">/ ฿3,054</span>
+            <span id="miniBurnTitle">🍚 ถังกินอยู่ (พ.ย. 2026):</span>
+            <span class="text-emerald-600 font-extrabold" id="miniBurnRemaining">฿7,190.00</span>
+            <span class="text-slate-400 font-normal text-[10px]" id="miniBurnTotal">/ ฿7,190</span>
           </div>
           <span id="miniBurnDailyBadge" class="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">
-            เฉลี่ย ฿<span id="miniBurnDaily">334</span> / วัน
+            เฉลี่ย ฿<span id="miniBurnDaily">240</span> / วัน
           </span>
         </div>
         <div class="w-full bg-slate-200/80 rounded-full h-2 mt-2 overflow-hidden">
-          <div id="miniBurnBar" class="bg-emerald-500 h-2 rounded-full transition-all duration-500" style="width: 62%"></div>
+          <div id="miniBurnBar" class="bg-emerald-500 h-2 rounded-full transition-all duration-500" style="width: 100%"></div>
         </div>
       </div>
 
-      <!-- Advance Badge Notification (5,500 THB) -->
+      <!-- Advance Badge Notification (2,750 THB) -->
       <div id="advanceBadgeRecord" class="bg-amber-500/10 border border-amber-300/80 rounded-2xl p-2.5 flex items-center justify-between text-xs text-amber-900 shadow-xs">
         <div class="flex items-center space-x-1.5 font-bold">
           <span class="text-base">⚠️</span>
-          <span>มีเงินยืมล่วงหน้าจากคลัง: <span class="text-amber-700 font-extrabold">5,500 บาท</span></span>
+          <span>มีเงินยืมล่วงหน้าจากคลัง: <span class="text-amber-700 font-extrabold">2,750 บาท</span></span>
         </div>
-        <span class="text-[10px] bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded-full whitespace-nowrap">ผ่อนคืน 2 งวด: พ.ย. 2,750 บ. / ธ.ค. 2,750 บ.</span>
+        <span class="text-[10px] bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded-full whitespace-nowrap">ผ่อนคืนงวด 1/2 สำเร็จ (เหลืองวด ธ.ค. 2,750 บ.)</span>
       </div>
 
       <!-- Budget Bucket Selector (ถังงบประมาณ) -->
@@ -154,7 +154,7 @@
           <h3 class="text-xs font-semibold text-slate-500 tracking-wider uppercase">🏷️ หักจากถังงบประมาณ</h3>
           <span class="text-[10px] text-indigo-600 font-bold" id="selectedBucketLabel">🍚 กินอยู่ & ใช้ชีวิต</span>
         </div>
-        <div class="grid grid-cols-3 gap-1.5" id="bucketBtnContainer">
+        <div class="grid grid-cols-4 gap-1" id="bucketBtnContainer">
           <button type="button" onclick="setBucket('กินอยู่ & ใช้ชีวิต')" class="btn-bucket py-2 px-1 text-xs rounded-xl border border-indigo-500 bg-indigo-50 text-indigo-700 font-bold active:scale-95 text-center truncate">
             🍚 กินอยู่
           </button>
@@ -163,6 +163,9 @@
           </button>
           <button type="button" onclick="setBucket('โปรเจกต์ PG-1 / พิเศษ')" class="btn-bucket py-2 px-1 text-xs rounded-xl border border-slate-200 text-slate-600 font-medium active:scale-95 text-center truncate">
             ⚙️ PG-1
+          </button>
+          <button type="button" onclick="setBucket('งบอิสระ R&D / Freedom')" class="btn-bucket py-2 px-1 text-xs rounded-xl border border-slate-200 text-slate-600 font-medium active:scale-95 text-center truncate">
+            💡 อิสระ
           </button>
         </div>
       </div>
@@ -264,13 +267,13 @@
       <div class="bg-gradient-to-br from-indigo-700 via-indigo-800 to-slate-900 text-white rounded-3xl p-5 shadow-lg space-y-3.5">
         <div class="flex items-center justify-between">
           <span class="text-[10px] font-bold tracking-wider uppercase bg-white/15 px-2 py-0.5 rounded-full text-indigo-200">Personal Net Worth</span>
-          <span class="text-xs text-indigo-200 font-light" id="dashMonthLabel">สรุปปลายเดือน ต.ค. 2026</span>
+          <span class="text-xs text-indigo-200 font-light" id="dashMonthLabel">สรุปรอบเดือน พ.ย. 2026</span>
         </div>
 
         <div>
           <span class="text-xs text-indigo-200 font-light">ความมั่งคั่งสุทธิ (Net Worth) 🌟</span>
-          <div class="text-3xl font-black mt-0.5 tracking-tight text-white" id="dashNetWorth">฿53,758</div>
-          <p class="text-[10px] text-indigo-300 mt-0.5">สินทรัพย์ (฿88,198) ลบ หนี้สิน (฿34,440)</p>
+          <div class="text-3xl font-black mt-0.5 tracking-tight text-white" id="dashNetWorth">฿61,690</div>
+          <p class="text-[10px] text-indigo-300 mt-0.5" id="dashNetWorthSub">สินทรัพย์ (฿93,670) ลบ หนี้สิน (฿31,980)</p>
         </div>
 
         <!-- 4 Sub-Cards for Cash Treasury / PVD / Liabilities / Receivables -->
@@ -278,7 +281,7 @@
           <div class="bg-white/10 rounded-2xl p-2.5 text-left backdrop-blur-xs flex items-center justify-between">
             <div>
               <div class="text-[10px] text-emerald-300 font-medium">เงินสดในคลัง 🟢</div>
-              <div class="text-xs font-black text-white mt-0.5" id="dashCashTreasury">฿48,500</div>
+              <div class="text-xs font-black text-white mt-0.5" id="dashCashTreasury">฿59,250</div>
             </div>
             <span class="text-[9px] bg-emerald-500/30 text-emerald-200 px-1.5 py-0.5 rounded font-bold">สำรอง</span>
           </div>
@@ -292,9 +295,9 @@
           <div class="bg-white/10 rounded-2xl p-2.5 text-left backdrop-blur-xs flex items-center justify-between">
             <div>
               <div class="text-[10px] text-rose-300 font-medium">หนี้งวดรถ 🔴</div>
-              <div class="text-xs font-black text-white mt-0.5" id="dashLiabilities">฿34,440</div>
+              <div class="text-xs font-black text-white mt-0.5" id="dashLiabilities">฿31,980</div>
             </div>
-            <span id="dashBikeMonths" class="text-[9px] bg-rose-500/30 text-rose-200 px-1.5 py-0.5 rounded font-bold">เหลือ 14 งวด</span>
+            <span id="dashBikeMonths" class="text-[9px] bg-rose-500/30 text-rose-200 px-1.5 py-0.5 rounded font-bold">เหลือ 13 งวด</span>
           </div>
           <div onclick="openReceivableModal()" class="bg-white/10 hover:bg-white/15 active:scale-95 cursor-pointer rounded-2xl p-2.5 text-left backdrop-blur-xs transition flex items-center justify-between">
             <div>
@@ -311,11 +314,11 @@
         <div class="flex items-center space-x-2.5">
           <span class="text-xl">⚠️</span>
           <div>
-            <div class="font-bold">มีเงินยืมล่วงหน้าจากคลัง: <span class="text-amber-700 font-extrabold">5,500 บาท</span></div>
-            <div class="text-[10px] text-amber-700/80 mt-0.5">หักแยกถัง PG-1 (4,000 บ.) + เติมกินอยู่ ต.ค. (1,500 บ.) · ผ่อนคืน 2 งวด: พ.ย. 2,750 บ. / ธ.ค. 2,750 บ.</div>
+            <div class="font-bold">มีเงินยืมล่วงหน้าจากคลัง: <span class="text-amber-700 font-extrabold">2,750 บาท</span></div>
+            <div class="text-[10px] text-amber-700/80 mt-0.5">ผ่อนคืนงวด 1/2 สำเร็จแล้ว (2,750 บ.) · คงเหลืองวดสุดท้ายรอบ ธ.ค. 2,750 บ.</div>
           </div>
         </div>
-        <span class="text-[10px] bg-amber-100 border border-amber-200 text-amber-800 font-bold px-2 py-1 rounded-xl whitespace-nowrap">ผ่อนคืน 2 งวด</span>
+        <span class="text-[10px] bg-amber-100 border border-amber-200 text-amber-800 font-bold px-2 py-1 rounded-xl whitespace-nowrap">เหลืองวด ธ.ค.</span>
       </div>
 
       <!-- ================== 2. DYNAMIC BUDGET BURN-DOWN ================== -->
@@ -327,54 +330,65 @@
           <span class="text-[10px] text-slate-400">รอบเดือนนี้</span>
         </div>
 
-        <!-- Hero Burn-Down: ถังกินอยู่ & ใช้ชีวิต / งบปลายเดือน ต.ค. -->
+        <!-- Hero Burn-Down: ถังกินอยู่ & ใช้ชีวิต รอบ พ.ย. 2026 -->
         <div class="bg-slate-50 border border-slate-100 rounded-2xl p-3.5 space-y-2">
           <div class="flex justify-between items-start">
             <div>
               <div class="text-xs font-bold text-slate-800 flex items-center space-x-1">
-                <span id="dashLivingTitle">⚡ งบปลายเดือน ต.ค.</span>
-                <span class="text-[10px] bg-emerald-100 text-emerald-800 font-semibold px-1.5 py-0.2 rounded-md" id="dashLivingBadge">งบ 3,054 บ.</span>
+                <span id="dashLivingTitle">🍚 ถังกินอยู่ (พ.ย. 2026)</span>
+                <span class="text-[10px] bg-emerald-100 text-emerald-800 font-semibold px-1.5 py-0.2 rounded-md" id="dashLivingBadge">งบ 7,190 บ.</span>
               </div>
               <div class="text-[11px] text-slate-500 mt-0.5">
-                จ่ายแล้ว: <span class="font-bold text-rose-600" id="dashLivingSpent">฿1,052</span> · 
-                เหลือ: <span class="font-bold text-emerald-600" id="dashLivingRemaining">฿2,001.73</span>
+                จ่ายแล้ว: <span class="font-bold text-rose-600" id="dashLivingSpent">฿0</span> · 
+                เหลือ: <span class="font-bold text-emerald-600" id="dashLivingRemaining">฿7,190.00</span>
               </div>
             </div>
             <div class="text-right">
               <span class="text-[10px] font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full" id="dashLivingDailyBadge">
-                เฉลี่ย ฿<span id="dashLivingDaily">334</span> / วัน
+                เฉลี่ย ฿<span id="dashLivingDaily">240</span> / วัน
               </span>
             </div>
           </div>
 
           <!-- Progress Bar -->
           <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
-            <div id="dashLivingBar" class="bg-emerald-500 h-2.5 rounded-full transition-all duration-500" style="width: 66%"></div>
+            <div id="dashLivingBar" class="bg-emerald-500 h-2.5 rounded-full transition-all duration-500" style="width: 100%"></div>
           </div>
           <div class="flex justify-between text-[9px] text-slate-400">
-            <span>ใช้ไป <span id="dashLivingPercent">34%</span></span>
-            <span>เหลืออีก <span id="dashDaysLeft">6</span> วัน</span>
+            <span>ใช้ไป <span id="dashLivingPercent">0%</span></span>
+            <span>เหลืออีก <span id="dashDaysLeft">30</span> วัน</span>
           </div>
         </div>
 
-        <!-- 2 Sub-Buckets: Fixed & Project -->
-        <div class="grid grid-cols-2 gap-2">
-          <div class="bg-slate-50 border border-slate-100 rounded-2xl p-3">
-            <div class="text-[11px] font-bold text-slate-700">🏠 รายจ่ายคงที่</div>
-            <div class="text-sm font-extrabold text-slate-900 mt-0.5" id="dashFixedSpent">฿0</div>
-            <div class="text-[9px] text-slate-400">งบ ฿7,000 (ห้อง, รถ, เน็ต, AI)</div>
+        <!-- 3 Sub-Buckets: Fixed, PG-1 & Freedom -->
+        <div class="grid grid-cols-3 gap-1.5">
+          <div class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5">
+            <div class="text-[10px] font-bold text-slate-700">🏠 คงที่</div>
+            <div class="text-xs font-extrabold text-slate-900 mt-0.5" id="dashFixedSpent">฿0</div>
+            <div class="text-[8px] text-slate-400">งบ ฿7,000 (ห้อง, รถ)</div>
           </div>
-          <div class="bg-indigo-50/40 border border-indigo-100/80 rounded-2xl p-3">
+          <div class="bg-indigo-50/40 border border-indigo-100/80 rounded-2xl p-2.5">
             <div class="flex items-center justify-between">
-              <div class="text-[11px] font-bold text-indigo-950">⚙️ งบอะไหล่ PG-1</div>
-              <span class="text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.2 rounded-md font-semibold">งบ 4,000 บ.</span>
+              <div class="text-[10px] font-bold text-indigo-950">⚙️ PG-1</div>
+              <span class="text-[8px] bg-indigo-100 text-indigo-700 px-1 py-0.2 rounded font-semibold">งบ 4,000</span>
             </div>
-            <div class="text-sm font-extrabold text-indigo-600 mt-0.5">
+            <div class="text-xs font-extrabold text-indigo-600 mt-0.5">
               เหลือ: <span id="dashProjectRemaining">฿174.64</span>
             </div>
-            <div class="text-[9px] text-slate-500 mt-0.5 flex justify-between">
-              <span>ใช้ไป: <span class="font-bold text-slate-700" id="dashProjectSpent">฿3,825.36</span></span>
-              <span class="text-indigo-600 font-medium">แยกจากคลัง</span>
+            <div class="text-[8px] text-slate-500 mt-0.5 flex justify-between">
+              <span>จ่าย: <span class="font-bold text-slate-700" id="dashProjectSpent">฿3,825.36</span></span>
+            </div>
+          </div>
+          <div class="bg-amber-50/50 border border-amber-200/80 rounded-2xl p-2.5">
+            <div class="flex items-center justify-between">
+              <div class="text-[10px] font-bold text-amber-950">💡 งบอิสระ</div>
+              <span class="text-[8px] bg-amber-100 text-amber-800 px-1 py-0.2 rounded font-semibold">R&D</span>
+            </div>
+            <div class="text-xs font-extrabold text-amber-700 mt-0.5">
+              เหลือ: <span id="dashFreedomRemaining">฿1,182.23</span>
+            </div>
+            <div class="text-[8px] text-slate-500 mt-0.5 flex justify-between">
+              <span>โบนัสเงินส่วนเกิน</span>
             </div>
           </div>
         </div>
@@ -1490,121 +1504,112 @@
 
       const totalExp = Number(data.totalExpense) || 0;
       const now = new Date();
-      const isOct = (now.getFullYear() === 2026 && now.getMonth() === 9);
-      const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-      const daysLeft = Math.max(1, daysInMonth - now.getDate());
+      
+      // รอบเดือนพฤศจิกายน 2026: เริ่ม 31 ต.ค. 2026 ถึง 30 พ.ย. 2026 (30 วัน เฉลี่ย ~240 บ./วัน)
+      const novCycleStartDateStr = '2026-10-31';
+      const cycleEndDate = new Date(2026, 10, 30, 23, 59, 59);
+      const diffTime = cycleEndDate.getTime() - now.getTime();
+      const daysLeft = Math.max(1, Math.min(30, Math.ceil(diffTime / (1000 * 60 * 60 * 24))));
 
-      // 0. คำนวณ projectSpent ทันทีจากรายการที่มีอยู่ (Client-Side Instant Loop Calculation)
+      // 0. แยกยอดรายจ่ายตามถัง (นับเฉพาะรายการที่เกิดในรอบ พ.ย. คือ >= 2026-10-31)
       let calcProjectSpent = 0;
       let calcFixedSpent = 0;
       let calcLivingSpent = 0;
+      let calcFreedomSpent = 0;
 
       if (data.recentTransactions && Array.isArray(data.recentTransactions)) {
         data.recentTransactions.forEach(t => {
           if (t.type === 'expense') {
             const amt = Number(t.amount) || 0;
-            const b = (t.bucket || '').toString();
-            const n = (t.note || '').toString();
-            const c = (t.category || '').toString();
+            const b = t.bucket || '';
+            const n = t.note || '';
+            const c = t.category || '';
+            const d = t.date || '';
 
             const isPG1 = b.includes('PG-1') || b.includes('โปรเจกต์') ||
                           /PG-1|เสตอร์|โซ่|นอต|อะไหล่|มอเตอร์|motor|taobao/i.test(n) ||
                           /PG-1|เสตอร์|โซ่|นอต|อะไหล่|มอเตอร์|motor|taobao/i.test(c);
 
+            const isFreedom = b.includes('อิสระ') || b.includes('Freedom') || /Freedom|อิสระ|R&D/i.test(n);
             const isFixed = b.includes('คงที่') || c.includes('ที่พัก/บิล');
 
-            if (isPG1) {
-              calcProjectSpent += amt;
-            } else if (isFixed) {
-              calcFixedSpent += amt;
-            } else {
-              calcLivingSpent += amt;
+            // รายการในรอบ พ.ย. (>= 2026-10-31)
+            if (d >= novCycleStartDateStr) {
+              if (isPG1) {
+                calcProjectSpent += amt;
+              } else if (isFreedom) {
+                calcFreedomSpent += amt;
+              } else if (isFixed) {
+                calcFixedSpent += amt;
+              } else {
+                calcLivingSpent += amt;
+              }
             }
           }
         });
       }
 
-      // Auto-fallback calculations if backend didn't return them
-      if (!data.burnDown) {
-        // เดือน ต.ค. ใช้ฐานงบ 3,053.73 บ. เพื่อให้เหลือเงินสดจริง 2,001.73 บ. (เมื่อหักกินอยู่จริง 1,052 บ.)
-        const livingBudget = isOct ? 3053.73 : 8000;
-        const livingSpent = calcLivingSpent > 0 ? calcLivingSpent : Math.max(0, totalExp - calcProjectSpent);
-        const livingRemaining = Math.max(0, livingBudget - livingSpent);
-        const dailyAllowance = Math.round(livingRemaining / daysLeft);
-        const livingPercent = Math.min(100, Math.round((livingSpent / livingBudget) * 100));
+      // ฐานงบประมาณรอบเดือน พ.ย. 2026
+      const livingBudget = 7190.00;
+      const fixedBudget = 7000.00;
+      const freedomBudget = 1182.23;
+      const pg1Remaining = 174.64;
 
-        data.burnDown = {
-          isOctoberBridge: isOct,
-          livingBudget: livingBudget,
-          livingSpent: livingSpent,
-          livingRemaining: livingRemaining,
-          dailyAllowance: dailyAllowance,
-          livingPercent: livingPercent,
-          daysLeft: daysLeft,
-          fixedSpent: calcFixedSpent,
-          projectSpent: calcProjectSpent
-        };
-      } else {
-        // ปรับฐานงบ ต.ค. ให้ตรงกับเงินสดจริงในมือ 2,001.73 บ.
-        if (isOct && (data.burnDown.livingBudget === 1500 || data.burnDown.livingBudget === 3000 || !data.burnDown.livingBudget)) {
-          data.burnDown.livingBudget = 3053.73;
-          data.burnDown.livingRemaining = Math.max(0, 3053.73 - data.burnDown.livingSpent);
-          data.burnDown.dailyAllowance = Math.round(data.burnDown.livingRemaining / data.burnDown.daysLeft);
-          data.burnDown.livingPercent = Math.min(100, Math.round((data.burnDown.livingSpent / 3053.73) * 100));
-        }
-        // หาก backend ส่ง projectSpent เป็น 0 หรือยังไม่ได้ deploy ใหม่ ให้ใช้ยอดคำนวณจากรายการทันที
-        if (calcProjectSpent > 0 && (!data.burnDown.projectSpent || data.burnDown.projectSpent < calcProjectSpent)) {
-          // หาก livingSpent ใน ต.ค. เคยรวมยอดอะไหล่ PG-1 เข้าไป ให้หักแยกออกมาให้ถูกต้อง
-          if (isOct && data.burnDown.livingSpent >= calcProjectSpent) {
-            data.burnDown.livingSpent = Math.max(0, data.burnDown.livingSpent - calcProjectSpent);
-            data.burnDown.livingRemaining = Math.max(0, data.burnDown.livingBudget - data.burnDown.livingSpent);
-            data.burnDown.dailyAllowance = Math.round(data.burnDown.livingRemaining / data.burnDown.daysLeft);
-            data.burnDown.livingPercent = Math.min(100, Math.round((data.burnDown.livingSpent / data.burnDown.livingBudget) * 100));
-          }
-          data.burnDown.projectSpent = calcProjectSpent;
-        }
-      }
+      // คำนวณ Burn-Down
+      const livingSpent = (data.burnDown && data.burnDown.livingBudget === 7190 && data.burnDown.livingSpent !== undefined)
+        ? data.burnDown.livingSpent
+        : calcLivingSpent;
 
-      if (!data.netWorth) {
-        const cashTreasury = 48500;
-        const pvdAmount = 31420;
-        const bikeDebt = 34440;
-        const receivable = 3000;
-        const totalAssets = cashTreasury + pvdAmount;
-        const netWorth = totalAssets - bikeDebt;
+      const livingRemaining = Math.max(0, livingBudget - livingSpent);
+      const dailyAllowance = Math.round(livingRemaining / daysLeft);
+      const livingPercent = Math.min(100, Math.round((livingSpent / livingBudget) * 100));
 
-        data.netWorth = {
-          netWorth: netWorth,
-          totalAssets: totalAssets,
-          cashInTreasury: cashTreasury,
-          pvdAmount: pvdAmount,
-          totalLiabilities: bikeDebt,
-          bikeMonthsLeft: 14,
-          receivableAmount: receivable
-        };
-      }
+      data.burnDown = {
+        isOctoberBridge: false,
+        livingBudget: livingBudget,
+        livingSpent: livingSpent,
+        livingRemaining: livingRemaining,
+        dailyAllowance: dailyAllowance,
+        livingPercent: livingPercent,
+        daysLeft: daysLeft,
+        fixedSpent: calcFixedSpent,
+        projectSpent: calcProjectSpent,
+        freedomBudget: freedomBudget,
+        freedomRemaining: Math.max(0, freedomBudget - calcFreedomSpent)
+      };
 
-      // 1. Net Worth Cards
+      // 1. Net Worth (ความมั่งคั่งสุทธิ) พ.ย. 2026
+      const cashTreasury = 59250;
+      const pvdAmount = 31420;
+      const bikeDebt = 31980; // เหลือ 13 งวด x 2,460
+      const receivable = 3000;
+      const totalAssets = cashTreasury + pvdAmount + receivable; // 93,670
+      const netWorth = totalAssets - bikeDebt; // 61,690
+
+      data.netWorth = {
+        netWorth: netWorth,
+        totalAssets: totalAssets,
+        cashInTreasury: cashTreasury,
+        pvdAmount: pvdAmount,
+        totalLiabilities: bikeDebt,
+        bikeMonthsLeft: 13,
+        receivableAmount: receivable
+      };
+
       if (data.netWorth) {
         const nw = data.netWorth;
-        // Safety check if GAS returns old 19200 debt before redeployment
-        if (nw.totalLiabilities === 19200) {
-          nw.totalLiabilities = 34440;
-          if (nw.netWorth) nw.netWorth = nw.netWorth - (34440 - 19200);
-        }
-        if (nw.bikeMonthsLeft === 8 || !nw.bikeMonthsLeft) {
-          nw.bikeMonthsLeft = 14;
-        }
-
-        document.getElementById('dashNetWorth').innerText = '฿' + (nw.netWorth || 53758).toLocaleString('th-TH');
+        document.getElementById('dashNetWorth').innerText = '฿' + (nw.netWorth || 61690).toLocaleString('th-TH');
+        const netWorthSub = document.getElementById('dashNetWorthSub');
+        if (netWorthSub) netWorthSub.innerText = `สินทรัพย์ (฿${(nw.totalAssets || 93670).toLocaleString('th-TH')}) ลบ หนี้สิน (฿${(nw.totalLiabilities || 31980).toLocaleString('th-TH')})`;
+        
         const cashEl = document.getElementById('dashCashTreasury');
-        if (cashEl) cashEl.innerText = '฿' + (nw.cashInTreasury || 48500).toLocaleString('th-TH');
+        if (cashEl) cashEl.innerText = '฿' + (nw.cashInTreasury || 59250).toLocaleString('th-TH');
         const pvdEl = document.getElementById('dashPvdAmount');
         if (pvdEl) pvdEl.innerText = '฿' + (nw.pvdAmount || 31420).toLocaleString('th-TH');
-        document.getElementById('dashLiabilities').innerText = '฿' + (nw.totalLiabilities || 34440).toLocaleString('th-TH');
+        document.getElementById('dashLiabilities').innerText = '฿' + (nw.totalLiabilities || 31980).toLocaleString('th-TH');
         document.getElementById('dashReceivables').innerText = '฿' + (nw.receivableAmount || 3000).toLocaleString('th-TH');
         const bikeMonthsEl = document.getElementById('dashBikeMonths');
-        if (bikeMonthsEl && nw.bikeMonthsLeft) bikeMonthsEl.innerText = `เหลือ ${nw.bikeMonthsLeft} งวด`;
+        if (bikeMonthsEl) bikeMonthsEl.innerText = `เหลือ ${nw.bikeMonthsLeft || 13} งวด`;
       }
 
       // 2. Dynamic Burn-Down & Advance
@@ -1618,17 +1623,12 @@
         const miniTitle = document.getElementById('miniBurnTitle');
         const miniTotal = document.getElementById('miniBurnTotal');
 
-        if (isOct) {
-          if (dashTitle) dashTitle.innerText = '⚡ งบปลายเดือน ต.ค.';
-          if (dashBadge) dashBadge.innerText = `งบ ${(bd.livingBudget || 3000).toLocaleString()} บ.`;
-          if (miniTitle) miniTitle.innerText = '⚡ งบปลายเดือน ต.ค.:';
-          if (miniTotal) miniTotal.innerText = `/ ฿${(bd.livingBudget || 3000).toLocaleString()}`;
-        } else {
-          if (dashTitle) dashTitle.innerText = '🍚 ถังกินอยู่ & ใช้ชีวิต';
-          if (dashBadge) dashBadge.innerText = `งบ ${(bd.livingBudget || 8000).toLocaleString()} บ.`;
-          if (miniTitle) miniTitle.innerText = '🍚 ถังกินอยู่เดือนนี้:';
-          if (miniTotal) miniTotal.innerText = `/ ฿${(bd.livingBudget || 8000).toLocaleString()}`;
-        }
+        if (dashTitle) dashTitle.innerText = '🍚 ถังกินอยู่ (พ.ย. 2026)';
+        if (dashBadge) dashBadge.innerText = `งบ ${(bd.livingBudget || 7190).toLocaleString()} บ.`;
+        if (miniTitle) miniTitle.innerText = '🍚 ถังกินอยู่ (พ.ย. 2026):';
+        if (miniTotal) miniTotal.innerText = `/ ฿${(bd.livingBudget || 7190).toLocaleString()}`;
+        const dashMonthLabel = document.getElementById('dashMonthLabel');
+        if (dashMonthLabel) dashMonthLabel.innerText = 'สรุปรอบเดือน พ.ย. 2026';
 
         // Values
         const remVal = bd.livingRemaining || 0;
@@ -1671,23 +1671,24 @@
           }
         }
 
-        // Sub Buckets (พร้อม fallback จากยอดคำนวณสด)
+        // Sub Buckets (Fixed, PG-1 & Freedom)
         const fixedEl = document.getElementById('dashFixedSpent');
         if (fixedEl) fixedEl.innerText = '฿' + (bd.fixedSpent || calcFixedSpent || 0).toLocaleString('th-TH');
-        const pg1Budget = 4000;
-        const projSpent = (bd.projectSpent || calcProjectSpent || 0);
-        const projRemaining = Math.max(0, pg1Budget - projSpent);
-        const projEl = document.getElementById('dashProjectSpent');
-        if (projEl) {
-          projEl.innerText = (projSpent % 1 !== 0)
-            ? '฿' + projSpent.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-            : '฿' + projSpent.toLocaleString('th-TH');
-        }
+        
+        // PG-1: 174.64 บาท คงเหลือ
+        const pg1Rem = 174.64;
         const projRemEl = document.getElementById('dashProjectRemaining');
-        if (projRemEl) {
-          projRemEl.innerText = (projRemaining % 1 !== 0)
-            ? '฿' + projRemaining.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-            : '฿' + projRemaining.toLocaleString('th-TH');
+        if (projRemEl) projRemEl.innerText = '฿' + pg1Rem.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const projEl = document.getElementById('dashProjectSpent');
+        if (projEl) projEl.innerText = '฿3,825.36';
+
+        // Freedom Bucket: 1,182.23 บาท คงเหลือ
+        const freeRemEl = document.getElementById('dashFreedomRemaining');
+        if (freeRemEl) {
+          const freeRem = (bd.freedomRemaining !== undefined) ? bd.freedomRemaining : Math.max(0, 1182.23 - calcFreedomSpent);
+          freeRemEl.innerText = (freeRem % 1 !== 0)
+            ? '฿' + freeRem.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            : '฿' + freeRem.toLocaleString('th-TH');
         }
       }
 
